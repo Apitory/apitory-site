@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url><loc>https://apitory.com/</loc></url>
+<url><loc>https://apitory.com/articles.html</loc></url>
 <url><loc>https://apitory.com/actors/google-maps-contacts.html</loc></url>
 <url><loc>https://apitory.com/actors/google-maps-home-services-leads.html</loc></url>
 <url><loc>https://apitory.com/actors/google-maps-dentist-leads.html</loc></url>
@@ -8,4 +9,14 @@
 <url><loc>https://apitory.com/actors/greenhouse-jobs-live-api.html</loc></url>
 <url><loc>https://apitory.com/actors/uk-companies-house.html</loc></url>
 <url><loc>https://apitory.com/actors/telegram-channel-scraper.html</loc></url>
+<url><loc>https://apitory.com/articles/google-maps-lead-generation-guide.html</loc></url>
+<url><loc>https://apitory.com/articles/extract-contacts-from-google-maps.html</loc></url>
+<url><loc>https://apitory.com/articles/live-job-data-from-ats-apis.html</loc></url>
+<url><loc>https://apitory.com/articles/build-niche-job-board-live-data.html</loc></url>
+<url><loc>https://apitory.com/articles/uk-companies-house-data-guide.html</loc></url>
+<url><loc>https://apitory.com/articles/telegram-channel-data-guide.html</loc></url>
+<url><loc>https://apitory.com/articles/home-services-leads-for-agencies.html</loc></url>
+<url><loc>https://apitory.com/articles/dental-practice-leads.html</loc></url>
+<url><loc>https://apitory.com/articles/pay-per-result-pricing-explained.html</loc></url>
+<url><loc>https://apitory.com/articles/what-is-an-apify-actor-buyers-guide.html</loc></url>
 </urlset>
