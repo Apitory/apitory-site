@@ -1,44 +1,122 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AI Startup Jobs, Live: The Hiring Market Behind the Headlines — Apitory</title><meta name="description" content="Live job listings from 128 AI companies, pulled at run time from their own ATS boards — frontier labs, AI infrastructure, applied-AI startups and AI biotech, 9,454 open roles."><link rel="icon" type="image/svg+xml" href="/logo-mark.svg"><link rel="stylesheet" href="/style.css?v=13"><link rel="canonical" href="https://apitory.com/articles/ai-startup-jobs-live-data.html"></head><body><div class="bgfx"></div><header><nav><a class="brand" href="/"><img class="mark" src="/logo-mark.svg" alt=""><img class="typo" src="/logo-typo.svg" alt="Apitory"></a><span><a href="/#actors">Actors</a> &nbsp;|&nbsp; <a href="/articles.html">Articles</a> &nbsp;|&nbsp; <a href="https://apify.com/apitory">Apify Store</a> &nbsp;|&nbsp; <a href="mailto:apitoryhq@gmail.com">Support</a></span></nav></header><main><p><a href="/articles.html">&larr; All articles</a></p><h1>AI Startup Jobs, Live: The Hiring Market Behind the Headlines</h1>
-<p class="tag">The AI industry's hiring is the most watched labour market in the world — and the most misread, because most of what people cite is an index. Here is what live data from the companies' own boards actually shows, and how to use it.</p>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AI Startup Jobs, Live: The Hiring Market Behind the Headlines — Apitory</title><meta name="description" content="Live job listings from 128 AI companies, pulled at run time from their own ATS boards — frontier labs, AI infrastructure, applied-AI startups and AI biotech, 9,454 open roles."><link rel="icon" type="image/svg+xml" href="/logo-mark.svg"><link rel="stylesheet" href="/style.css?v=13"><link rel="canonical" href="https://apitory.com/articles/ai-startup-jobs-live-data.html"></head><body><div class="bgfx"></div><header><nav><a class="brand" href="/"><img class="mark" src="/logo-mark.svg" alt=""><img class="typo" src="/logo-typo.svg" alt="Apitory"></a><span><a href="/#actors">Actors</a> &nbsp;|&nbsp; <a href="/articles.html">Articles</a> &nbsp;|&nbsp; <a href="https://apify.com/apitory">Apify Store</a> &nbsp;|&nbsp; <a href="mailto:apitoryhq@gmail.com">Support</a></span></nav></header><main><p><a href="/articles.html">&larr; All articles</a></p><h1>Live AI Startup Hiring Data From 128 Verified ATS Boards</h1>
 
-<h2>The AI hiring market has a centre, and it is on two systems</h2>
-<p>Every technology wave concentrates its hiring on the same few applicant tracking systems, and the AI wave is no exception. The companies defining it — frontier labs, AI infrastructure, applied-AI startups, AI biotech — run their career boards overwhelmingly on Ashby and Greenhouse. That concentration is the opportunity: instead of scraping a hundred career pages or trusting an aggregator's snapshot, you can pull the whole AI hiring market live, from the companies' own boards, through their official public APIs. Our <a href="/actors/ai-startup-jobs-live.html">AI Startup Jobs — Live Pack</a> does exactly that: a curated pack of <strong>128 AI companies, verified live with 9,454 open jobs</strong> counted at build time, priced at $3.00 per 1,000 job results.</p>
-<p>The pack was assembled by probing 307 candidate board pairs against the five public ATS APIs and keeping only boards with live postings: Ashby contributes 84 boards and 5,681 jobs — the centre of gravity — Greenhouse 43 boards and 3,763 jobs, Workable a single board (Hugging Face, 10 jobs). No AI-startup boards with live postings were found on Lever or SmartRecruiters at build time; the cohort has consolidated onto two systems. The sector composition inside the pack is the tour a buyer actually wants: frontier labs (OpenAI, Anthropic, Cohere, Perplexity, World Labs), AI infrastructure (Modal, Baseten, Anyscale, Fireworks AI, CoreWeave, Crusoe), applied-AI startups (Harvey, Legora, Sierra, Decagon, ElevenLabs, Synthesia, Cursor, Cognition) and AI biotech (Isomorphic Labs, insitro, Owkin, Eikon). The pack is ordered by open-job count ascending, so a capped default run samples broadly across companies before reaching the mega-boards — OpenAI alone holds 876 open roles and would otherwise swallow the whole run.</p>
+<p><strong>TL;DR:</strong> Pull live open roles directly from 128 curated AI companies holding 9,454 openings across Ashby, Greenhouse, and Workable—priced at $0.003 per delivered job record. Daily runs produce real opening-and-closure diffs instead of stale job-index snapshots.</p>
 
-<h2>Live pull vs. index: why the freshness argument is sharpest here</h2>
-<p>Job data reaches buyers three ways — indexed databases, page scrapers, live ATS pulls — and the differences are sharpest exactly where hiring moves fastest, which is AI. An index is a snapshot: it shows postings that closed yesterday and misses the ones that opened this morning, because its crawler has not visited yet. A scraper reads career pages at run time but breaks every time a company redesigns its site. A live pull asks the ATS for a company's current openings and returns exactly what the company's own careers page is showing, because it is the same feed. When a role closes, it disappears from the feed — and from your results — immediately. The mechanics are explained in our <a href="/articles/live-job-data-from-ats-apis.html">guide to live job data from ATS APIs</a>; the AI case is where the argument has the highest stakes, because the market it describes is the one whose participants read every signal.</p>
-<p>The practical consequence is the diff. Run the same pack tomorrow and compare the two datasets: new records are openings, vanished records are closures, and both are real events rather than crawl artefacts. For an AI job board, the diff is the freshest content — "new roles this week" is generated, not written. For a competitor watchlist, it is the earliest signal of a rival's research investment. For a recruiting-tool vendor, it is the buying-signal feed: a hiring spike in a target account is a budget signal. And for a market researcher, the diff is the time series itself — hiring velocity by sector, remote-policy shifts, the rise and fall of role families — computed on data whose timestamps come from the employers' own systems. A closed role that disappears from the feed the day it closes is the cleanest possible proof of that freshness: the dataset never contains a job you cannot apply for.</p>
+<p>The AI industry's hiring is the most watched labour market in the world, and also the most misread, because almost every chart people quote comes from an aggregated index. When hiring moves this fast, an aggregator's crawl schedule hides what is actually happening inside frontier labs, infrastructure vendors, applied-AI startups, and AI biotech teams. Using the <a href="/actors/ai-startup-jobs-live.html">AI Startup Jobs — Live Pack</a>, you can bypass static snapshots and query the employers' own applicant tracking systems (ATS) directly through their official public APIs.</p>
 
-<h2>Curation is the product: the names that were dropped on purpose</h2>
-<p>A pack is judged by what it excludes as much as what it includes, and this pack's curation decisions are worth stating plainly because they are the difference between a list that looks big and a list that means something. Four famous names were dropped during curation: xAI's Greenhouse board turned out to be an annotation-staffing pool — 300 near-identical temporary "AI Tutor" contract roles under the entity name "SpaceXSI", not the company's core hiring; Anduril's 2,600 jobs were general defense-manufacturing hiring, not an AI startup, and would have swallowed the pack's identity (a fifth of all probed volume); Epirus was defense RF/hardware, not AI-first; and one Pylon board could not be verified as the support platform of the same name. A pack that keeps those four is 13,000 jobs of noise; the 128 boards that ship are the AI cohort, verified one by one against live postings, with identity checks performed against sample posting content. Our Ashby guide, <a href="/articles/ashby-jobs-live-data.html">live Ashby job data</a>, describes the same discipline on the Ashby-only cut — the slug-verification traps, the name collisions, the boards that look right and are not.</p>
-<p>The honest gaps belong in the same paragraph. Ashby's feed carries no company display name (the board slug is the identifier) and no description-text field is missing — description text is always included — but Workable records carry no description text at all, and Ashby records carry no language or experience-level field. We return what the source actually carries rather than guessing from the description. And the pack decays: companies switch ATS and slugs die, so it is re-verified at every version build, and boards that fail are reported in the run summary rather than silently dropped.</p>
+<h2>Why Daily Diffs Beat Static Job Indexes in AI</h2>
 
-<h2>Who buys this, and for what</h2>
-<p><strong>AI job boards and newsletters.</strong> A board for AI roles does not need the whole web; it needs complete, current coverage of the 128 companies that define AI hiring, and the diff between daily runs as its freshest content. Building that board on live data rather than an index is the whole product decision — we describe the pattern in <a href="/articles/build-niche-job-board-live-data.html">building a niche job board on live data</a>.</p>
-<p><strong>Talent intelligence and market mapping.</strong> Which AI companies are hiring, for which functions, and where — on a time series that shows hiring velocity by sector rather than a single snapshot.</p>
-<p><strong>Recruiting lead generation.</strong> AI companies hiring aggressively are AI companies buying tools; a hiring spike is a buying signal, filterable by department so the outreach lands in the function that is spending.</p>
-<p><strong>Research on the AI labour market.</strong> Live postings with full text support skills analysis, remote-policy tracking and the rise of role families (the applied-researcher role, the forward-deployed engineer, the AI-evaluations specialist) on evidence that can be cited because it was pulled from the employers' own boards.</p>
+<p>Job data reaches buyers three ways—indexed databases, page scrapers, and live ATS pulls—and the gap between them is widest wherever hiring shifts quickest. An indexed database is a snapshot: it still displays postings that closed yesterday while missing roles that went live this morning because its crawler has not returned yet. A page scraper fetches HTML at run time, only to break whenever a company redesigns its careers site. A live ATS pull queries the exact feed powering the company's own careers page. When an engineering or research team closes a role, it vanishes from the feed—and from your dataset—immediately. We walk through the underlying API mechanics in <a href="/articles/live-job-data-from-ats-apis.html">our guide to live job data from ATS APIs</a>; in AI, where market participants react to every hiring signal, stale listings carry real cost.</p>
 
-<h2>Reading the pack as a market signal</h2>
-<p>A hiring pack is also a market instrument, and the AI pack rewards being read that way. Three readings are worth a buyer's time. <strong>Role families</strong>: the pack's titles trace the industry's shape — applied research scientists and ML engineers at the labs, forward-deployed engineers at the applied companies, infrastructure and GPU roles at the platform layer, and the newer evaluations and safety roles that did not exist as a category two years ago. Tracking which families grow fastest, quarter by quarter, is a leading indicator of where the industry's money is going before it shows up in funding announcements. <strong>Geography</strong>: the structured location fields (city, region, country, workplace type) show whether the AI industry is concentrating in San Francisco or dispersing to remote-first hiring — a question every talent buyer answers from this data rather than from headlines. <strong>Velocity</strong>: the diff between daily runs measures hiring velocity by company and by sector. A lab that opens twenty roles in a week is scaling a team; a startup whose board shrinks for a month is either consolidating or struggling. None of these readings needs a single additional data source: they are all arithmetic on the same live feed, and all of them are only trustworthy because the feed is live. An index that lags by a week turns a hiring surge into history; a live pull turns it into news while it is still actionable.</p>
+<p>Because every pull reflects the employer's live board at run time, the practical unit of value is the diff between consecutive runs. Run the same pack tomorrow and compare the two outputs: newly appearing records are openings, vanished records are closures, and both represent genuine hiring events rather than crawl artefacts. A dataset built this way never hands you a job you cannot apply for, because closed postings drop out the day they close.</p>
 
-<h2>Cost: what watching the AI hiring market costs</h2>
-<p>At $0.003 per job record, the arithmetic is small and proportional: a daily run returning the pack's roughly 500 capped records costs about $1.50 a day in Actor charges, and a quiet day costs proportionally less, because you pay for records delivered, not for companies checked. There is no subscription, no monthly minimum, and the run summary goes to the key-value store, never into your dataset — you are never charged for a non-job record. Our general argument for this pricing shape is in <a href="/articles/pay-per-result-pricing-explained.html">pay-per-result pricing, explained</a>; AI job data is its cleanest case, because a closed job is a result with literally zero value, and a live pull never delivers one. And if your list spans beyond AI — or beyond these two systems — the multi-system parent <a href="/actors/career-site-jobs-live.html">Career Site Jobs — Live ATS API</a> covers all five platforms under the same engine, and the <a href="/actors/greenhouse-jobs-live-api.html">Greenhouse-only cut</a> covers the other half of the AI cohort on its own.</p>
+<p>That clean daily diff turns raw postings into three market readings without requiring any external data source:</p>
 
-<h2>FAQ</h2>
-<h3>How fresh is the data?</h3>
-<p>The Actor queries the official public ATS APIs at run time. Results reflect what each company's own careers page displays at that moment, because the careers page is served from the same system. There is no Apitory-side index between you and the source.</p>
-<h3>Which companies are in the pack?</h3>
-<p>128 AI companies verified live at build time, holding 9,454 open jobs: frontier labs, AI infrastructure, applied-AI startups and AI biotech. The full sector breakdown is in the Actor's README; the pack is re-verified at every version build.</p>
-<h3>Why are some famous names missing?</h3>
-<p>Four were dropped on purpose during curation: boards that turned out to be annotation-staffing pools or general mega-corporate hiring rather than the company's own AI roles. A pack that keeps them looks bigger and means less.</p>
-<h3>Can I add companies outside the pack?</h3>
-<p>Yes — pass any boards of your own in the <code>companies</code> input, on any of the five supported systems (Greenhouse, Ashby, Lever, SmartRecruiters, Workable). The pack is the default, not the limit.</p>
-<h3>What does it cost to run daily?</h3>
-<p>$3.00 per 1,000 job records delivered. A 500-job daily pull costs about $1.50 in Actor charges. Boards with no open roles cost nothing beyond the run's start event.</p>
-<h3>What if a company leaves its ATS?</h3>
-<p>Its board stops returning postings and the failure is reported in the run summary, not silently dropped. The pack is re-verified at every version build; the same pattern applies to your own lists — a previously active company flatlining to zero is the signature of a migration.</p>
+<ul>
+  <li><strong>Role-family shifts:</strong> Job titles map the industry's evolving structure—applied research scientists and ML engineers at frontier labs, forward-deployed engineers at applied-AI companies, GPU and infrastructure specialists at the platform layer, and newer evaluations and safety roles that did not exist as a category two years ago. Tracking which families expand fastest quarter by quarter provides a leading indicator of capital allocation before funding announcements appear.</li>
+  <li><strong>Geographic concentration:</strong> Structured location fields—city, region, country, and workplace type—show whether AI hiring is clustering in hubs like San Francisco or dispersing into remote-first teams, letting talent buyers answer the question from primary data rather than headlines.</li>
+  <li><strong>Hiring velocity:</strong> Comparing daily runs measures expansion and contraction by company and sector. A lab adding twenty roles in a week is scaling an initiative; a startup whose board shrinks for a month is consolidating or slowing down. Where a week-old index turns a hiring surge into history, a live pull surfaces it while it is still actionable.</li>
+</ul>
 
-<p><a class="btn" href="https://apify.com/apitory/ai-startup-jobs-live">Run AI Startup Jobs — Live Pack on Apify →</a></p>
+<h2>Where the Cohort Lives: Platform Share and Sample Output</h2>
+
+<p>Every technology wave concentrates on a handful of recruiting platforms, and AI companies are no exception. Rather than scraping a hundred disparate career pages, you can cover the core cohort through two dominant systems. When we assembled the default pack by probing 307 candidate board pairs across five public ATS APIs and retaining only boards with live openings, Ashby emerged as the centre of gravity with 84 boards and 5,681 jobs, followed by Greenhouse with 43 boards and 3,763 jobs. Workable contributes a single board (Hugging Face, 10 jobs), while neither Lever nor SmartRecruiters held live AI-startup boards at build time.</p>
+
+<p>Across those 128 verified companies and 9,454 open jobs counted at build time, the pack spans four core segments: frontier labs (including OpenAI, Anthropic, Cohere, Perplexity, and World Labs), AI infrastructure (Modal, Baseten, Anyscale, Fireworks AI, CoreWeave, and Crusoe), applied-AI startups (Harvey, Legora, Sierra, Decagon, ElevenLabs, Synthesia, Cursor, and Cognition), and AI biotech (Isomorphic Labs, insitro, Owkin, and Eikon). Boards are ordered by open-job count ascending so that a capped default run samples broadly across smaller teams before hitting mega-boards—OpenAI alone holds 876 open roles and would otherwise consume an entire capped pull on its own.</p>
+
+<p>Each record returns structured metadata directly from the source ATS feed. Below is a verified sample record captured from an on-Apify run against Descript's Greenhouse board:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Sample Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>ats</code></td>
+      <td><code>greenhouse</code></td>
+    </tr>
+    <tr>
+      <td><code>companyId</code></td>
+      <td><code>descript</code></td>
+    </tr>
+    <tr>
+      <td><code>company</code></td>
+      <td><code>Descript</code></td>
+    </tr>
+    <tr>
+      <td><code>jobTitle</code></td>
+      <td><code>Applied Research Scientist, AI Research</code></td>
+    </tr>
+    <tr>
+      <td><code>location</code></td>
+      <td><code>San Francisco, CA or Remote, US</code></td>
+    </tr>
+    <tr>
+      <td><code>department</code></td>
+      <td><code>AI Research</code></td>
+    </tr>
+    <tr>
+      <td><code>postedAt</code></td>
+      <td><code>2026-08-24T20:18:24-04:00</code></td>
+    </tr>
+    <tr>
+      <td><code>fetchedAt</code></td>
+      <td><code>2026-11-26T05:02:33.465Z</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Transparency about schema differences across platforms matters just as much as coverage. Ashby's API carries no company display name—making the board slug the identifier—and while description text is always included on Ashby, its records carry no language or experience-level field. Workable records, by contrast, carry no description text at all. We pass through only what each source actually provides rather than guessing missing attributes from job descriptions.</p>
+
+<h2>How We Built and Curated the Pack</h2>
+
+<p>A curated dataset is defined as much by what it rejects as by what it ships. Keeping every live board that happens to match a well-known brand name inflates headcount while destroying signal. When we probed 307 candidate boards for the AI pack, we dropped 4 that returned live jobs because keeping them would have made the pack dishonest. First, the Greenhouse board <code>xai</code> turned out to be xAI's annotation-staffing pool: 300 near-identical temporary "AI Tutor" contract roles listed under the entity name <code>SpaceXSI</code> rather than the company's core hiring. Second, the board <code>andurilindustries</code> held 2,600 jobs—a fifth of all probed volume—of general defense-manufacturing hiring; Anduril is not a startup and would have swallowed the pack's identity, so we dropped it too, alongside a defense RF/hardware board (<code>epirus</code>) and an ambiguous <code>pylon</code> board that could not be verified as the support platform of the same name. We also verified the zeroes honestly: 48 Lever and 9 SmartRecruiters candidates returned no live AI-startup postings, and we sanity-checked the Lever endpoint against the known-good <code>binance</code> board (HTTP 200, real postings) before trusting that the zeroes were real rather than a probe bug.</p>
+
+<p>Had we left those four exclusions in, the pack would carry 13,000 jobs of noise. Instead, the 128 boards that ship represent the verified AI cohort, checked individually against live postings with identity checks on sample job content. We document the same verification discipline—handling slug-verification traps, name collisions, and misleading boards—in our guide on <a href="/articles/ashby-jobs-live-data.html">live Ashby job data</a>.</p>
+
+<p>Curated lists also decay over time as startups switch ATS providers or retire slugs. To prevent silent drift, we re-verify the entire pack at every version build, and any board that fails during a run is reported explicitly in the run summary rather than dropped without notice. You are also not restricted to the default 128 companies: pass your own boards in the <code>companies</code> input across all five supported systems (Greenhouse, Ashby, Lever, SmartRecruiters, and Workable). When monitoring custom lists, a previously active company flatlining to zero in the run summary is the clearest signature of an ATS migration.</p>
+
+<h2>Four Production Workflows Powered by Live Postings</h2>
+
+<p>Buyers put the live AI cohort to work across four recurring use cases:</p>
+
+<ul>
+  <li><strong>AI job boards and newsletters:</strong> A niche board does not need the entire web; it needs reliable, up-to-the-minute coverage of the 128 companies shaping AI hiring, using the daily diff so sections like "new roles this week" are generated automatically rather than written by hand. See our blueprint for <a href="/articles/build-niche-job-board-live-data.html">building a niche job board on live data</a>.</li>
+  <li><strong>Talent intelligence and market mapping:</strong> Recruiting and strategy teams track which AI companies are hiring, across which departments and locations, on a clean time series that captures sector velocity instead of a one-off snapshot.</li>
+  <li><strong>Recruiting lead generation:</strong> Companies scaling headcount aggressively are actively buying tools and services. Filtering live hiring spikes by department directs outreach straight to the teams with active budgets.</li>
+  <li><strong>AI labour market research:</strong> Full-text live postings support structured skills analysis, remote-policy tracking, and longitudinal studies of emerging roles—such as applied researchers, forward-deployed engineers, and AI-evaluations specialists—grounded in citable records pulled straight from employers' own boards.</li>
+</ul>
+
+<h2>Pay-Per-Result Pricing and Daily Run Economics</h2>
+
+<p>Pricing is strictly event- and record-based, with no subscriptions and no monthly minimums:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Billing Event</th>
+      <th>Unit Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Actor Start</td>
+      <td>$0.00005 per run</td>
+    </tr>
+    <tr>
+      <td>Job Result</td>
+      <td>$0.003 per job record ($3.00 per 1,000 jobs)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>At $0.003 per job record ($3.00 per 1,000 jobs), the daily budget is predictable and proportional to output. A daily pull capped at roughly 500 records costs about $1.50 per day in Actor charges, while quieter hiring days cost proportionally less because you pay only for job records delivered—not for the number of boards checked. Any board with zero open postings incurs no job-record charge beyond the run's start event, and the run summary is written to the key-value store rather than your dataset so you are never billed for a non-job record. We lay out the full reasoning behind this model in <a href="/articles/pay-per-result-pricing-explained.html">pay-per-result pricing, explained</a>—live AI job feeds are its clearest fit, since a closed posting holds zero value and a live pull never delivers one.</p>
+
+<p>If your coverage needs extend outside the AI cohort or span all five supported ATS platforms under the same engine, switch to our multi-system <a href="/actors/career-site-jobs-live.html">Career Site Jobs — Live ATS API</a>. If you only need the Greenhouse segment of the market on its own, use the dedicated <a href="/actors/greenhouse-jobs-live-api.html">Greenhouse-only cut</a>.</p>
+
+<p><a href="https://apify.com/apitory/ai-startup-jobs-live">Run AI Startup Jobs — Live Pack on Apify →</a></p>
 <h2>Related Actors</h2><ul><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#14b8a6,#06b6d4)">AS</span><a href="/actors/ai-startup-jobs-live.html">AI Startup Jobs — Live Pack (128 AI Company Boards)</a> — $3.00 / 1,000 jobs</li><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#65a30d,#10b981)">AJ</span><a href="/actors/ashby-jobs-live-api.html">Ashby Jobs — Live API (140+ Company Boards)</a> — $3.00 / 1,000 jobs</li><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#f43f5e,#f59e0b)">CS</span><a href="/actors/career-site-jobs-live.html">Career Site Jobs — Live ATS API</a> — $3.00 / 1,000 jobs</li></ul></main><footer><img class="fmark" src="/logo-mark.svg" alt=""><div>Support: <a href="mailto:apitoryhq@gmail.com">apitoryhq@gmail.com</a><br>Apitory — Data APIs &amp; Apify Actors. Clean data, pay per use.<br><a href="https://apify.com/apitory">apify.com/apitory</a></div></footer></body></html>

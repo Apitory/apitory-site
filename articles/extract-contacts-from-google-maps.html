@@ -1,83 +1,162 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>How to Extract Contacts from Google Maps (and What Actually Works) — Apitory</title><meta name="description" content="Maps listings contain no email addresses — so where do lead emails come from? The real two-step process, yield by trade, and the failure modes nobody advertises."><link rel="icon" type="image/svg+xml" href="/logo-mark.svg"><link rel="stylesheet" href="/style.css?v=13"><link rel="canonical" href="https://apitory.com/articles/extract-contacts-from-google-maps.html"></head><body><div class="bgfx"></div><header><nav><a class="brand" href="/"><img class="mark" src="/logo-mark.svg" alt=""><img class="typo" src="/logo-typo.svg" alt="Apitory"></a><span><a href="/#actors">Actors</a> &nbsp;|&nbsp; <a href="/articles.html">Articles</a> &nbsp;|&nbsp; <a href="https://apify.com/apitory">Apify Store</a> &nbsp;|&nbsp; <a href="mailto:apitoryhq@gmail.com">Support</a></span></nav></header><main><p><a href="/articles.html">&larr; All articles</a></p><h1>How to Extract Contacts from Google Maps (and What Actually Works)</h1>
-<p class="tag">Google Maps listings do not contain email addresses — so where do "Maps leads with emails" come from? This article explains the real two-step process, the failure modes at each step, and how to judge any tool that sells you the result.</p>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>How to Extract Contacts from Google Maps (and What Actually Works) — Apitory</title><meta name="description" content="Maps listings contain no email addresses — so where do lead emails come from? The real two-step process, yield by trade, and the failure modes nobody advertises."><link rel="icon" type="image/svg+xml" href="/logo-mark.svg"><link rel="stylesheet" href="/style.css?v=13"><link rel="canonical" href="https://apitory.com/articles/extract-contacts-from-google-maps.html"></head><body><div class="bgfx"></div><header><nav><a class="brand" href="/"><img class="mark" src="/logo-mark.svg" alt=""><img class="typo" src="/logo-typo.svg" alt="Apitory"></a><span><a href="/#actors">Actors</a> &nbsp;|&nbsp; <a href="/articles.html">Articles</a> &nbsp;|&nbsp; <a href="https://apify.com/apitory">Apify Store</a> &nbsp;|&nbsp; <a href="mailto:apitoryhq@gmail.com">Support</a></span></nav></header><main><p><a href="/articles.html">&larr; All articles</a></p><article>
+<h1>Extracting Contacts from Google Maps: How the Pipeline Works and What to Expect</h1>
 
-<h2>The misconception to clear up first</h2>
-<p>Search for "extract contacts from Google Maps" and you will find tools promising names, phone numbers and emails "from Google Maps". Only part of that promise lives on Maps. A business listing shows the business name, category, address, phone number, website, rating, review count and opening hours. It has never shown an email address. When a tool delivers emails alongside Maps data, the emails were collected in a second step: the tool followed the listing's website link and extracted the contact details the business publishes on its own site.</p>
-<p>This is not a pedantic distinction. It determines what can go wrong, what the data costs, and what you may legitimately do with it. The listing data is Google's presentation of facts about a business. The email is the business's own publication, on its own website, placed there so customers can get in touch. Any honest vendor in this space should be able to explain which step produced which field — and if they cannot, assume the data came from a stored database of unknown age instead.</p>
+<p><strong>TL;DR:</strong> Google Maps listings never include emails; tools collect business records first and crawl each site second. Yield varies by trade, honest tools charge per found contact, and twenty rows audit any vendor.</p>
 
-<h2>Step one: extracting the listing data</h2>
-<p>The first step is a search. Google Maps answers natural-language queries — "dentist in Berlin", "plumber near Leeds", "HVAC contractor Austin" — with a scrollable panel of matching businesses. An extractor works through that panel and records, for every business, the structured fields the listing carries.</p>
-<p>Three practical realities shape this step:</p>
-<ul>
-<li><strong>Result caps.</strong> A single search returns a limited panel of results. For dense markets — "restaurant in London" — one query will not enumerate the whole market. The standard technique is to split the territory: search by neighbourhood, by sub-category ("Italian restaurant", "sushi restaurant"), or by adjacent phrasings, then merge and deduplicate. Any tool that claims a complete city-wide list from one query is overselling.</li>
-<li><strong>Duplicates are structural.</strong> The same business can appear under name variants, at a head-office pin and a branch pin, or in several overlapping searches. Deduplication on name plus address — or on coordinates — is not optional polish; it is the difference between a list and a pile.</li>
-<li><strong>The website field is the payload.</strong> For contact extraction, the single most important field in the listing is the website URL, because it is the bridge to step two. Records without a website can still yield a phone number, but they will never yield an email, and a good extractor should tell you the website coverage of a run before you pay for enrichment.</li>
-</ul>
-<p>Our own <a href="/actors/google-maps-contacts.html">Google Maps Contacts &amp; Leads</a> Actor charges $0.004 per place at this step — cheap, because the step is cheap — and reports the listing fields including the website, rating and status for every record.</p>
+<section>
+  <h2>Why Google Maps Listings Have No Emails—and Where Leads Actually Come From</h2>
+  <p>Search for "extract contacts from Google Maps" and you will encounter tools promising names, phone numbers, and email addresses straight "from Google Maps." Only part of that promise exists on Maps itself. A Google Maps business listing displays the business name, category, address, phone number, website, rating, review count, and opening hours. It has never displayed an email address.</p>
+  <p>Whenever a tool delivers emails alongside Maps records, those addresses were gathered in a second, separate step: the tool followed the listing's website link and extracted the contact details that the business chose to publish on its own site. Treating those two stages as one operation blurs a distinction that matters legally, financially, and operationally. The listing fields are Google's presentation of public business facts; the email address is the business's own publication on its own domain, placed there so customers can get in touch.</p>
+  <p>Any trustworthy vendor should be able to tell you exactly which stage produced each field in your spreadsheet. If a provider cannot explain how it moves from a Maps listing to a website email, assume the addresses came from a stored database of unknown age rather than live extraction.</p>
+  <p>To make that boundary concrete, every Actor page on this site includes a real sample output record for inspection—such as this verified output from our <a href="/actors/google-maps-contacts.html">Google Maps Contacts &amp; Leads Actor</a>:</p>
+  <table>
+    <thead>
+      <tr>
+        <th>name</th>
+        <th>category</th>
+        <th>rating</th>
+        <th>reviewsCount</th>
+        <th>contactFound</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Baldoria Madrid</td>
+        <td>Italian restaurant</td>
+        <td>4.8</td>
+        <td>28,976</td>
+        <td>true</td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Notice what the two steps contribute. Fields like the business name, category, rating, and review count come directly from the Maps listing, while the contact status reflects whether the follow-up crawl of the business's own website uncovered usable public contact details.</p>
+</section>
 
-<h2>Step two: from website to contact details</h2>
-<p>Given a business website, contact extraction is a small research task repeated at scale:</p>
-<ol>
-<li><strong>Fetch the homepage and the obvious contact pages.</strong> The high-yield targets are the homepage footer, the contact page, the imprint or legal page (in several European countries the imprint is legally required and almost always carries an email), and any "about" or "team" page.</li>
-<li><strong>Extract and classify what is found.</strong> Email addresses, additional phone numbers, and contact-form URLs. Classification matters: an info@ address is a business contact; a webmaster@ or a newsletter-vendor address is not a lead. A careful extractor prefers addresses published in a customer-facing context.</li>
-<li><strong>Unwrap the indirections.</strong> Real websites hide behind redirect chains and link shorteners, and the listing's website field itself sometimes contains a redirect rather than the final address. (We hit exactly this in our own Maps engine — listings intermittently returned a redirect wrapper instead of the real website — and fixed it by unwrapping redirects before the fetch. It is a small detail that silently kills email yield if you miss it.)</li>
-<li><strong>Record provenance.</strong> Every extracted email should carry the URL it was found on. Provenance is what lets you audit a list, defend it, and refresh it — and its absence is a reliable sign of a resold database.</li>
-</ol>
-<h3>Why the yield varies so much by trade</h3>
-<p>Not every business publishes an email, and the publishing habit is a property of the trade, not of the tool. In our own smoke tests: a five-term dental pack run against Berlin practices returned contact details for 93% of places and an email for 87% — dental practices run appointment businesses and publish contact channels as a matter of course. A six-trade home-services pack returned contacts for 87% of places but emails for only 40% — many sole traders publish a mobile number and a contact form, and no email at all. Neither result says the tool is good or bad; both say something true about how those trades prefer to be contacted. Judge any vendor's yield claims against the trade, and be suspicious of a single headline percentage applied to all markets.</p>
+<section>
+  <h2>The Economics of Two-Step Extraction: Pricing, Honesty, and Automation</h2>
+  <p>Because listing capture and website crawling have completely different infrastructure demands, pricing models reveal a great deal about how a vendor actually builds its pipeline. Step one—reading the structured panel Google Maps returns for a search—is inexpensive. Step two—fetching and parsing arbitrary small-business websites—requires real compute, and a large share of those website fetches turn up no publishable email address at all.</p>
+  <p>That cost asymmetry produces one dishonest pricing model and two honest ones:</p>
+  <ul>
+    <li><strong>The dishonest model:</strong> Charge a flat fee per row for "leads with emails" and quietly deliver rows without emails, or backfill missing addresses from a stale, resold database.</li>
+    <li><strong>Per-fetch pricing:</strong> Charge per listing and per website fetch attempt, shifting all yield risk onto the buyer even when a site has no email to give.</li>
+    <li><strong>Per-found-contact pricing:</strong> Charge a low base rate per place plus a lead premium only when the crawl actually finds a usable public contact on the business's website.</li>
+  </ul>
+  <p>Under per-found-contact pricing, the vendor absorbs the compute cost of crawling websites that publish only a contact form or nothing at all—which is the strongest signal that the vendor trusts its own extraction pipeline. We break down the broader rationale behind that structure in <a href="/articles/pay-per-result-pricing-explained.html">pay-per-result pricing, explained</a>. For our own Actor, the exact billing schedule works as follows:</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Pricing Item</th>
+        <th>Rate</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Actor Start</td>
+        <td>$0.00005 per run</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Place</td>
+        <td>$0.004 per place</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Lead</td>
+        <td>$0.10 per lead</td>
+        <td>Charged ONLY when the business's own website yields a public email/phone (<code>contactFound: true</code>)</td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Knowing those unit economics also makes the build-versus-buy decision straightforward. If you need a one-off list of fifty businesses, do the work manually: run your searches on Maps, open each website in a browser, and copy the details into a spreadsheet. You will finish in an afternoon and gain first-hand intuition for your market's real publishing habits.</p>
+  <p>The crossover point arrives with repetition and scale—weekly territory refreshes, multi-city campaigns, or thousands of rows—where manual lookups stop being an afternoon errand and turn into a full-time job. That is when an automated extractor that pulls live listings, deduplicates records, unwraps redirects, filters by contact-page context, and charges only for found contacts pays for itself. If you are planning that transition, start with our <a href="/articles/google-maps-lead-generation-guide.html">complete guide to Google Maps lead generation</a>, which covers list-building strategy from end to end alongside this technical deep dive.</p>
+  <p>For the two industries we see requested most often, we also package the same two-step engine and pay-per-contact pricing rule into pre-configured versions: <a href="/actors/google-maps-home-services-leads.html">home services leads</a> with a six-trade pack prefilled, and <a href="/actors/google-maps-dentist-leads.html">dentist leads</a> with a five-term dental pack.</p>
+</section>
 
-<h2>The failure modes nobody advertises</h2>
-<p><strong>Contact forms instead of addresses.</strong> A growing share of small-business sites offer only a form. There is no email to extract, and any tool that "finds" one for such a business invented it or bought it from somewhere you do not want to know about. The correct output is an empty email field and a contact-page URL.</p>
-<p><strong>Stale websites.</strong> The listing may point at a domain that has lapsed, been parked, or been replaced by a directory page. Extractors should detect parked domains and report the record as no-contact rather than harvesting the parking page's addresses.</p>
-<p><strong>Chain and franchise structures.</strong> A listing for a franchised location often links to the national chain's site, whose published email belongs to head office, not the branch. Whether that is a defect depends on who you sell to — but the record should make the structure visible rather than presenting a head-office inbox as a branch contact.</p>
-<p><strong>Role accounts and third parties.</strong> Sites publish addresses for their web designer, their booking platform and their newsletter provider. Indiscriminate extraction fills your list with people who have never heard of the business you are trying to reach. Context filtering — preferring addresses on contact and imprint pages over addresses buried in blog comments or policy text — is where careful tools earn their price.</p>
+<section>
+  <h2>Inside the Pipeline: Step One (Listing Capture) and Step Two (Website Crawling)</h2>
+  <p>To evaluate any extraction tool on engineering merit rather than marketing copy, trace what happens from the initial search query to the final contact row. Cheap implementations lose huge amounts of yield in unglamorous places that never appear in a sales pitch.</p>
 
-<h2>How pricing should work for this — and how to spot the bad version</h2>
-<p>Step one is cheap and step two is not: fetching and parsing arbitrary websites costs real compute, and a large share of fetches find nothing publishable. That cost shape creates two honest pricing models and one dishonest one.</p>
-<p>The dishonest model charges per row for "leads with emails" and quietly delivers rows without emails, or pads the list from a stored database. The honest models are: charge per place plus a premium only when a contact is actually found (our model: $0.004 per place, $0.10 only when the record carries a usable public contact), or charge per fetch attempt with the yield risk on you. Between the honest two, per-contact pricing is the one where the vendor eats the cost of the no-email majority — which is also the strongest signal that the vendor trusts its own extraction. We wrote up the general argument in <a href="/articles/pay-per-result-pricing-explained.html">pay-per-result pricing, explained</a>.</p>
+  <h3>Capturing and Cleaning the Maps Listing</h3>
+  <p>Google Maps responds to natural-language queries—such as "dentist in Berlin," "plumber near Leeds," or "HVAC contractor Austin"—with a scrollable panel of matching businesses. Recording the structured fields from that panel sounds simple, yet three practical realities govern what you actually get back:</p>
+  <ul>
+    <li><strong>Result caps:</strong> Any single query returns a bounded panel of results. In dense markets like "restaurant in London," one search will never enumerate the entire city. Reliable coverage requires splitting the territory—searching by neighbourhood, by sub-category ("Italian restaurant," "sushi restaurant"), or by adjacent phrasings—and then merging the outputs. Any tool promising a complete city-wide list from a single query is overselling.</li>
+    <li><strong>Structural duplicates:</strong> The same business routinely surfaces under minor name variations, at both a head-office pin and a branch pin, or across overlapping searches. Deduplicating on name plus address, or on coordinates, is not optional polish; it is the difference between a usable list and an unusable pile.</li>
+    <li><strong>The website URL as the bridge:</strong> For contact extraction, the website field is the single most consequential item on the listing because it bridges step one and step two. Records lacking a website can still carry a phone number from Maps, but they can never produce a website email. A transparent extractor reports website coverage before you spend money on enrichment.</li>
+  </ul>
 
-<h2>Doing it yourself vs. using an Actor</h2>
-<p>For a one-off list of fifty businesses, do it manually: search Maps, open the sites, copy the details into a spreadsheet. You will finish in an afternoon and learn your market's real yield in the process. The crossover comes with repetition and scale — weekly territory refreshes, multi-city campaigns, thousands of rows — where manual work stops being an afternoon and starts being a job. That is the point at which an extractor that pulls live, deduplicates, unwraps redirects, filters by contact-page context and charges only for found contacts pays for itself. If you are evaluating that step, start with the <a href="/articles/google-maps-lead-generation-guide.html">complete guide to Google Maps lead generation</a>, which covers list-building strategy end to end; this article is its technical companion.</p>
-<p>Two specialised versions of the same engine cover the trades we see most: <a href="/actors/google-maps-home-services-leads.html">home services leads</a> with a six-trade pack prefilled, and <a href="/actors/google-maps-dentist-leads.html">dentist leads</a> with a five-term dental pack. Both inherit the same two-step process and the same pricing rule.</p>
+  <h3>From Raw URL to Audited Contact Details</h3>
+  <p>Once a listing carries a website URL, turning that link into verified public contact data requires a disciplined sequence of technical decisions:</p>
+  <p><strong>1. Domain normalisation and redirect unwrapping.</strong> Raw website fields in Maps listings are messy in the wild: <code>www</code> and non-<code>www</code> variants, deep paths pointing to a specific landing page, mixed <code>http</code> and <code>https</code> schemes, and occasional social-media profiles instead of standalone domains. A sound pipeline canonicalises to the site root, follows redirect chains and link shorteners to their final destination, and unwraps redirect wrappers before fetching. Skipping that step causes failures before extraction even starts.</p>
+  <p>We learned first-hand how easy it is for a small URL wrapper to silently wreck an entire run. During a family build's smoke test, we encountered an intermittent Google Maps panel variant that returned each place's website as a Google redirect URL (<code>/url?q=...</code>) instead of the resolved direct URL. Because our contact phase could not fetch that wrapped shape, the run silently returned place records only—0 contacts, 0 emails—while still incurring full proxy cost. We fixed the issue in the shared engine by adding an unwrap step that decodes the redirect target (for <code>http</code> and <code>https</code> only) and passes all other URLs through unchanged; a local unit check of the shipped function passed 10/10 cases. On this Actor the fix shipped as version 0.5, and the re-smoke on a Madrid pizzeria query (cap 6) returned 6 places, 5 with websites, 0 redirect URLs, 4 contacts found, and 3 with an email, at a measured platform cost of $0.1204.</p>
+  <p><strong>2. Adaptive fetch strategy.</strong> Most small-business sites serve static HTML and fetch cleanly. Others render their contact blocks with JavaScript or sit behind bot checks that trip naive datacenter requests. The pipeline must inspect each response to decide whether a plain fetch succeeded—checking for a footer, a contact link, and recognisable page structure—or whether it received an empty shell. Treating a rendered shell as "no contact found" is the largest silent yield leak in the industry, visible only when a human opens the site and sees the email sitting right on the screen.</p>
+  <p><strong>3. Language-aware page discovery.</strong> High-yield contact pages carry different names across markets: Contact, Kontakt, Impressum, Contacto, Contatti, Mentions légales. A crawler engineered solely around English URL slugs systematically misses addresses in other regions because it never requests the page where the email actually lives.</p>
+  <p><strong>4. Context filtering and classification.</strong> Fetching the homepage footer, contact page, imprint or legal page, and "about" or "team" pages will turn up email addresses, extra phone numbers, and contact-form URLs. The pipeline must then classify what it sees: an <code>info@</code> inbox belongs to the business, whereas a <code>webmaster@</code> address or a newsletter-vendor contact does not. Mature pipelines weigh where on the page an address appeared rather than grabbing every string containing an <code>@</code> sign.</p>
+  <p><strong>5. Provenance and politeness.</strong> Every extracted email should carry the exact source URL where it was published so you can audit, defend, and refresh the list—missing provenance is a classic hallmark of a resold database. At the same time, a small business's website is its shopfront, not a bulk API. Serious pipelines fetch only a handful of pages per domain, cache shared pages within a run so a multi-branch chain is not crawled repeatedly, and avoid hammering small servers with parallel connections that trigger IP blocks and hurt yield.</p>
+  <p>None of those internal choices show up as columns in your final CSV, yet they explain why two tools running the exact same Google Maps search can deliver email coverage ten points apart.</p>
+</section>
 
-<h2>Anatomy of a contact hunt: where addresses actually hide</h2>
-<p>To judge extraction quality, it helps to know where a small business's email address physically lives on its website. In rough order of yield:</p>
-<ul>
-<li><strong>The imprint or legal page.</strong> In Germany and several other European jurisdictions, businesses are legally required to publish an imprint with contact details. For those markets this page is close to a guaranteed find, and it is a large part of why the Berlin dental smoke test returned emails for 87% of practices. A serious extractor checks the imprint early; a lazy one never finds it, because the link is usually a single quiet word in the footer.</li>
-<li><strong>The contact page.</strong> The obvious target, and genuinely productive — but read it properly. Many contact pages lead with a form and place the email below it, or on a "for emergencies" line, or inside the directions paragraph. Extraction that stops at "this page has a form" misses the address sitting under the form.</li>
-<li><strong>The homepage footer.</strong> Especially on older small-business sites, the footer carries the full contact block: address, phone, email. Footers are also where the web designer's own email sometimes sits — context filtering is what keeps the designer out of your list.</li>
-<li><strong>mailto: links.</strong> An address used as a link target exists in the page markup even when the visible text says only "Email us". Extractors that read rendered text alone miss these; extractors that read the markup catch them. The reverse failure also exists: addresses that appear in markup as spam-trap decoys or in commented-out code from a previous design. Mature pipelines weigh where in the page an address was found, not merely that it was found.</li>
-<li><strong>Obfuscated addresses.</strong> Some sites write "info [at] example.com" or render the address as an image to deter harvesters. Whether to de-obfuscate is a policy question, not a technical one: the business published the address for human customers while signalling it does not want bulk collection. Our position is that the honest output respects the signal — record the contact page, leave the email field empty. A vendor that boasts about defeating obfuscation is telling you something about how it will treat your instructions too.</li>
-</ul>
+<section>
+  <h2>Where Business Emails Hide—and Why Honest Tools Leave Fields Empty</h2>
+  <p>Evaluating extraction quality gets much easier once you know where small businesses physically place their email addresses—and why an honest tool will sometimes return an empty email column even when a business has an active website.</p>
 
-<h2>The one thing you must never do: guess addresses</h2>
-<p>There is a technique this article has deliberately not described as an option: constructing addresses from patterns — first name, last name, common formats — for people at a business. Pattern-guessed addresses are not extracted data; they are fabrications with a plausible shape. They bounce, they hit the wrong people, they burn sender reputation, and when they do reach someone, the recipient knows instantly that they were never a published contact. Any vendor whose email yield for a phone-first trade looks impossibly high is either guessing, reselling a database, or both. The yield numbers in this article — 87% for Berlin dentists, 40% for home services — are what honest extraction looks like: high where businesses publish, modest where they do not. If a competitor quotes you a flat 95% across all trades, you now know which questions to ask.</p>
+  <h3>High-Yield Locations on Small-Business Sites</h3>
+  <ul>
+    <li><strong>The imprint or legal page:</strong> In Germany and several other European jurisdictions, businesses are legally required to publish an imprint containing contact details. In those markets, the imprint is close to a guaranteed find, even though the link is often a single quiet word tucked into the footer that lazy crawlers overlook.</li>
+    <li><strong>The contact page:</strong> Obviously productive, provided the parser reads the whole page. Many businesses put a contact form at the top and place the email address underneath it, on an "for emergencies" line, or inside a directions paragraph. Stopping as soon as a form tag is detected misses all of those addresses.</li>
+    <li><strong>The homepage footer:</strong> Particularly on older websites, the footer holds the full contact block—street address, phone, and email. Because web designers sometimes leave their own studio email in the same footer, context filtering is essential to keep third parties out of your lead list.</li>
+    <li><strong><code>mailto:</code> markup:</strong> Many sites display anchor text such as "Email us" while hiding the actual address inside the <code>mailto:</code> attribute. Tools that parse only visible rendered text miss these completely, though markup parsers also have to guard against spam-trap decoys and commented-out code left behind from old themes.</li>
+  </ul>
 
-<h2>A five-minute audit for any vendor's sample</h2>
-<p>Before buying contact data from anyone, including us, run this audit on a sample of twenty records. Take five records that carry emails and visit the businesses' websites yourself: can you find each address, on a public page, within a minute? Take five records with no email and check the sites: is the absence real — form-only, parked, obfuscated — or did the extractor simply not look at the imprint page? Check two records against the live Maps listing: do name, address and phone match what Google shows today? Finally, check the sample for pattern-guessed addresses by picking any email with a personal name in it and looking for that person on the business's site. Twenty records and fifteen minutes will tell you more about a vendor's pipeline than any sales page — ours included, which is why every Actor page on this site carries a real sample record for exactly this purpose.</p>
+  <h3>Failure Modes and Deliberate Boundaries</h3>
+  <p>When a website exists yet no email appears in your export, one of several structural realities is usually responsible:</p>
+  <ul>
+    <li><strong>Form-only websites:</strong> A growing share of small businesses deliberately omit an email address and offer only a web form. There is no email to extract; any vendor returning one either invented it or pulled it from an external database. The correct, honest output is an empty email field paired with the contact-page URL.</li>
+    <li><strong>Lapsed, parked, or directory domains:</strong> Listings sometimes point to expired domains, parking pages, or third-party directory profiles. An extractor should recognise parked pages and mark no contact found rather than harvesting the parking provider's email.</li>
+    <li><strong>Chain and franchise hierarchies:</strong> Individual franchise pins frequently link to a national corporate website whose published inbox routes to head office rather than the local branch. Whether that matters depends on who you sell to, but clean output makes the site structure transparent instead of disguising a corporate address as a local branch contact.</li>
+    <li><strong>Third-party and role accounts:</strong> Without context rules preferring contact and imprint pages over policy text or blog comments, extractors pollute lists with addresses belonging to booking platforms, newsletter tools, and web agencies.</li>
+  </ul>
+  <p>Two additional boundaries separate legitimate extraction from spam engineering. First, some websites obfuscate addresses as "info [at] example.com" or embed them inside images specifically to deter automated harvesting. Whether to defeat that obfuscation is a policy decision, not a technical obstacle: the business signalled that it wants human visitors rather than bulk scrapers, and our position is to respect that boundary by recording the contact page and leaving the email field blank. A vendor that brags about bypassing obfuscation shows you how lightly it treats stated boundaries.</p>
+  <p>Second, you should never accept pattern-guessed addresses—emails constructed by combining a person's first and last name with common company formats. Guessed addresses are fabrications with a plausible shape. They bounce, land in the wrong inbox, damage your sender reputation, and immediately signal to recipients that their address was never collected from a public source.</p>
+</section>
 
-<h2>Inside the pipeline: how extraction actually processes a website</h2>
-<p>For buyers who want to judge a vendor's engineering rather than its copywriting, here is the sequence a serious contact-extraction pipeline runs for each place record — and the decision points where cheap implementations quietly lose yield.</p>
-<p><strong>Domain normalisation comes first.</strong> The listing's website field is messy in the wild: www and non-www variants, trailing paths pointing at a specific landing page, http beside https, occasionally a social-media profile instead of a site. The pipeline canonicalises to the site's root, resolves redirects to the final destination, and unwraps redirect wrappers (including the ones the listing itself sometimes carries — the bug we fixed in our own engine, where a wrapped URL silently zeroed a record's email yield). A pipeline that fetches the raw field as-is will fail on a meaningful share of records before extraction even begins.</p>
-<p><strong>Fetch strategy is a yield decision.</strong> Most small-business sites are static and fetch cleanly. Some render their contact details with JavaScript; some sit behind bot checks that a datacenter fetch trips over. A pipeline has to decide, per site, whether the plain fetch sufficed — the page contains a footer, a contact link, recognisable structure — or whether the page it received is a shell. Treating a shell as "no contact found" is the single largest silent yield leak in this industry, and it never appears in any vendor's marketing; it appears only in the audit described above, as records whose "missing" emails are visible on the site to any human who visits.</p>
-<p><strong>Localisation decides which pages exist.</strong> The high-value pages have different names in different markets: Contact, Kontakt, Impressum, Contacto, Contatti, Mentions légales. A pipeline built for one language's web will systematically underperform in every other market, because it never visits the page where the address lives. This is a second, quieter reason our Berlin dental yield (87%) is worth trusting as a pipeline signal: reaching it required the German pages to be first-class citizens of the crawl, not afterthoughts.</p>
-<p><strong>Politeness is also engineering.</strong> A business's website is its shopfront, not a bulk-data endpoint. Sensible pipelines fetch a handful of pages per site, cache within the run so a chain's shared pages are fetched once rather than per branch, and never hammer a small site with parallel requests. This is not only ethics; a pipeline that gets IP-blocked by half the small-business web has a yield problem of its own making. When you evaluate vendors, "how many pages do you fetch per business, and how do you treat a site that says no" is a technical question with technical answers — ask it.</p>
-<p>None of this is visible in the output dataset, which is precisely why the audit matters: the dataset shows you the yield, and the yield is the sum of these decisions. Two vendors can run the same listings through the same nominal process and deliver email coverage ten points apart, and the difference is entirely in the unglamorous steps above.</p>
+<section>
+  <h2>Trade-by-Trade Yield Benchmarks and the Twenty-Record Vendor Audit</h2>
+  <p>The single most important benchmark rule in Maps lead generation is that email coverage is a property of the trade, not a badge of tool superiority. In our own smoke tests, a five-term dental pack run against Berlin practices returned contact details for 93% of places and an email address for 87%. Appointment-driven healthcare clinics publish email channels routinely—and in Germany, making local-language pages like <code>Impressum</code> and <code>Kontakt</code> first-class crawl targets is a major reason that 87% figure holds up. You can explore that workflow further in our guide to <a href="/articles/dental-practice-leads.html">dental practice leads</a>.</p>
+  <p>By contrast, a six-trade home-services pack returned contact details for 87% of places but emails for only 40%. Many sole traders—such as plumbers or HVAC contractors—work from a mobile number and a web contact form without publishing an email inbox at all; see <a href="/articles/home-services-leads-for-agencies.html">home services leads for agencies</a> for how agencies handle those phone-heavy markets. Neither smoke test makes the pipeline better or worse—together, they show what honest extraction looks like: high where businesses publish, modest where they do not. Whenever a competitor promises a flat 95% email rate across every industry, you are almost certainly looking at pattern-guessing, a recycled database, or both.</p>
+  <p>Before committing budget to any vendor—our own Actors included—run a fifteen-minute audit on a sample of twenty records:</p>
+  <ol>
+    <li>Pick five records that include emails and open each business's website yourself. Can you verify every address on a public page within a minute?</li>
+    <li>Pick five records that have a website but no email and visit those sites. Is the gap genuine—form-only, parked, or obfuscated—or did the extractor simply miss the imprint or footer?</li>
+    <li>Check two records directly against the live Google Maps listing to confirm that the business name, address, and phone number match what Google currently displays.</li>
+    <li>Inspect any email containing a personal name and verify on the business's site that the person and address are actually published there rather than guessed from a name pattern.</li>
+  </ol>
+  <p>Twenty records and fifteen minutes will tell you more about a vendor's real engineering than any marketing page.</p>
+</section>
 
-<h2>FAQ</h2>
-<h3>Can I get email addresses directly from Google Maps?</h3>
-<p>No. Maps listings do not contain email addresses. Emails attached to Maps lead lists come from the businesses' own websites, reached via the listing's website field. Any source that says otherwise is misdescribing its process.</p>
-<h3>What share of businesses will have an email?</h3>
-<p>It depends on the trade and the market, not on the tool. In our smoke tests, Berlin dental practices yielded emails for 87% of places, while a home-services pack yielded 40%. Expect phone coverage to be much higher than email coverage almost everywhere.</p>
-<h3>Are extracted emails verified?</h3>
-<p>Extraction establishes that an address was published on the business's site at run time; it does not guarantee the mailbox is monitored or that a given message will be accepted. Run your own validation pass before a large send, and always honour opt-outs immediately.</p>
-<h3>Why do some records have a website but no email?</h3>
-<p>Because the business publishes only a contact form, or publishes its email as an image, or the site is parked or unreachable. The honest output for such a record is the contact-page URL and an empty email field.</p>
-<h3>Is this the business's private data?</h3>
-<p>No — the process described here collects only details the business itself publishes for customers: listing facts and contact details on its public website. It does not touch private individuals' data, and we recommend using any resulting list under the anti-spam and privacy law of the jurisdiction you send into.</p>
-<h3>Can I extract contacts for several trades at once?</h3>
-<p>Run one search per trade and location, then merge and deduplicate on name plus address. Pre-configured packs for <a href="/articles/home-services-leads-for-agencies.html">home services</a> and <a href="/articles/dental-practice-leads.html">dental practices</a> exist because those two trades are requested most.</p>
+<section>
+  <h2>Questions Buyers Ask Most Often</h2>
 
-<p><a class="btn" href="https://apify.com/apitory/google-maps-contacts">Run Google Maps Contacts &amp; Leads on Apify →</a></p>
+  <h3>Does Google Maps itself store business email addresses?</h3>
+  <p>No. Google Maps listings do not contain email fields. Any email address attached to a Maps lead list was collected by visiting the business's own website via the listing's website URL, and any provider claiming otherwise is misrepresenting how its data was sourced.</p>
+
+  <h3>What email coverage should I expect across different trades?</h3>
+  <p>Coverage depends heavily on the industry and local publishing norms rather than the extractor alone. In our smoke tests, Berlin dental practices yielded emails for 87% of places, whereas a six-trade home-services pack yielded emails for 40%. In almost every market, phone coverage will exceed email coverage.</p>
+
+  <h3>Does extraction guarantee that an email address is deliverable?</h3>
+  <p>No. Extraction confirms that the business published the address on its public website at the time of the crawl; it does not verify that the mailbox is actively monitored or that a given message will be accepted. Run your own validation step before launching a large outreach send and honour opt-outs immediately.</p>
+
+  <h3>Why do some records include a website URL but return an empty email field?</h3>
+  <p>Usually because the business provides only a web contact form, displays its address as an image or obfuscated text, or points to a parked or unreachable domain. When no public email is present, an honest pipeline records the contact-page URL and leaves the email field empty.</p>
+
+  <h3>Does this process collect private personal data?</h3>
+  <p>No. The two-step workflow described here gathers only public business facts shown on Maps listings and customer-facing contact details published by the business on its own website. Always use extracted lists in compliance with the anti-spam and privacy regulations that apply in the jurisdiction you are contacting.</p>
+
+  <h3>How should I extract contacts across multiple trades or cities?</h3>
+  <p>Run separate searches per trade and location, then merge the outputs and deduplicate on business name plus address or coordinates. Because home services and dental practices are requested most often, we maintain pre-configured packs tailored specifically to those two verticals.</p>
+
+  <p><a href="https://apify.com/apitory/google-maps-contacts">Run Google Maps Contacts &amp; Leads on Apify →</a></p>
+</section>
+</article>
 <h2>Related Actors</h2><ul><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#8b5cf6,#6366f1)">GM</span><a href="/actors/google-maps-contacts.html">Google Maps Contacts & Leads</a> — $0.004 / place · $0.10 only when a public contact is found</li><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#ec4899,#f97316)">GM</span><a href="/actors/google-maps-dentist-leads.html">Google Maps Dentist Leads</a> — $0.004 / place · $0.10 only when a public contact is found</li><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#6366f1,#a855f7)">GM</span><a href="/actors/google-maps-home-services-leads.html">Google Maps Home Services Leads</a> — $0.004 / place · $0.10 only when a public contact is found</li></ul></main><footer><img class="fmark" src="/logo-mark.svg" alt=""><div>Support: <a href="mailto:apitoryhq@gmail.com">apitoryhq@gmail.com</a><br>Apitory — Data APIs &amp; Apify Actors. Clean data, pay per use.<br><a href="https://apify.com/apitory">apify.com/apitory</a></div></footer></body></html>

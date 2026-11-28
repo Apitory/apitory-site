@@ -1,99 +1,220 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Google Maps Lead Generation: The Complete Guide — Apitory</title><meta name="description" content="How to build lead lists from Google Maps: the two-step places-plus-contacts model, real costs, quality rules, and when Maps is the wrong source."><link rel="icon" type="image/svg+xml" href="/logo-mark.svg"><link rel="stylesheet" href="/style.css?v=13"><link rel="canonical" href="https://apitory.com/articles/google-maps-lead-generation-guide.html"></head><body><div class="bgfx"></div><header><nav><a class="brand" href="/"><img class="mark" src="/logo-mark.svg" alt=""><img class="typo" src="/logo-typo.svg" alt="Apitory"></a><span><a href="/#actors">Actors</a> &nbsp;|&nbsp; <a href="/articles.html">Articles</a> &nbsp;|&nbsp; <a href="https://apify.com/apitory">Apify Store</a> &nbsp;|&nbsp; <a href="mailto:apitoryhq@gmail.com">Support</a></span></nav></header><main><p><a href="/articles.html">&larr; All articles</a></p><h1>Google Maps Lead Generation: The Complete Guide</h1>
-<p class="tag">How to turn Google Maps into a structured, repeatable source of local business leads — what data you can actually get, how the extraction works, what it costs, and how to use the results without wasting money on dead records.</p>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Google Maps Lead Generation: The Complete Guide — Apitory</title><meta name="description" content="How to build lead lists from Google Maps: the two-step places-plus-contacts model, real costs, quality rules, and when Maps is the wrong source."><link rel="icon" type="image/svg+xml" href="/logo-mark.svg"><link rel="stylesheet" href="/style.css?v=13"><link rel="canonical" href="https://apitory.com/articles/google-maps-lead-generation-guide.html"></head><body><div class="bgfx"></div><header><nav><a class="brand" href="/"><img class="mark" src="/logo-mark.svg" alt=""><img class="typo" src="/logo-typo.svg" alt="Apitory"></a><span><a href="/#actors">Actors</a> &nbsp;|&nbsp; <a href="/articles.html">Articles</a> &nbsp;|&nbsp; <a href="https://apify.com/apitory">Apify Store</a> &nbsp;|&nbsp; <a href="mailto:apitoryhq@gmail.com">Support</a></span></nav></header><main><p><a href="/articles.html">&larr; All articles</a></p><article>
+  <h1>Turning Google Maps Into a Live Local Lead Pipeline</h1>
 
-<h2>Why Google Maps is a lead source at all</h2>
-<p>Almost every local business on earth maintains a presence on Google Maps, whether it manages that presence actively or not. A listing carries the business name, its category, its address, its phone number, its opening hours, its rating and review count, and — most valuable for outreach — a link to its website. No other single directory covers as many plumbers, dentists, restaurants, salons, clinics, workshops and retailers in one consistent shape.</p>
-<p>That consistency is what makes Maps useful for lead generation. A chamber-of-commerce directory gives you one format per town. A trade association gives you members only. Google Maps gives you the same fields for a roofer in Dallas and a roofer in Dortmund, which means a single extraction process can build a list for any trade in any city, on demand, instead of buying a static list that started going stale the day it was compiled.</p>
-<p>The catch is that Maps is built for humans looking at a screen, not for pipelines. The data is there, but it is paginated, rate-limited and presented a screenful at a time. Lead generation from Maps is therefore an extraction problem: how to pull the listings for a search — a trade plus a place — into a spreadsheet or dataset, then enrich the rows that matter with contact details from the businesses' own public websites.</p>
+  <section aria-label="TL;DR">
+    <p><strong>TL;DR:</strong> Google Maps offers structured local business listings but no emails. Extract cheap place records first, filter out closed or off-target rows, and pay the lead fee only when website enrichment finds a public contact.</p>
+  </section>
 
-<h2>What data a Maps listing actually contains</h2>
-<p>A typical extracted place record includes:</p>
-<ul>
-<li><strong>Business name and category</strong> — the primary category the business lists itself under, such as "Dental clinic" or "HVAC contractor".</li>
-<li><strong>Address and coordinates</strong> — the full postal address plus latitude and longitude, which makes territory mapping and duplicate detection straightforward.</li>
-<li><strong>Phone number</strong> — the number shown on the listing, usually the business's main line.</li>
-<li><strong>Website</strong> — the business's own site, which is the bridge to contact enrichment: contact pages and footers are where public email addresses live.</li>
-<li><strong>Rating and review count</strong> — a fast quality and activity signal. A business with hundreds of recent reviews is trading; a business with none may be dormant.</li>
-<li><strong>Opening hours and status</strong> — including permanently-closed flags, which you want in the data precisely so you can filter those businesses out.</li>
-</ul>
-<p>What a listing does <em>not</em> contain is an email address. Anyone who promises emails "from Google Maps" is actually doing the second step — visiting the business's website and extracting the publicly published contact details. That distinction matters for both accuracy and legality: the email comes from the business's own site, where the business itself published it for customers to use.</p>
+  <p>Building a repeatable source of local business leads from Google Maps comes down to understanding what the map actually holds, how extraction and enrichment work together, what the run costs, and how to turn raw listings into outreach-ready records without paying for dead data.</p>
 
-<h2>The two-step model: places first, contacts second</h2>
-<p>Serious Maps lead generation always separates two jobs that are often confused:</p>
-<ol>
-<li><strong>Place extraction.</strong> Run a search (trade + location), collect every matching listing, and store the structured fields. This is cheap and fast, and it defines your market: how many businesses of this type exist in this area.</li>
-<li><strong>Contact enrichment.</strong> For each place with a website, visit the site and extract the public contact details — email addresses, additional phone numbers, contact-page links. This is the expensive step, because it involves fetching and parsing arbitrary websites, so it should be charged and run only against places that pass your filters.</li>
-</ol>
-<p>Separating the steps is what keeps the economics sane. If you enrich every raw listing, you pay to fetch websites for closed businesses, duplicates and businesses outside your real target profile. If you filter the place list first — by rating, review count, status, category — you only pay enrichment prices for rows you would actually contact.</p>
-<p>This is also how our own <a href="/actors/google-maps-contacts.html">Google Maps Contacts &amp; Leads</a> Actor is priced: $0.004 per place extracted, and a $0.10 lead charge <em>only</em> when the record actually carries a usable public contact. A place that yields no contact costs you the place price and nothing more. We think that is the only fair way to price enrichment, and it is the model this guide assumes throughout.</p>
+  <h2>Two Stages: Market Mapping Before Website Enrichment</h2>
 
-<h2>Step by step: building a lead list from Maps</h2>
-<h3>1. Define the search the way a customer would</h3>
-<p>Maps searches are natural-language queries: "emergency plumber in Leeds", "dentist in Berlin", "roofing contractor near Austin". The results differ by phrasing, so pick the phrasing your target businesses optimise for — usually the plain trade name plus the city. If you need wider coverage, run several adjacent phrasings and deduplicate on name plus address afterwards; overlapping searches are the standard way to beat the per-search result cap.</p>
-<h3>2. Extract the places</h3>
-<p>Run the extraction and collect the full place records. Expect the raw list to contain duplicates (the same business under slightly different names), a few mis-categorised businesses, and some closed ones. That is normal; the next step exists for exactly this reason.</p>
-<h3>3. Filter before you enrich</h3>
-<p>Apply your buying criteria to the place data first: drop permanently closed businesses, drop duplicates, drop ratings or review counts below your threshold if you sell to established businesses — or keep the low-review ones if you sell to new businesses, in which case a low review count <em>is</em> your targeting signal. The point is that the filter decision is yours and it is free; enrichment is the part that costs money.</p>
-<h3>4. Enrich the survivors</h3>
-<p>Run contact extraction against the filtered list. The output adds the fields outreach actually needs: public email addresses found on the business's site, the contact page URL, and any additional numbers. Not every business publishes an email — in our own smoke tests the share varies a lot by trade, which is exactly why per-lead pricing (the $0.004 place fee always applies; only the $0.10 premium is charged when a contact is found) beats per-row pricing.</p>
-<h3>5. Verify, segment, and load</h3>
-<p>Before the list goes anywhere near a campaign, run the basics: syntax-check the emails, drop role addresses if your campaign wants named contacts, and segment by the fields you already have — rating band, review count, neighbourhood. Then load the list into your CRM or outreach tool with the source query and extraction date attached to every row, so a list can be refreshed instead of rebuilt.</p>
+  <p>Almost every local business on earth maintains a presence on Google Maps, whether it manages that presence actively or not. A single listing carries the business name, category, address, phone number, opening hours, rating, review count, and—most useful for outreach—a link to its website. No other single directory covers as many plumbers, dentists, restaurants, salons, clinics, workshops, and retailers in one consistent shape.</p>
 
-<h2>How much does Maps lead generation cost?</h2>
-<p>There are three cost shapes in this market, and they behave very differently:</p>
-<ul>
-<li><strong>Subscriptions to static databases.</strong> You pay monthly whether or not you use the data, and the data ages from the day it was compiled. Fine for broad, slow-moving markets; poor for "every X in this city, this week".</li>
-<li><strong>Per-row scraping tools.</strong> You pay for every record extracted, including the ones with no contact details. Simple to understand, quietly expensive at scale, because a large share of raw rows never become leads.</li>
-<li><strong>Per-result pricing with a contact premium.</strong> Places are cheap; the premium is charged only on records that carry a usable public contact. This aligns the bill with the outcome — a list of 1,000 places where 400 yield contacts costs the place price for all 1,000 and the lead price for 400.</li>
-</ul>
-<p>With the third model, the arithmetic for a typical local campaign is small: 1,000 places at $0.004 is $4, and 400 verified-contact leads at $0.10 is $40 — a $44 list that you built for one trade in one city, extracted fresh, instead of a rented slice of a national database. Your mileage will vary with the trade's email-publishing habits, which is the honest variable in every Maps campaign.</p>
+  <p>That shared structure is why Maps works so well for prospecting. A chamber-of-commerce directory gives you one format per town, and a trade association gives you members only. Google Maps returns the same fields for a roofer in Dallas and a roofer in Dortmund, so a single extraction workflow can assemble a list for any trade in any city on demand instead of relying on a static list that began aging the day it was compiled.</p>
 
-<h2>Quality rules that separate a list from a liability</h2>
-<p><strong>Freshness beats size.</strong> A list extracted this week from live listings will outperform a list three times its size compiled last year, because businesses close, move and change numbers continuously. Prefer tools that pull live at run time over tools that resell a stored index.</p>
-<p><strong>Keep the closed ones visible.</strong> Extract the status field and filter deliberately. Silently dropping closed businesses at extraction time sounds helpful until you need to know why a territory's count changed.</p>
-<p><strong>Deduplicate on identity, not name.</strong> The same business appears as "Smith &amp; Sons Plumbing", "Smith and Sons Plumbing Ltd" and a second pin at its yard address. Name-plus-address (or coordinates) matching catches what name matching misses.</p>
-<p><strong>Respect the source.</strong> The contact details discussed here are ones businesses publish publicly for customers. Use them for relevant business outreach, honour opt-outs immediately, and follow the anti-spam law of the jurisdiction you are sending into. A clean list used badly is still spam; a clean list used precisely is pipeline.</p>
+  <p>The catch is that Maps is designed for people browsing a screen, not for data pipelines. The records are there, but they are paginated, rate-limited, and loaded one screenful at a time. Turning Maps into a lead source means pulling search results—a trade paired with a location—into a structured dataset, and then enriching the qualifying rows with public contact details from the businesses' own websites.</p>
 
-<h2>When Maps is the wrong source</h2>
-<p>Maps lead generation is built for local, listed, customer-facing businesses. It is the wrong tool for finding individual professionals who do not run a listed premises, for businesses that deliberately stay unlisted, and for contact data about private individuals — none of that is on a Maps listing, and none of it should be scraped from anywhere else either. It is also the wrong tool when your market is defined by something Maps cannot see, such as company size or technology stack; for that you want company-register data (for the UK, see our guide to <a href="/articles/uk-companies-house-data-guide.html">Companies House data</a>) layered on top of the Maps list.</p>
+  <p>Effective Maps lead generation separates two distinct jobs that are often lumped together:</p>
 
-<h2>Specialised cuts: home services and dentists</h2>
-<p>The general engine covers any trade, but two trades come up so often that we ship pre-configured versions. <a href="/actors/google-maps-home-services-leads.html">Google Maps Home Services Leads</a> comes with a six-trade pack prefilled for plumbers, electricians, HVAC and related trades — in our smoke test, 87% of extracted places carried contact details and 40% carried an email. <a href="/actors/google-maps-dentist-leads.html">Google Maps Dentist Leads</a> uses a five-term dental pack — in the Berlin smoke test, 93% of places carried contacts and 87% an email, because dental practices publish contact details more consistently than most trades. The engines are identical; the packs save you the query setup and the defaults are tuned per trade.</p>
-<p>For the detailed mechanics of step two — how emails are found on business websites and what can go wrong — read the companion piece: <a href="/articles/extract-contacts-from-google-maps.html">How to extract contacts from Google Maps</a>.</p>
+  <ul>
+    <li><strong>Stage 1 — Place extraction:</strong> You run a search for a trade and location, collect every matching listing, and save the structured fields. This step is fast and inexpensive, and it maps your addressable market by showing how many businesses of that type operate in the area.</li>
+    <li><strong>Stage 2 — Contact enrichment:</strong> For listings that have a website, the enrichment step visits the business's own site and pulls public contact details such as email addresses, extra phone numbers, social links, and contact-page URLs. Because fetching and parsing arbitrary websites is the costly step, it should run—and be billed—only on listings that pass your criteria.</li>
+  </ul>
 
-<h2>A worked example: one trade, one metro, real arithmetic</h2>
-<p>Abstract advice is cheap, so here is the whole workflow priced out on a concrete — illustrative — campaign. Suppose you sell a booking-and-reminders service to roofing companies and you want every roofer in one mid-size metro area.</p>
-<p>You run three adjacent searches ("roofing contractor", "roof repair", "roofing company") across the metro's main districts and merge the results. Say the raw extraction returns 640 place records. At $0.004 per place, that step costs $2.56. Deduplication on name plus address removes the overlaps between the three phrasings — suppose 90 records go, leaving 550 distinct businesses. Filtering drops the permanently closed (say 25) and the clearly out-of-trade listings the broad phrasings caught (say 15). You now hold 510 live, distinct roofers: the complete visible market, enumerated for less than the cost of a coffee.</p>
-<p>Enrichment runs against those 510. Roofing is a phone-first trade, so suppose the yield resembles our home-services smoke test: most records return contact details, roughly four in ten return a public email. The lead charge — $0.10, applied only where a usable public contact was found — lands on perhaps 440 records: $44. The email subset, around 200 addresses, costs nothing extra; it is a property of the records, not a separate product. Total data cost for the campaign: under $47, for a list that did not exist last week, built from live listings, with every record carrying its rating, review count, status and source query.</p>
-<p>Now segment it the way a salesperson would. The 60-odd roofers with 100+ reviews are established businesses — pitch efficiency and protection. The 180 with a handful of reviews are growth-stage — pitch visibility. The ones with no website at all, visible instantly in the data, are a separate campaign with a separate first offer. That segmentation took minutes, because the fields were already in the records. This is the part static databases cannot reproduce: not the rows, but the <em>current truth</em> about the rows, in a shape your campaign can act on the same day.</p>
+  <p>Splitting the pipeline protects your budget. Enriching every raw listing means paying to crawl websites for permanently closed businesses, duplicate pins, and companies outside your target profile. Filtering the place list first—by status, category, rating, or review count—ensures enrichment spend goes strictly toward businesses you would actually contact.</p>
 
-<h2>The mistakes that quietly ruin Maps campaigns</h2>
-<ul>
-<li><strong>Buying the biggest list instead of the freshest.</strong> Size is the easiest number to sell and the least useful number to buy. A 5,000-row list of mixed age will underperform a 500-row list extracted this week, because your team burns its first calls on closed and moved businesses and loses faith in the rest.</li>
-<li><strong>Enriching before filtering.</strong> Every closed business, duplicate and out-of-territory row you enrich is money spent to make your list worse. The filter step is free; do it first, every time.</li>
-<li><strong>One search per market.</strong> A single query under-enumerates dense markets because of result caps. Adjacent phrasings plus deduplication is not a hack; it is the correct way to enumerate a market through a capped interface.</li>
-<li><strong>Treating email as the only channel.</strong> In phone-first trades, insisting on email coverage shrinks your addressable list to a minority of the market. Use the phone numbers — they are on the listing, they are complete, and the businesses publish them to be called.</li>
-<li><strong>No provenance, no refresh.</strong> A list without source queries and extraction dates cannot be refreshed, only replaced — and a team that cannot refresh will quietly keep using a rotting list. Attach the metadata at build time; it costs nothing and saves the campaign later.</li>
-<li><strong>Skipping the status field.</strong> Permanently-closed flags exist in the data precisely so you never pitch a dead business. Extract the field, filter on it, and keep the closed records in a separate tab rather than deleting them — territory counts over time are market intelligence.</li>
-</ul>
+  <p>That two-stage separation is also how our <a href="/actors/google-maps-contacts.html">Google Maps Contacts &amp; Leads Actor</a> is priced: $0.004 per place extracted, plus a $0.10 lead fee charged only when a usable public contact is found. A place that yields no contact costs the place fee and nothing more—an outcome-aligned model that this guide uses throughout.</p>
 
-<h2>How Maps data fits the rest of your stack</h2>
-<p>A Maps list is rarely the final dataset; it is the local layer of one. The register layer (for the UK, <a href="/articles/uk-companies-house-data-guide.html">Companies House</a>) adds legal identity, age, officers and control — the difference between "a dental practice in Leeds" and "a company incorporated in 2019, two directors, active status". The hiring layer (live ATS data, covered in <a href="/articles/live-job-data-from-ats-apis.html">our ATS guide</a>) adds growth signals for the businesses large enough to hire through an ATS. Layered together, the three sources answer the questions a good prospecting operation actually asks: who exists here, are they real and trading, are they growing, and how do I reach them? Maps is the layer that answers the first and last of those, which is why it is usually where the stack starts.</p>
+  <h2>Fields You Get and What a Real Record Looks Like</h2>
 
-<h2>FAQ</h2>
-<h3>Is it legal to extract lead data from Google Maps?</h3>
-<p>Extracting publicly displayed business information and publicly published contact details is a widely used practice, but the legal position depends on your jurisdiction, the terms of the services involved and how you use the data. This guide is not legal advice. What we can say is how our Actors behave: they collect business listing data and contact details that businesses publish on their own websites, and we recommend using any list in line with the anti-spam and privacy law where you operate, with immediate opt-out handling.</p>
-<h3>Does Google Maps itself provide email addresses?</h3>
-<p>No. Listings show names, categories, addresses, phone numbers, websites, ratings and hours — not emails. Email addresses come from the second step: visiting the business's own website, where the business has published them for customers.</p>
-<h3>How accurate is the data?</h3>
-<p>It is exactly as accurate as the live listing and the business's website at the moment of the run, because the extraction pulls from the source at run time rather than from a stored index. Businesses do change their details, so refresh lists before major campaigns instead of treating any list as permanent.</p>
-<h3>Why charge the lead premium only when a contact is found?</h3>
-<p>Because a place with no public contact is not a lead. Per-row pricing charges you for the failures; per-lead pricing means the premium part of the bill only ever attaches to records you can actually use. See our article on <a href="/articles/pay-per-result-pricing-explained.html">pay-per-result pricing</a> for the full reasoning.</p>
-<h3>Can I run this for several cities or trades at once?</h3>
-<p>Yes — run one search per trade-and-city combination and merge the outputs, deduplicating on name plus address. Overlapping phrasings of the same search are also a legitimate way to widen coverage of a single market.</p>
-<h3>What format does the output come in?</h3>
-<p>A structured dataset (JSON, with CSV/Excel export from the Apify console) — one record per place, with the listing fields and, where found, the contact fields. It loads directly into spreadsheets, CRMs and outreach tools.</p>
+  <p>Each extracted place record gives you the core listing fields directly from Google Maps:</p>
 
-<p><a class="btn" href="https://apify.com/apitory/google-maps-contacts">Run Google Maps Contacts &amp; Leads on Apify →</a></p>
+  <ul>
+    <li><strong>Business name and category:</strong> The primary category the business lists itself under, such as "Dental clinic" or "HVAC contractor".</li>
+    <li><strong>Address and coordinates:</strong> The full postal address alongside latitude and longitude, which simplifies territory mapping and duplicate detection.</li>
+    <li><strong>Phone number:</strong> The primary number displayed on the listing, typically the business's main line.</li>
+    <li><strong>Website:</strong> The business's own site, serving as the bridge to enrichment where public email addresses sit in footers and contact pages.</li>
+    <li><strong>Rating and review count:</strong> A quick signal of activity and standing—hundreds of recent reviews point to an active business, while none may indicate a dormant listing.</li>
+    <li><strong>Opening hours and business status:</strong> Including permanently-closed flags, which belong in your dataset specifically so you can filter those businesses out deliberately.</li>
+  </ul>
+
+  <p>What a Google Maps listing does <em>not</em> include is an email address. Anyone promising email addresses "from Google Maps" is running the second step: visiting each business's website and extracting the contact information the business published there for customers. Knowing where that data originates matters for both accuracy and compliance.</p>
+
+  <p>When contact enrichment runs against a business's own website, it adds public email addresses, additional phone numbers, social links, and contact-page links to the record. Output arrives as a structured dataset—JSON, with CSV and Excel export available from the Apify console—with one record per place containing both listing and discovered contact fields, ready for spreadsheets, CRMs, or outreach tools.</p>
+
+  <p>Below is a real sample output record from the <code>google-maps-contacts</code> Actor showing key output fields:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Field</th>
+        <th>Sample value</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>name</code></td>
+        <td>Baldoria Madrid</td>
+      </tr>
+      <tr>
+        <td><code>category</code></td>
+        <td>Italian restaurant</td>
+      </tr>
+      <tr>
+        <td><code>rating</code></td>
+        <td>4.8</td>
+      </tr>
+      <tr>
+        <td><code>reviewsCount</code></td>
+        <td>28976</td>
+      </tr>
+      <tr>
+        <td><code>contactFound</code></td>
+        <td>true</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>Across a full dataset, those fields sit alongside the full set of listing and enrichment attributes: business name, category, address, coordinates (latitude/longitude), phone number, website, rating, review count, opening hours, business status, plus enriched public email addresses, additional phone numbers, social links, and contact-page links.</p>
+
+  <h2>Pricing Structure and Real Campaign Economics</h2>
+
+  <p>In the local lead-data market, tools fall into three pricing shapes with very different cost behaviour:</p>
+
+  <ul>
+    <li><strong>Static database subscriptions:</strong> You pay a monthly fee whether you use the data or not, and every record ages from the day it was compiled. That suits broad, slow-moving markets, not "every business of this trade in this city, this week".</li>
+    <li><strong>Per-row scraping tools:</strong> You pay for every extracted row, including listings with no contact information. Simple on paper, yet quietly expensive at scale because many raw rows never turn into actionable leads.</li>
+    <li><strong>Per-result pricing with a contact premium:</strong> Place extraction is cheap, and the lead premium applies only when a record carries a usable public contact.</li>
+  </ul>
+
+  <p>Here is the exact pricing breakdown for the Google Maps Contacts &amp; Leads Actor:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Pricing event</th>
+        <th>Rate</th>
+        <th>Billing rule</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Actor Start</td>
+        <td>$0.00005</td>
+        <td>Per run</td>
+      </tr>
+      <tr>
+        <td>Place</td>
+        <td>$0.004</td>
+        <td>Per place</td>
+      </tr>
+      <tr>
+        <td>Lead</td>
+        <td>$0.10</td>
+        <td>Per lead, charged only when a public contact is found</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>Under this model, the bill tracks usable outcomes rather than raw scrape volume. For a typical local campaign of 1,000 places where 400 yield contacts, 1,000 places at $0.004 cost $4, and 400 verified-contact leads at $0.10 cost $40—a $44 list built fresh for one trade in one city rather than a rented slice of a national database. Your exact yield varies with how consistently a given trade publishes emails, which is the honest variable in every Maps campaign. For the full reasoning behind outcome-based billing, see <a href="/articles/pay-per-result-pricing-explained.html">our article on pay-per-result pricing</a>.</p>
+
+  <h3>Worked Metro Campaign: Pricing Every Step</h3>
+
+  <p>To make the arithmetic concrete, consider an illustrative campaign targeting every roofing company in a mid-size metro area to pitch a booking-and-reminders service:</p>
+
+  <ol>
+    <li><strong>Capture the market with overlapping searches:</strong> You run three adjacent queries—<code>"roofing contractor"</code>, <code>"roof repair"</code>, and <code>"roofing company"</code>—across the metro's main districts and merge the output. Suppose the raw extraction returns 640 place records. At $0.004 per place, that costs $2.56.</li>
+    <li><strong>Deduplicate and filter before paying for contacts:</strong> Deduplicating on name plus address removes overlaps across the three search phrasings—suppose 90 rows drop out, leaving 550 distinct businesses. Filtering removes permanently closed listings (say 25) and clearly out-of-trade businesses caught by broad phrasing (say 15). You now hold 510 live, distinct roofers: the complete visible market, mapped for less than the cost of a coffee.</li>
+    <li><strong>Enrich the filtered list:</strong> Running enrichment across those 510 survivors mirrors what we see in phone-first home-service trades: most records return contact details, while roughly four in ten return a public email. If the $0.10 lead fee applies to around 440 records, enrichment comes to $44. The email subset—around 200 addresses—costs nothing extra because it is part of the same contact record, not a separate add-on. Total data cost for the campaign stays under $47 for a live list that did not exist a week earlier, complete with rating, review count, status, and source query.</li>
+    <li><strong>Segment on live signals:</strong> From those fields, segmentation takes minutes. The 60-odd roofers with 100+ reviews are established operators to pitch on efficiency and protection; the 180 with a handful of reviews are growth-stage companies to pitch on visibility; and the businesses with no website at all stand out immediately for a separate first offer. Static databases cannot match that same-day truth about how a territory looks right now.</li>
+  </ol>
+
+  <h2>How to Build, Filter, and Segment a List</h2>
+
+  <p>Executing that workflow reliably across any trade and city comes down to five operational habits:</p>
+
+  <h3>Frame searches the way customers search</h3>
+
+  <p>Google Maps responds to natural-language queries such as <code>"emergency plumber in Leeds"</code>, <code>"dentist in Berlin"</code>, or <code>"roofing contractor near Austin"</code>. Results shift with phrasing, so start with the plain trade name plus city that local businesses optimise for. In dense markets, a single query hits result caps, so run multiple adjacent phrasings or pair trade-and-city combinations and merge them afterwards.</p>
+
+  <h3>Collect raw places with closed listings intact</h3>
+
+  <p>Expect the initial extraction to include duplicate pins (the same company listed under minor name variations), a handful of mis-categorised listings, and closed businesses. Keep the business status field visible rather than stripping closed businesses silently during extraction—if a territory's active count changes later, knowing how many closed avoids misreading the market.</p>
+
+  <h3>Filter and deduplicate at zero enrichment cost</h3>
+
+  <p>Before running contact enrichment, drop permanently closed businesses, remove duplicates using name plus address or coordinates—catching variants like <code>"Smith &amp; Sons Plumbing"</code>, <code>"Smith and Sons Plumbing Ltd"</code>, and a separate pin at a yard address—and apply your buyer criteria. Drop low ratings or low review counts if you sell to established firms, or keep low-review listings if you target newer businesses. Filtering is free; enrichment is what costs money.</p>
+
+  <h3>Enrich the survivors and evaluate yield by trade</h3>
+
+  <p>Run website contact extraction only on the filtered set. Email publishing rates vary widely by trade, which is why paying the $0.10 lead fee only when a contact is found outperforms per-row billing while the $0.004 place fee covers discovery. Two trades come up often enough that we ship pre-configured Actors on the identical engine:</p>
+
+  <ul>
+    <li><a href="/actors/google-maps-home-services-leads.html">Google Maps Home Services Leads</a> ships with a six-trade pack prefilled for plumbers, electricians, HVAC, and related trades. In our smoke test, 87% of extracted places carried contact details and 40% carried an email.</li>
+    <li><a href="/actors/google-maps-dentist-leads.html">Google Maps Dentist Leads</a> uses a five-term dental pack. In our Berlin smoke test, 93% of places carried contacts and 87% carried an email, reflecting how consistently dental practices publish contact details.</li>
+  </ul>
+
+  <p>Both use the same underlying engine; the packs simply remove query setup and tune defaults to the trade.</p>
+
+  <h3>Verify, segment, and store provenance</h3>
+
+  <p>Before importing into a campaign, syntax-check email addresses, remove role addresses if your outreach requires named contacts, and segment using the listing metrics you already captured—rating band, review count, and neighbourhood. Attach the source query and extraction date to every row inside your CRM or outreach tool so teams can refresh lists cleanly instead of starting over from scratch.</p>
+
+  <h2>Edge Cases in Extraction: What Happened With Redirect URLs</h2>
+
+  <p>Even with a clean workflow, step two—fetching arbitrary business websites—exposes real-world quirks in how Google Maps formats outbound links. For a detailed look at how website contact extraction works and what can break, read <a href="/articles/extract-contacts-from-google-maps.html">our guide on extracting contacts from Google Maps</a>.</p>
+
+  <p>We hit one of those quirks first-hand during our build and repair work. On 2026-11-26, during a smoke run for a related build, we found that Google Maps intermittently returns a place's website not as the direct URL, but as a Google redirect URL formatted as <code>/url?q=http://...&amp;opi=...</code>. Because our contact-extraction phase could not fetch that shape, affected runs silently finished marked as "success" with place records only—0 contacts and 0 emails—while still consuming the full proxy spend. Since the underlying engine is shared, the issue affected the entire Maps Actor family rather than a single Actor.</p>
+
+  <p>We fixed the bug by unwrapping the redirect before enrichment: whenever a website link contains <code>/url?q=</code>, we extract the <code>q</code> parameter, URL-decode it, and pass it through only when it resolves to an <code>http(s)</code> target; direct URLs, missing values, and non-http targets pass through unchanged. We unit-tested the shipped function across 10 cases and all 10 behaved as intended. In the re-run smoke test after the fix—searching for a pizzeria in Madrid capped at 6 places—the run returned 6 places, 5 with a website, 0 redirect URLs, 4 contacts found, and 3 with an email address, at a measured platform cost of $0.1204.</p>
+
+  <h2>Common Pitfalls, Data Hygiene, and Compliance</h2>
+
+  <p>Most underperforming Maps campaigns fail for predictable operational reasons rather than data scarcity:</p>
+
+  <ul>
+    <li><strong>Chasing list volume over freshness:</strong> A 5,000-row list of mixed age routinely loses to a 500-row list pulled this week because businesses move, close, and change phone numbers constantly. Live extraction at run time beats resold static indexes, and refreshing before major campaigns keeps details aligned with live listings.</li>
+    <li><strong>Enriching before filtering:</strong> Paying to crawl websites for closed businesses, duplicate listings, and out-of-area firms wastes budget on records you will discard anyway.</li>
+    <li><strong>Relying on a single query in dense markets:</strong> One search misses listings behind result caps; adjacent phrasings plus name-and-address deduplication is the proper way to enumerate a city.</li>
+    <li><strong>Ignoring phone numbers in phone-first trades:</strong> Filtering strictly for email shrinks your market unnecessarily when businesses list their main phone number specifically to receive customer calls.</li>
+    <li><strong>Dropping provenance or closed-status records:</strong> Without source queries and extraction dates, lists rot because nobody knows how to refresh them. Keep closed businesses in a separate tab rather than deleting them so you never pitch dead companies while retaining territory counts over time.</li>
+  </ul>
+
+  <p>On the compliance side, extracting publicly displayed business information and publicly published website contact details is common practice, though legal requirements vary by jurisdiction, platform terms, and usage—and this guide is not legal advice. Our Actors collect public listing data alongside contact details businesses publish on their own websites for customers. Use those details strictly for relevant business outreach, honour opt-out requests immediately, and follow the privacy and anti-spam laws where you send. A clean list used carelessly is still spam; a clean list used precisely builds pipeline.</p>
+
+  <h2>Limits of Maps Data and Layering Your Prospecting Stack</h2>
+
+  <p>Google Maps excels at local, customer-facing businesses with a physical or service presence. It is the wrong source for finding individual professionals without listed premises, businesses that deliberately remain unlisted, or private-individual contact records—none of that belongs on Maps or should be scraped elsewhere.</p>
+
+  <p>Maps also cannot show corporate attributes that live outside a storefront listing, such as company age, ownership structure, headcount, or technology stack. In practice, Maps works best as the local layer at the base of a multi-source stack:</p>
+
+  <ul>
+    <li><strong>Local presence and reachability (Google Maps):</strong> Answers who operates in the territory and how to contact them.</li>
+    <li><strong>Corporate register data:</strong> Turns "a dental practice in Leeds" into "a company incorporated in 2019, two directors, active status". For UK prospecting, layer <a href="/articles/uk-companies-house-data-guide.html">our guide to Companies House data</a> on top of your Maps list.</li>
+    <li><strong>Hiring signals:</strong> For companies large enough to recruit through an applicant tracking system, <a href="/articles/live-job-data-from-ats-apis.html">live job data from ATS APIs</a> adds active growth signals.</li>
+  </ul>
+
+  <p>Together, those layers answer the core questions of any B2B prospecting operation: who exists locally, whether they are real and trading, whether they are expanding, and how to reach them.</p>
+
+  <h2>Common Questions About Maps Lead Extraction</h2>
+
+  <h3>Where do the email addresses actually come from?</h3>
+  <p>Not from Google Maps itself. Maps listings carry names, categories, addresses, phone numbers, websites, ratings, and opening hours. Emails come from the enrichment step, which visits each business's own website and reads the contact details published there for customers.</p>
+
+  <h3>How up to date are the extracted records?</h3>
+  <p>Records reflect the live Google Maps listing and the business's live website at the exact moment the run executes, because extraction pulls from the source at run time instead of a stored database. Because business details change continuously, re-run before major outreach pushes.</p>
+
+  <h3>What happens if a listing has no public contact details?</h3>
+  <p>You pay only the $0.004 place fee (plus the $0.00005 Actor start fee per run). The $0.10 lead fee is billed only when a public contact is found, so dead-end listings do not trigger enrichment charges.</p>
+
+  <h3>Can I cover multiple cities or multiple trades in one workflow?</h3>
+  <p>Yes. Run separate searches per trade-and-city pair—or overlapping query phrasings for a single dense market—and merge the exported JSON, CSV, or Excel datasets, deduplicating on business name plus address or coordinates.</p>
+
+  <h3>Is it legal to collect business leads this way?</h3>
+  <p>While gathering publicly displayed business details and publicly published website contacts is widely practiced, rules depend on your local jurisdiction, applicable terms, and how you send outreach. Always comply with local anti-spam and privacy regulations and process opt-outs immediately.</p>
+
+  <p><a href="https://apify.com/apitory/google-maps-contacts">Run Google Maps Contacts &amp; Leads on Apify &rarr;</a></p>
+</article>
 <h2>Related Actors</h2><ul><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#8b5cf6,#6366f1)">GM</span><a href="/actors/google-maps-contacts.html">Google Maps Contacts & Leads</a> — $0.004 / place · $0.10 only when a public contact is found</li><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#6366f1,#a855f7)">GM</span><a href="/actors/google-maps-home-services-leads.html">Google Maps Home Services Leads</a> — $0.004 / place · $0.10 only when a public contact is found</li><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#ec4899,#f97316)">GM</span><a href="/actors/google-maps-dentist-leads.html">Google Maps Dentist Leads</a> — $0.004 / place · $0.10 only when a public contact is found</li></ul></main><footer><img class="fmark" src="/logo-mark.svg" alt=""><div>Support: <a href="mailto:apitoryhq@gmail.com">apitoryhq@gmail.com</a><br>Apitory — Data APIs &amp; Apify Actors. Clean data, pay per use.<br><a href="https://apify.com/apitory">apify.com/apitory</a></div></footer></body></html>

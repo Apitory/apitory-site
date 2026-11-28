@@ -1,80 +1,165 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>What Is an Apify Actor? A Buyer&#x27;s Guide to Renting Software That Returns Data — Apitory</title><meta name="description" content="Runs, inputs, datasets, scheduling and pricing models — the mechanics of buying data through Apify Actors, and a six-point checklist for evaluating any Actor before you spend real money."><link rel="icon" type="image/svg+xml" href="/logo-mark.svg"><link rel="stylesheet" href="/style.css?v=13"><link rel="canonical" href="https://apitory.com/articles/what-is-an-apify-actor-buyers-guide.html"></head><body><div class="bgfx"></div><header><nav><a class="brand" href="/"><img class="mark" src="/logo-mark.svg" alt=""><img class="typo" src="/logo-typo.svg" alt="Apitory"></a><span><a href="/#actors">Actors</a> &nbsp;|&nbsp; <a href="/articles.html">Articles</a> &nbsp;|&nbsp; <a href="https://apify.com/apitory">Apify Store</a> &nbsp;|&nbsp; <a href="mailto:apitoryhq@gmail.com">Support</a></span></nav></header><main><p><a href="/articles.html">&larr; All articles</a></p><h1>What Is an Apify Actor? A Buyer's Guide to Renting Software That Returns Data</h1>
-<p class="tag">Actors are how data products are sold on Apify: small cloud programs that take your input, do a defined job, and hand you a structured dataset. If you buy data but have never bought it this way, this guide explains the mechanics — runs, inputs, datasets, scheduling and pricing — so you can evaluate any Actor like an insider.</p>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>What Is an Apify Actor? A Buyer&#x27;s Guide to Renting Software That Returns Data — Apitory</title><meta name="description" content="Runs, inputs, datasets, scheduling and pricing models — the mechanics of buying data through Apify Actors, and a six-point checklist for evaluating any Actor before you spend real money."><link rel="icon" type="image/svg+xml" href="/logo-mark.svg"><link rel="stylesheet" href="/style.css?v=13"><link rel="canonical" href="https://apitory.com/articles/what-is-an-apify-actor-buyers-guide.html"></head><body><div class="bgfx"></div><header><nav><a class="brand" href="/"><img class="mark" src="/logo-mark.svg" alt=""><img class="typo" src="/logo-typo.svg" alt="Apitory"></a><span><a href="/#actors">Actors</a> &nbsp;|&nbsp; <a href="/articles.html">Articles</a> &nbsp;|&nbsp; <a href="https://apify.com/apitory">Apify Store</a> &nbsp;|&nbsp; <a href="mailto:apitoryhq@gmail.com">Support</a></span></nav></header><main><p><a href="/articles.html">&larr; All articles</a></p><h1>Buying Data Through Apify Actors: A Practical Guide for First-Time Buyers</h1>
 
-<h2>The one-paragraph version</h2>
-<p>An Apify Actor is a program that lives in Apify's cloud and does one defined job: extract the businesses matching a search, pull a set of companies' live job listings, fetch a company record, collect a channel's posts. You describe the job by filling in a structured input — a search term, a list of companies, a set of company numbers. You press run (or your scheduler does). The Actor executes in the cloud, on the vendor's maintenance, and when it finishes you receive a dataset: clean, structured records you can download as JSON, CSV or Excel, or read through an API into your own systems. You pay for the run according to the Actor's pricing model — in our catalogue, per result delivered.</p>
-<p>If the analogy helps: a traditional data vendor sells you a database. An Actor rents you the machine that builds the database — except the machine runs on demand, its output is built fresh from the sources at the moment you ask, and you never install, host or maintain anything.</p>
+<p><strong>TL;DR:</strong> An Apify Actor is a cloud program you rent, not buy: you fill in an input, it runs, you get a structured dataset back. This guide walks through inputs, runs, datasets, scheduling and pricing, shows a real sample record and a real pricing table, and tells you exactly what to check before you spend money.</p>
 
-<h2>Why data is sold this way now</h2>
-<p>The Actor model exists because the older models have structural problems that buyers have learned the hard way. Static databases age from the day they are compiled, and the buyer cannot tell which records have rotted. Bespoke scraping projects hand the buyer a maintenance obligation disguised as an asset: the scraper works until the source changes, which is to say, briefly. APIs from the original sources are excellent where they exist — much of our own catalogue is built on them — but most sources have no buyer-facing API at all.</p>
-<p>An Actor inverts each of those. The data is produced at run time, so its age is measured in minutes, and the run's output carries its own timestamp. Maintenance is the vendor's problem and the vendor's cost of staying in business: when a source changes, the vendor fixes the Actor once and every buyer's next run benefits. And the packaging — input form, dataset output, scheduling, billing — is standardised by the platform, so a buyer who learns one Actor has learned the shape of all of them. Our catalogue is a fair sample of the model: <a href="/actors/google-maps-contacts.html">Maps lead extraction</a>, <a href="/actors/career-site-jobs-live.html">live ATS job pulls</a>, <a href="/actors/uk-companies-house.html">official UK register records</a> and <a href="/actors/telegram-channel-scraper.html">public Telegram channel collection</a> are four very different data jobs delivered in exactly the same shape.</p>
+<h2>The Short Version: What You're Actually Renting</h2>
 
-<h2>The five mechanics every buyer should understand</h2>
-<h3>1. Input</h3>
-<p>Every Actor defines an input form: the parameters of the job. A Maps extractor wants a search query and limits; a job-data Actor wants your company list; a register Actor wants company numbers. Two judgements live here. First, good inputs mirror the buyer's decision — territory, trade, company list — rather than the vendor's internals. Second, defaults matter: an Actor whose defaults produce a sensible, real result on a bare run is an Actor whose vendor expects to be tested. Ours are built that way deliberately, because a buyer who can verify the goods on a small run before committing is a buyer who comes back.</p>
-<h3>2. Runs</h3>
-<p>A run is one execution: your input, the Actor's work, one dataset out. Runs are visible in the console with their status, timing and charges, which makes the unit of purchase concrete — you can point at exactly what you paid for. Runs can be started by hand in the console, through the API from your own code, or on a schedule (see below), and the same Actor serves all three without modification.</p>
-<h3>3. Datasets</h3>
-<p>The output is a dataset: a table of records, one per result, with named fields. Datasets are the contract between vendor and buyer, so judge an Actor by its dataset the way you would judge a database by its schema. Are the fields the ones the source actually has — or a padded list half of which come back empty? Does each record carry its provenance (the source URL, the fetch date)? Can you export in the format your stack eats? A serious vendor publishes a sample record; ours appear on every Actor page on this site, taken from real runs.</p>
-<h3>4. Scheduling</h3>
+<p>An Apify Actor is a program that lives in the cloud and does one defined job: extract the businesses matching a search, pull a set of companies' live job listings, fetch a company record, collect a channel's posts. You describe the job by filling in a structured input — a search term, a list of companies, a set of company numbers. You press run, or your scheduler does. The Actor executes on the vendor's infrastructure and on the vendor's maintenance budget, and when it finishes you receive a dataset: clean, structured records you can download as JSON, CSV or Excel, or read through an API into your own systems. You pay according to the Actor's pricing model — on this shelf, per result delivered.</p>
+
+<p>The useful analogy: a traditional data vendor sells you a database. An Actor rents you the machine that builds the database — except the machine runs on demand, its output is built fresh from the sources at the moment you ask, and you never install, host or maintain anything.</p>
+
+<h2>Why Vendors Moved to This Model</h2>
+
+<p>The Actor model exists because older models have structural problems buyers learn the hard way. Static databases age from the day they are compiled, and the buyer cannot tell which records have rotted. Bespoke scraping projects hand the buyer a maintenance obligation disguised as an asset: the scraper works until the source changes, which is to say, briefly. APIs from the original sources are excellent where they exist, but most sources have no buyer-facing API at all.</p>
+
+<p>An Actor inverts each of those problems. The data is produced at run time, so its age is measured in minutes, and the run's output carries its own timestamp. Maintenance is the vendor's problem and the vendor's cost of staying in business: when a source changes, the vendor fixes the Actor once and every buyer's next run benefits. And the packaging — input form, dataset output, scheduling, billing — is standardised by the platform, so a buyer who learns one Actor has learned the shape of all of them. This shelf is a fair sample of the model: <a href="/actors/google-maps-contacts.html">Maps lead extraction</a>, <a href="/actors/career-site-jobs-live.html">live ATS job pulls</a>, <a href="/actors/uk-companies-house.html">official UK register records</a> and <a href="/actors/telegram-channel-scraper.html">public Telegram channel collection</a> are four very different data jobs delivered in exactly the same shape.</p>
+
+<h2>The Five Moving Parts You're Paying For</h2>
+
+<h3>Input</h3>
+
+<p>Every Actor defines an input form: the parameters of the job. A Maps extractor wants a search query and limits; a job-data Actor wants your company list; a register Actor wants company numbers. Two judgements live here. First, good inputs mirror the buyer's decision — territory, trade, company list — rather than the vendor's internals. Second, defaults matter: an Actor whose defaults produce a sensible, real result on a bare run is an Actor whose vendor expects to be tested.</p>
+
+<h3>Runs</h3>
+
+<p>A run is one execution: your input, the Actor's work, one dataset out. Runs are visible in the console with their status, timing and charges, which makes the unit of purchase concrete — you can point at exactly what you paid for. Runs can be started by hand in the console, through the API from your own code, or on a schedule, and the same Actor serves all three without modification.</p>
+
+<h3>Datasets</h3>
+
+<p>The output is a dataset: a table of records, one per result, with named fields. Datasets are the contract between vendor and buyer, so judge an Actor by its dataset the way you would judge a database by its schema. Are the fields the ones the source actually has — or a padded list half of which come back empty? Does each record carry its provenance (the source URL, the fetch date)? Can you export in the format your stack eats?</p>
+
+<h3>Scheduling</h3>
+
 <p>Most data jobs are not one-off; they are snapshots of something that changes. Actors can run on a schedule — daily, weekly — with the same input, producing a new dataset each time. The buyer's workflow then becomes a diff: today's dataset against yesterday's is new businesses, closed jobs, changed records. Scheduling is what turns a data purchase into a monitoring system without buying a separate monitoring product, and it is the single most underused mechanic by new buyers.</p>
-<h3>5. Pricing</h3>
-<p>Actors price in several shapes: per run, per hour of compute, by subscription tier, or per event/result. The shape matters more than the number, because it decides who carries the cost of failure — the empty record, the closed listing, the duplicate. We price per delivered result, with premiums only on success events (a Maps record that actually carries a usable contact, for example), and we make the full argument in <a href="/articles/pay-per-result-pricing-explained.html">pay-per-result pricing, explained</a>. Whatever the shape, the discipline is the same: before a large run, do a small run, count the delivered records, sample them for quality, and reconcile the charge. On this platform, that test costs very little — which is rather the point.</p>
 
-<h2>How to evaluate an Actor before you spend real money</h2>
-<ol>
-<li><strong>Read the input form.</strong> Does it ask for decisions you understand? Opaque inputs hide vague products.</li>
-<li><strong>Inspect the sample output.</strong> No sample record, no purchase. Check that the fields you need exist and carry plausible, specific values — not lorem ipsum in a trench coat.</li>
-<li><strong>Run the smallest real test.</strong> Use your own territory, your own company list, your own channel. Verify three records against the source yourself. Data is verifiable goods; verify it.</li>
-<li><strong>Check the pricing definition, not the headline.</strong> What exactly triggers each charge? What does a run that finds nothing cost? Is the premium attached to your definition of success or the vendor's?</li>
-<li><strong>Look at how the vendor handles failure.</strong> Empty fields reported honestly, or quietly padded? A run log that shows its working, or a black box? The failure behaviour is the product, because at scale you will meet it constantly.</li>
-<li><strong>Confirm the exit.</strong> Your datasets are exportable and readable by API. If a vendor's model depends on your data being trapped, price that in.</li>
-</ol>
-<p>Applied to our own catalogue, that checklist is the experience we have tried to build: defined inputs, real sample records on every page, per-result pricing with the definitions stated in the open, and guides that explain the underlying mechanics — <a href="/articles/google-maps-lead-generation-guide.html">how Maps lead generation works</a>, <a href="/articles/live-job-data-from-ats-apis.html">why live ATS pulls beat job-data indexes</a>, <a href="/articles/telegram-channel-data-guide.html">what public channel collection does and does not do</a> — so that a buyer can judge the method, not just the marketing.</p>
+<h3>Pricing</h3>
 
-<h2>Actors vs. the alternatives, in one view</h2>
-<p><strong>vs. buying a database:</strong> an Actor's output is built at run time from the source; a database is built once and resold. Freshness and auditability favour the Actor; open-ended browsing of a huge inventory favours the database.</p>
-<p><strong>vs. hiring a scraping freelancer:</strong> the freelancer delivers code that starts decaying immediately and a maintenance relationship you did not want. The Actor's vendor maintains the code as their business. For a one-off, exotic source the freelancer may be the only route; for recurring standard jobs, the Actor wins on total cost of ownership.</p>
-<p><strong>vs. the source's own API:</strong> where a good official API exists and your team can build on it, that is a legitimate choice — several of our Actors are exactly that, packaged: the official feed, plus the assembly, normalisation and delivery you would otherwise build yourself. You are paying for not building and not maintaining, at per-result prices that make the comparison easy to run.</p>
-<p><strong>vs. doing it manually:</strong> below a few dozen records, manual wins and teaches you the market. The crossover is repetition and scale, and it arrives sooner than most buyers expect — usually at the second refresh.</p>
+<p>Actors price in several shapes: per run, per hour of compute, by subscription tier, or per event/result. The shape matters more than the number, because it decides who carries the cost of failure — the empty record, the closed listing, the duplicate. This shelf prices per delivered result, with premiums only on success events, and the full argument is made in <a href="/articles/pay-per-result-pricing-explained.html">pay-per-result pricing, explained</a>. The discipline is the same regardless of shape: before a large run, do a small run, count the delivered records, sample them for quality, and reconcile the charge.</p>
 
-<h2>Reading an Actor's page like an auditor</h2>
-<p>An Actor's Store page compresses the whole evaluation into one screen, if you know where to look. <strong>The title and description</strong> should name the source and the output precisely — "live pulls from five ATS platforms" is a claim you can test; "ultimate job data solution" is not. <strong>The pricing section</strong> deserves the slowest read on the page: identify every event that triggers a charge, the price of each, and what a run that finds nothing costs. If the pricing cannot be understood in two minutes, it is designed not to be. <strong>The input form</strong> (visible before you run) shows whether the vendor thinks in buyer decisions or in internal parameters. <strong>The sample output</strong> is the product's confession: real records have specific, checkable values — a real company's real officers, a real job's real application link — while placeholder samples hide behind tidy fiction. <strong>Ratings and reviews</strong> matter, but read them for operational detail rather than stars: complaints about empty fields, stale data and surprise charges are the three failure confessions in this market, and a vendor's replies to them show you the support culture you are buying into. <strong>The developer profile</strong> tells you whether the vendor is a business or a weekend: a profile that lists its catalogue, states its pricing philosophy and publishes a support address — ours is apitoryhq@gmail.com, on every page — is making itself accountable in a way an anonymous listing is not.</p>
+<p>Here is exactly how that pricing works out across this shelf, family by family:</p>
 
-<h2>Integrations: getting data out of the console and into your stack</h2>
-<p>The console workflow — run, download CSV — is where most buyers start, and for monthly jobs it may be all you ever need. The model scales beyond it in three standard directions. <strong>The API</strong> lets your own systems start runs and read datasets programmatically: your CRM can request a territory refresh, your pipeline can pull this morning's job dataset, your monitoring job can fetch the latest channel archive, all without a human touching the console. <strong>Scheduling</strong>, described earlier, is the no-code version of the same idea: the platform starts the run, and your only job is consuming the diff. <strong>Integration platforms</strong> — Make, n8n, Zapier and their peers — connect Actors to the tools businesses already run: a finished run can push records into a spreadsheet, a CRM or a Slack channel through prebuilt modules, which is how non-technical teams end up with automated data routines that would otherwise have waited for engineering time. The evaluation point for buyers is that none of these are premium tiers or enterprise unlocks; they are properties of the platform every Actor runs on. When you choose an Actor you are also choosing this delivery machinery, and it is worth more than most feature-list differences between competing listings.</p>
+<table>
+<tr><th>Family</th><th>Billed event</th><th>Price</th><th>Notes</th></tr>
+<tr><td>Maps</td><td>Place</td><td>$0.004 per place</td><td>Base extraction charge</td></tr>
+<tr><td>Maps</td><td>Lead</td><td>$0.10 per lead</td><td>Charged only when a public contact is found</td></tr>
+<tr><td>Maps</td><td>Actor Start</td><td>$0.00005 per run</td><td>Flat run fee</td></tr>
+<tr><td>Jobs</td><td>Job Result</td><td>$0.003 per job record</td><td>$3.00 per 1,000 jobs</td></tr>
+<tr><td>Jobs</td><td>Actor Start</td><td>$0.00005 per run</td><td>Flat run fee</td></tr>
+<tr><td>Telegram</td><td>Message Delivered</td><td>$0.0015 per post</td><td>Status items are always free</td></tr>
+<tr><td>Telegram</td><td>Actor Start</td><td>$0.00005 per run</td><td>Flat run fee</td></tr>
+<tr><td>UK Companies House</td><td>Full record</td><td>$0.001 per company</td><td>$1.00 per 1,000 companies</td></tr>
+</table>
 
-<h2>A short glossary for the buying conversation</h2>
+<p>Every Actor on this shelf uses this pay-per-result shape — no subscriptions, no compute-hour guessing. The pricing definitions behind each line are explained in full in <a href="/articles/pay-per-result-pricing-explained.html">pay-per-result pricing, explained</a>.</p>
+
+<h2>A Field Repair That Shows What "Honest Failure" Looks Like</h2>
+
+<p>We learned the difference between a run that succeeds and a run that delivers the hard way. An intermittent Google Maps variant returned website addresses as Google redirect URLs, and one of our smoke runs completed "successfully" with 0 contacts and 0 emails at full cost, because the contact phase had nothing fetchable to visit. A green badge, in other words, that meant nothing.</p>
+
+<p>We fixed the engine with a redirect-unwrap step, unit-checked across 10/10 cases, and re-ran the job: 6 places, 0 redirect URLs, 4 contacts found. It is the clearest example we have of why a buyer should look at what an Actor reports when it cannot deliver — named status items and honest counts — not just at a green SUCCEEDED badge.</p>
+
+<h2>A Sample Output Record, Worked</h2>
+
+<p>A serious vendor publishes a sample record so you can judge the schema before you pay for it. Here is one real record from a <a href="/actors/google-maps-contacts.html">Maps contacts run</a>:</p>
+
+<table>
+<tr><th>Field</th><th>Value</th></tr>
+<tr><td>name</td><td>Baldoria Madrid</td></tr>
+<tr><td>category</td><td>Italian restaurant</td></tr>
+<tr><td>rating</td><td>4.8</td></tr>
+<tr><td>reviewsCount</td><td>28,976</td></tr>
+<tr><td>contactFound</td><td>true</td></tr>
+</table>
+
+<p>Notice the fields are the ones the source actually has, with specific, checkable values — not a padded schema half of which comes back empty. That's the test to apply to any Actor's sample page before you spend real money, and it's exactly how the <a href="/articles/google-maps-lead-generation-guide.html">Maps lead generation guide</a> walks through the method behind this particular output.</p>
+
+<h2>A Buyer's Checklist Before You Spend Real Money</h2>
+
 <ul>
-<li><strong>Run:</strong> one execution of an Actor against one input, producing one dataset and one auditable charge.</li>
-<li><strong>Dataset:</strong> the structured output of a run — one record per result, with named fields, exportable and API-readable.</li>
-<li><strong>Pay-per-event (PPE):</strong> pricing where defined events in a run trigger charges. The events may be attempts or results; the definition is everything, as our <a href="/articles/pay-per-result-pricing-explained.html">pricing guide</a> argues.</li>
-<li><strong>Standby / API mode:</strong> some Actors stay running and answer requests in real time rather than executing batch runs — the right shape for lookup-style products, the wrong one for bulk collection.</li>
-<li><strong>Live pull:</strong> data fetched from the source system at run time, as opposed to served from the vendor's stored index. The distinction decides freshness more than any other single factor.</li>
-<li><strong>Provenance:</strong> the per-record trail — source, fetch time, origin URL — that lets a buyer audit a dataset instead of trusting it. Its absence is a finding, not a detail.</li>
+<li>Read the input form. Does it ask for decisions you understand? Opaque inputs hide vague products.</li>
+<li>Inspect the sample output. No sample record, no purchase. Check that the fields you need exist and carry plausible, specific values — not lorem ipsum in a trench coat.</li>
+<li>Run the smallest real test. Use your own territory, your own company list, your own channel. Verify three records against the source yourself. Data is verifiable goods; verify it.</li>
+<li>Check the pricing definition, not the headline. What exactly triggers each charge? What does a run that finds nothing cost? Is the premium attached to your definition of success or the vendor's?</li>
+<li>Look at how the vendor handles failure. Empty fields reported honestly, or quietly padded? A run log that shows its working, or a black box?</li>
+<li>Confirm the exit. Your datasets are exportable and readable by API. If a vendor's model depends on your data being trapped, price that in.</li>
 </ul>
-<p>With those six terms, you can hold your own in any data-buying conversation — including with us. That is rather the intention of this guide: the Actor model rewards informed buyers, because its products are testable, countable and auditable, and a market of informed buyers is the one we would rather compete in.</p>
 
-<h2>Your first thirty days with an Actor: a sane adoption plan</h2>
-<p>Most failed data adoptions fail socially, not technically — the tool worked, the workflow around it never formed. A thirty-day pattern that avoids that: <strong>Week one, verify.</strong> Run small, real jobs — your own territory, your own company list — and audit the output against sources you can check by hand. Decide, from evidence, whether the yield and quality clear your bar. <strong>Week two, integrate.</strong> Put the output into the system where the work happens — the CRM, the board, the monitoring sheet — with provenance fields attached, and define who owns the refresh. Data that lives in a downloads folder dies there. <strong>Week three, schedule.</strong> Convert the manual run into a scheduled one and build the diff habit: the standing meeting or report where changes are reviewed is the moment the data starts compounding into decisions. <strong>Week four, measure and decide.</strong> Compare the month against the alternative you were using — the database, the manual process, the freelancer — on the only metrics that matter: freshness, yield, hours spent, and outcomes produced. Expand, adjust or walk away on that evidence. The pattern is deliberately boring, and it has one property worth naming: at every stage, the amount committed is proportional to what has been proven, which is exactly the property the per-result pricing model gives the commercial side. Tool adoption and pricing model, aligned, are what make data buying feel less like procurement and more like engineering.</p>
+<h2>Weighing Actors Against the Alternatives</h2>
 
-<h2>Questions worth asking in the Store before you buy</h2>
-<p>Apify Actor pages carry questions and reviews from other buyers; they are also the right place to put a vendor on the record before money moves. The questions whose answers predict your experience: "What exactly triggers each charge, and what does an empty run cost?" — tests the pricing definition. "When was this Actor last updated, and what broke most recently?" — tests maintenance reality. "Can I see a full sample dataset, not one record?" — tests output honesty at volume, where padding hides. "How do you handle duplicates?" — tests whether deduplication is a feature or a hope. "What does the output look like when the source has nothing for my input?" — tests failure behaviour, the product's true character. A vendor who answers these precisely and publicly is a vendor whose incentives you can work with; evasive answers are also data. For our part, the answers for the Apitory catalogue are documented across this site's guides — the pricing definitions in the <a href="/articles/pay-per-result-pricing-explained.html">pricing article</a>, the methods in each source guide, sample records on every Actor page — because we would rather be audited before the sale than forgiven after it.</p>
+<p><strong>Vs. buying a database:</strong> an Actor's output is built at run time from the source; a database is built once and resold. Freshness and auditability favour the Actor; open-ended browsing of a huge inventory favours the database.</p>
 
-<h2>FAQ</h2>
-<h3>Do I need to be a developer to use an Actor?</h3>
-<p>No. The console input form and dataset download cover the standard workflow. Developers get more from the API and scheduling, but the product is designed to be run from the browser by the person who needs the data.</p>
-<h3>Where does the data come from?</h3>
-<p>It depends on the Actor, and the vendor should say plainly: ours pull from the sources themselves at run time — live listings and business websites for Maps data, the ATS platforms' public feeds for jobs, the official Companies House register, and public Telegram channels.</p>
-<h3>What do I pay, in total?</h3>
-<p>The Actor's charges (for ours, per result delivered, defined on each Actor's page) plus Apify's platform usage for the run — compute and proxies — under Apify's own pricing. Both lines are visible per run in the console.</p>
-<h3>Can I automate recurring data collection?</h3>
-<p>Yes — schedule the Actor with a saved input and each run produces a fresh dataset. Diffing consecutive datasets gives you change detection: new entries, closures, updates.</p>
-<h3>Who maintains the Actor when a source changes?</h3>
-<p>The vendor. That is the core of the model: one fix by the vendor repairs every buyer's subsequent runs. If a vendor's Actors are visibly unmaintained, treat that as the product review that matters most.</p>
-<h3>Can I try before committing?</h3>
-<p>Yes, and you should. A small run on your own real input costs very little and settles every question this guide raises — fields, freshness, yield and charges — against your own ground truth.</p>
+<p><strong>Vs. hiring a scraping freelancer:</strong> the freelancer delivers code that starts decaying immediately and a maintenance relationship you did not want. The Actor's vendor maintains the code as their business. For a one-off, exotic source the freelancer may be the only route; for recurring standard jobs, the Actor wins on total cost of ownership.</p>
 
-<p><a class="btn" href="https://apify.com/apitory">Browse Apitory Actors on the Apify Store →</a></p>
+<p><strong>Vs. the source's own API:</strong> where a good official API exists and your team can build on it, that is a legitimate choice — several Actors on this shelf are exactly that, packaged: the official feed, plus the assembly, normalisation and delivery you would otherwise build yourself. The <a href="/articles/live-job-data-from-ats-apis.html">live ATS job data guide</a> is a worked example of this. You are paying for not building and not maintaining, at per-result prices that make the comparison easy to run.</p>
+
+<p><strong>Vs. doing it manually:</strong> below a few dozen records, manual wins and teaches you the market. The crossover is repetition and scale, and it arrives sooner than most buyers expect — usually at the second refresh.</p>
+
+<h2>Auditing a Store Listing Like a Professional</h2>
+
+<p>An Actor's Store page compresses the whole evaluation into one screen, if you know where to look. The title and description should name the source and the output precisely — "live pulls from five ATS platforms" is a claim you can test; "ultimate job data solution" is not. The pricing section deserves the slowest read on the page: identify every event that triggers a charge, the price of each, and what a run that finds nothing costs. If the pricing cannot be understood in two minutes, it is designed not to be.</p>
+
+<p>The input form, visible before you run, shows whether the vendor thinks in buyer decisions or in internal parameters. The sample output is the product's confession: real records have specific, checkable values — a real company's real officers, a real job's real application link — while placeholder samples hide behind tidy fiction. Ratings and reviews matter, but read them for operational detail rather than stars: complaints about empty fields, stale data and surprise charges are the three failure confessions in this market, and a vendor's replies to them show you the support culture you are buying into.</p>
+
+<p>The developer profile tells you whether the vendor is a business or a weekend project: a profile that lists its catalogue, states its pricing philosophy and publishes a support address — ours is apitoryhq@gmail.com, on every page — is making itself accountable in a way an anonymous listing is not. You can browse this shelf directly on <a href="https://apify.com/apitory">the Apify Store</a>.</p>
+
+<h2>Getting Data Out: APIs, Scheduling and No-Code Tools</h2>
+
+<p>The console workflow — run, download CSV — is where most buyers start, and for monthly jobs it may be all you ever need. The model scales beyond it in three standard directions. The API lets your own systems start runs and read datasets programmatically: your CRM can request a territory refresh, your pipeline can pull this morning's job dataset, your monitoring job can fetch the latest <a href="/articles/telegram-channel-data-guide.html">channel archive</a>, all without a human touching the console.</p>
+
+<p>Scheduling is the no-code version of the same idea: the platform starts the run, and your only job is consuming the diff. Integration platforms — Make, n8n, Zapier and their peers — connect Actors to the tools businesses already run: a finished run can push records into a spreadsheet, a CRM or a Slack channel through prebuilt modules, which is how non-technical teams end up with automated data routines that would otherwise have waited for engineering time. None of these are premium tiers or enterprise unlocks; they are properties of the platform every Actor runs on.</p>
+
+<h2>Terms Worth Knowing Before You Negotiate</h2>
+
+<p><strong>Run:</strong> one execution of an Actor against one input, producing one dataset and one auditable charge.</p>
+
+<p><strong>Dataset:</strong> the structured output of a run — one record per result, with named fields, exportable and API-readable.</p>
+
+<p><strong>Pay-per-event (PPE):</strong> pricing where defined events in a run trigger charges. The events may be attempts or results; the definition is everything, as the <a href="/articles/pay-per-result-pricing-explained.html">pricing guide</a> argues.</p>
+
+<p><strong>Standby / API mode:</strong> some Actors stay running and answer requests in real time rather than executing batch runs — the right shape for lookup-style products, the wrong one for bulk collection.</p>
+
+<p><strong>Live pull:</strong> data fetched from the source system at run time, as opposed to served from the vendor's stored index. The distinction decides freshness more than any other single factor.</p>
+
+<p><strong>Provenance:</strong> the per-record trail — source, fetch time, origin URL — that lets a buyer audit a dataset instead of trusting it. Its absence is a finding, not a detail.</p>
+
+<p>With those six terms, you can hold your own in any data-buying conversation.</p>
+
+<h2>A Sensible Onboarding Timeline</h2>
+
+<p>Most failed data adoptions fail socially, not technically — the tool worked, the workflow around it never formed. A thirty-day pattern avoids that. Week one, verify: run small, real jobs — your own territory, your own company list — and audit the output against sources you can check by hand. Decide, from evidence, whether the yield and quality clear your bar.</p>
+
+<p>Week two, integrate: put the output into the system where the work happens — the CRM, the board, the monitoring sheet — with provenance fields attached, and define who owns the refresh. Data that lives in a downloads folder dies there. Week three, schedule: convert the manual run into a scheduled one and build the diff habit, the standing meeting or report where changes are reviewed, which is the moment the data starts compounding into decisions.</p>
+
+<p>Week four, measure and decide: compare the month against the alternative you were using — the database, the manual process, the freelancer — on the only metrics that matter: freshness, yield, hours spent, and outcomes produced. Expand, adjust or walk away on that evidence. The pattern is deliberately boring, and it has one property worth naming: at every stage, the amount committed is proportional to what has been proven, which is exactly the property the per-result pricing model gives the commercial side.</p>
+
+<h2>What to Ask a Vendor Before You Commit</h2>
+
+<p>Apify Actor pages carry questions and reviews from other buyers; they are also the right place to put a vendor on the record before money moves. The questions whose answers predict your experience:</p>
+
+<ul>
+<li>"What exactly triggers each charge, and what does an empty run cost?" — tests the pricing definition.</li>
+<li>"When was this Actor last updated, and what broke most recently?" — tests maintenance reality.</li>
+<li>"Can I see a full sample dataset, not one record?" — tests output honesty at volume, where padding hides.</li>
+<li>"How do you handle duplicates?" — tests whether deduplication is a feature or a hope.</li>
+<li>"What does the output look like when the source has nothing for my input?" — tests failure behaviour, the product's true character.</li>
+</ul>
+
+<p>A vendor who answers these precisely and publicly is a vendor whose incentives you can work with; evasive answers are also data. For this shelf, the answers are documented across the site's guides — the pricing definitions in the pricing article, the methods in each source guide, sample records on every Actor page — because we would rather be audited before the sale than forgiven after it.</p>
+
+<h2>Common Questions From New Buyers</h2>
+
+<p><strong>Do I need to be a developer to use an Actor?</strong><br>No. The console input form and dataset download cover the standard workflow. Developers get more from the API and scheduling, but the product is designed to be run from the browser by the person who needs the data.</p>
+
+<p><strong>Where does the data come from?</strong><br>It depends on the Actor, and the vendor should say plainly: this shelf pulls from the sources themselves at run time — live listings and business websites for Maps data, the ATS platforms' public feeds for jobs, the official Companies House register, and public Telegram channels.</p>
+
+<p><strong>What do I pay, in total?</strong><br>The Actor's charges (per result delivered, defined on each Actor's page) plus Apify's platform usage for the run — compute and proxies — under Apify's own pricing. Both lines are visible per run in the console.</p>
+
+<p><strong>Can I automate recurring data collection?</strong><br>Yes — schedule the Actor with a saved input and each run produces a fresh dataset. Diffing consecutive datasets gives you change detection: new entries, closures, updates.</p>
+
+<p><strong>Who maintains the Actor when a source changes?</strong><br>The vendor. That is the core of the model: one fix by the vendor repairs every buyer's subsequent runs. If a vendor's Actors are visibly unmaintained, treat that as the product review that matters most.</p>
+
+<p><strong>Can I try before committing?</strong><br>Yes, and you should. A small run on your own real input costs very little and settles every question this guide raises — fields, freshness, yield and charges — against your own ground truth.</p>
+
+<p>Browse the full catalogue on <a href="https://apify.com/apitory">the Apify Store</a> →</p>
 <h2>Related Actors</h2><ul><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#8b5cf6,#6366f1)">GM</span><a href="/actors/google-maps-contacts.html">Google Maps Contacts & Leads</a> — $0.004 / place · $0.10 only when a public contact is found</li><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#f43f5e,#f59e0b)">CS</span><a href="/actors/career-site-jobs-live.html">Career Site Jobs — Live ATS API</a> — $3.00 / 1,000 jobs</li><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#f43f5e,#f59e0b)">TC</span><a href="/actors/telegram-channel-scraper.html">Telegram Channel Scraper</a> — $0.0015 / post delivered</li></ul></main><footer><img class="fmark" src="/logo-mark.svg" alt=""><div>Support: <a href="mailto:apitoryhq@gmail.com">apitoryhq@gmail.com</a><br>Apitory — Data APIs &amp; Apify Actors. Clean data, pay per use.<br><a href="https://apify.com/apitory">apify.com/apitory</a></div></footer></body></html>

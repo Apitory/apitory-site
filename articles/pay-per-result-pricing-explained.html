@@ -1,85 +1,217 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pay-Per-Result Pricing, Explained: Why Data Should Be Charged by the Delivered Record — Apitory</title><meta name="description" content="Subscriptions, seats and per-row pricing all charge you for the vendor&#x27;s inventory. Pay-per-result charges for delivered, usable records — how it works, where it is not cheapest, and how to audit a bill."><link rel="icon" type="image/svg+xml" href="/logo-mark.svg"><link rel="stylesheet" href="/style.css?v=13"><link rel="canonical" href="https://apitory.com/articles/pay-per-result-pricing-explained.html"></head><body><div class="bgfx"></div><header><nav><a class="brand" href="/"><img class="mark" src="/logo-mark.svg" alt=""><img class="typo" src="/logo-typo.svg" alt="Apitory"></a><span><a href="/#actors">Actors</a> &nbsp;|&nbsp; <a href="/articles.html">Articles</a> &nbsp;|&nbsp; <a href="https://apify.com/apitory">Apify Store</a> &nbsp;|&nbsp; <a href="mailto:apitoryhq@gmail.com">Support</a></span></nav></header><main><p><a href="/articles.html">&larr; All articles</a></p><h1>Pay-Per-Result Pricing, Explained: Why Data Should Be Charged by the Delivered Record</h1>
-<p class="tag">Most data is sold by subscription, by seat, or by the raw row — three models that charge you for the vendor's inventory rather than your outcome. Pay-per-result charges only for records actually delivered and usable. This article explains how it works, where it is fair, and how to compare it honestly against the alternatives.</p>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pay-Per-Result Pricing, Explained: Why Data Should Be Charged by the Delivered Record — Apitory</title><meta name="description" content="Subscriptions, seats and per-row pricing all charge you for the vendor&#x27;s inventory. Pay-per-result charges for delivered, usable records — how it works, where it is not cheapest, and how to audit a bill."><link rel="icon" type="image/svg+xml" href="/logo-mark.svg"><link rel="stylesheet" href="/style.css?v=13"><link rel="canonical" href="https://apitory.com/articles/pay-per-result-pricing-explained.html"></head><body><div class="bgfx"></div><header><nav><a class="brand" href="/"><img class="mark" src="/logo-mark.svg" alt=""><img class="typo" src="/logo-typo.svg" alt="Apitory"></a><span><a href="/#actors">Actors</a> &nbsp;|&nbsp; <a href="/articles.html">Articles</a> &nbsp;|&nbsp; <a href="https://apify.com/apitory">Apify Store</a> &nbsp;|&nbsp; <a href="mailto:apitoryhq@gmail.com">Support</a></span></nav></header><main><p><a href="/articles.html">&larr; All articles</a></p><article>
+  <h1>Pay-Per-Result Pricing for Data Products: How Outcome Billing Works</h1>
 
-<h2>The problem with how data is usually priced</h2>
-<p>Every pricing model quietly decides who carries the risk of failure. In data products, failure has specific shapes: the record with no contact details, the job listing for a role that closed last month, the company record that turns out to be a duplicate. The question is never whether failures exist — in any real dataset they do — but whose bill they land on.</p>
-<p><strong>Subscriptions</strong> put all the risk on the buyer. You pay for access to an inventory for a period, whether you use it heavily, lightly or not at all, and whether the slice you need is fresh or stale. The vendor's revenue is secured the day you sign; the incentive to keep your corner of the database current is whatever their churn anxiety provides.</p>
-<p><strong>Per-seat pricing</strong> prices your team, not the data. It made sense for software whose cost scaled with users; for data delivery it is an arbitrary multiplier that punishes you for letting more colleagues touch the same records.</p>
-<p><strong>Per-row pricing</strong> looks outcome-based and is not. A row is a unit of extraction, not a unit of value: the row for a business with no published contact, the row for a closed job, and the row you can actually use are all charged identically. Per-row vendors are paid for attempts. The buyer absorbs the yield.</p>
-<p>Pay-per-result starts from the other end: define the result — the thing the buyer is actually trying to obtain — and charge when, and only when, it is delivered.</p>
+  <p><strong>TL;DR:</strong> Pay-per-result bills only for delivered, verified records rather than raw extraction attempts or subscriptions. Forecast spend with a small pilot run and audit every charge against your output dataset.</p>
 
-<h2>What "result" means, precisely</h2>
-<p>The model only works if the result is defined sharply enough to be checked by both sides. In our own Actors the definitions are deliberately mechanical:</p>
-<ul>
-<li><strong>Google Maps leads:</strong> a place record costs $0.004 — places are cheap to extract and the buyer wants the full enumeration. The lead charge of $0.10 applies <em>only</em> when the record carries a usable public contact. A place that yields no contact never attracts the premium. (See the <a href="/articles/google-maps-lead-generation-guide.html">complete guide</a> for how the two steps work.)</li>
-<li><strong>Job data:</strong> $3.00 per 1,000 job records delivered from live ATS feeds. A company on your list with no open roles delivers no records and costs nothing beyond the run's start event — and because the pull is live, every delivered record is a role the employer itself currently lists as open.</li>
-<li><strong>UK company data:</strong> $0.001 per full record — company profile plus officers and persons with significant control — fetched from the official register at run time. You pay for the companies you asked about, assembled complete.</li>
-<li><strong>Telegram channels:</strong> $0.0015 per post delivered to your dataset. A monitoring run that finds twelve new posts costs twelve posts' worth, not a month of subscription.</li>
-</ul>
-<p>Two properties are doing the work in each definition. The unit is the buyer's unit of value, not the vendor's unit of effort. And the event is <em>verifiable by the buyer</em>: you can count the records in your dataset, check which ones carry contacts, and reconcile the bill against the delivery line by line. A pricing model you can audit is a pricing model that disciplines its vendor.</p>
+  <h2>Start With One Concrete Campaign: Three Pricing Models Side by Side</h2>
 
-<h2>The incentive argument — why this is not just a discount shape</h2>
-<p>Pricing models are incentive structures wearing invoices. Under per-row pricing, a vendor earns more by extracting more rows, so the product drifts toward volume: wider nets, looser filters, duplicates tolerated. Under pay-per-result, the vendor earns more only when the buyer's yield rises, so the product drifts toward the unglamorous work that actually moves yield — unwrapping redirect-hidden website URLs before fetching them (a real bug we found and fixed in our own Maps engine, where it had been silently suppressing email yield), filtering out parked domains, deduplicating properly, keeping parsers current when sources change.</p>
-<p>The same logic applies to freshness. A subscription database is paid the same whether its records are a day or a year old. A per-result vendor selling <em>live</em> pulls is paid per delivery, and the delivery is only worth buying if it is current — the model's revenue and the data's freshness point in the same direction. When you evaluate any data product, it is worth asking the vendor a simple question: "What do you earn more of when my results get worse?" If the answer is "the same" or "more", you have learned something important.</p>
+  <p>Most data is still sold by subscription, by seat, or by the raw row—three models designed around a vendor's inventory rather than your outcome. Every pricing model quietly decides who carries the risk when something goes wrong: a business record with no contact details, a job listing for a role that closed last month, or a company entry that turns out to be a duplicate. Failure exists in every real dataset. The real question is whose bill it lands on.</p>
 
-<h2>Comparing honestly: when pay-per-result is NOT the cheapest option</h2>
-<p>This model is not universally optimal, and a vendor who claims otherwise is selling. Three situations favour the alternatives:</p>
-<ul>
-<li><strong>Very high, steady volume.</strong> If you consume millions of records a month on a stable specification, a negotiated flat arrangement will usually beat any per-unit price — ours included. Per-result pricing wins on alignment and zero commitment, not on infinite scale economics.</li>
-<li><strong>Exploratory access.</strong> If you need to browse a broad inventory to discover what exists, an access subscription can be the right tool. Per-result is built for defined questions: these companies, this territory, this channel.</li>
-<li><strong>Data as a by-product.</strong> Where records are a cheap side output of a platform you already pay for, marginal pricing comparisons stop meaning much.</li>
-</ul>
-<p>There is also a cost the buyer still carries under our model, and it should be named: Apify runs consume platform usage (compute and proxies) in addition to the Actor's per-result charges, under Apify's own pricing. The per-result charge is the price of the data work; the platform it runs on bills separately, the same as a database subscription sits on top of your cloud bill. We consider the two-line bill a feature — each line is auditable — but it is a line you should know exists before your first run, not after.</p>
+  <p>The clearest way to judge pricing models is on a single concrete job, so take the campaign from our <a href="/articles/google-maps-lead-generation-guide.html">Google Maps lead generation guide</a>: a territory extraction that returns 1,000 places, of which—after filtering—700 are enriched and 400 yield a usable public contact.</p>
 
-<h2>How to audit a pay-per-result bill (a five-minute checklist)</h2>
-<ol>
-<li><strong>Count the delivered records</strong> in the dataset and multiply by the unit price. It should match the charge exactly; if the pricing has tiers or minimums, they should be stated on the Actor's page before you run.</li>
-<li><strong>Spot-check the premium events.</strong> If you were charged lead premiums, sample twenty premium records and confirm each carries the contact the premium is defined on. This is the audit per-row vendors cannot offer you, because in their model there is nothing to check.</li>
-<li><strong>Check the failures.</strong> Sample the records you were <em>not</em> premium-charged for. They should be genuinely contact-free — a business with no published email — not extraction misses. A vendor whose free rows are full of findable contacts is under-delivering, whatever the bill says.</li>
-<li><strong>Verify freshness on a known record.</strong> Pick one entity whose current state you know — a company whose director changed, a job that closed yesterday — and confirm the delivered record matches reality. Verifiability before commitment is the standard we recommend for all data buying, including ours; <a href="/articles/uk-companies-house-data-guide.html">our Companies House guide</a> describes the same three-company check for register data.</li>
-</ol>
-<p>If a vendor passes those four checks, the pricing model is doing its job. If a vendor cannot be checked this way, the pricing model is decoration.</p>
+  <ul>
+    <li><strong>Per-row pricing:</strong> At an illustrative $0.05 per extracted record, you pay for all 1,000 rows—$50—including the 600 rows that never become leads. A row is a unit of extraction, not a unit of value. The row for a business with no published contact, the row for a closed job, and the row you can actually use are priced identically. Per-row vendors are paid for attempts, while the buyer absorbs the yield.</li>
+    <li><strong>Subscription database pricing:</strong> Your campaign cost is whatever fraction of the monthly fee you assign to it, but the records come from the vendor's last compilation rather than this week's listings, and the 400-contact subset is limited to whatever their existing coverage happens to hold. Subscriptions place all the risk on the buyer: you pay for access for a period whether you run heavily, lightly, or not at all, and whether your slice is fresh or stale. The vendor's revenue is locked in the day you sign, leaving only churn anxiety to keep your corner of the database current.</li>
+    <li><strong>Per-seat pricing:</strong> Seat licences price your team instead of the data. That made sense for software whose cost scaled with users, but for data delivery it acts as an arbitrary multiplier that penalises you for letting more colleagues touch the same records.</li>
+    <li><strong>Pay-per-result pricing:</strong> At our prices, the bill for that territory is $4 for the places plus $40 for the 400 records carrying a usable contact: $44 total, with every premium dollar tied to a record you can open and inspect.</li>
+  </ul>
 
-<h2>Why we price everything this way</h2>
-<p>Apitory's catalogue is small and deliberately uniform: Maps leads, live job data, UK company records, Telegram channel data — every product is charged per delivered result, with premiums attached only to the events that constitute success for the buyer. The uniformity is the point. A buyer who learns to audit one of our Actors has learned to audit all of them, and a vendor whose revenue depends on delivered, checkable results has nowhere to hide a decaying product. If you are new to this way of buying data, <a href="/articles/what-is-an-apify-actor-buyers-guide.html">our buyer's guide to Apify Actors</a> explains the platform mechanics underneath — runs, datasets, scheduling and how charges appear — so the pricing conversation and the tooling conversation join up.</p>
+  <p>Notice that the interesting comparison is not the headline totals—they are deliberately close. What matters is what each invoice pays for. The per-row bill pays for attempts. The subscription bill pays for access. The per-result bill pays for the 400 outcomes, auditable record by record against the delivered file. When the campaign repeats next quarter in a new territory, only the pay-per-result bill scales with what that territory actually yields.</p>
 
-<h2>A worked comparison: the same campaign under three pricing models</h2>
-<p>Models are easiest to judge on one concrete job, so take the campaign from our <a href="/articles/google-maps-lead-generation-guide.html">lead generation guide</a>: a territory extraction returning 1,000 places, of which — after filtering — 700 are enriched and 400 yield a usable public contact. Under <strong>per-row pricing</strong> at an illustrative $0.05 per extracted record, you pay for all 1,000 rows: $50, including the 600 rows that never become leads. Under a <strong>subscription database</strong>, the campaign's cost is whatever fraction of the monthly fee you assign to it — but the records come from the vendor's last compilation, not from this week's listings, and the 400-contact subset is whatever their coverage happens to hold. Under <strong>pay-per-result</strong> at our prices, the bill is $4 for the places plus $40 for the 400 records that carry a usable contact: $44, with every premium dollar attached to a record you can open and inspect. The interesting comparison is not the totals — they are deliberately close. It is what each bill is <em>for</em>. The per-row bill is for attempts. The subscription bill is for access. The per-result bill is for the 400 outcomes, and it can be audited record by record against them. When the campaign repeats next quarter in a new territory, only the third bill scales with what the territory actually yields.</p>
+  <h3>The Broader Shift From Access to Measurable Outcomes</h3>
 
-<h2>If you negotiate data contracts: definitions to nail down</h2>
-<p>Per-result pricing moves the negotiation from price to definitions, which is where it always belonged. Whatever vendor you are dealing with — us included — get these five definitions in writing before volume starts:</p>
-<ul>
-<li><strong>The result.</strong> Exactly what a billable record must contain. "A lead" is not a definition; "a place record carrying at least one publicly published email address or a contact-page URL" is.</li>
-<li><strong>The duplicate rule.</strong> Are duplicates billed? Ours are a data-quality failure, not a product: deduplication on identity (name plus address, company number, job ID) happens before delivery, and a duplicate that slips through is not a result.</li>
-<li><strong>The freshness rule.</strong> When was the record produced? For live-pull products the answer is "during your run"; for anything else, the compilation date should be stated per record, not per sales page.</li>
-<li><strong>The failure bill.</strong> What does a run that finds nothing cost? Under our model, a minimal start event and nothing else. A vendor whose empty runs are expensive is charging for attempts under a result-shaped label.</li>
-<li><strong>The audit right.</strong> Can you sample delivered records against the source and dispute charges that fail the definition? A vendor confident in its pipeline will say yes in writing, because the audit is the mechanism that keeps both sides honest between renewals.</li>
-</ul>
-<p>Notice that none of these definitions mention price. That is the point: in data buying, most disappointment is definition-shaped, not price-shaped. A cheap record that is not what you meant to buy is expensive; a fairly priced record that exactly matches a written definition compounds in value every time you reuse the pipeline.</p>
+  <p>Data is not the only category repricing around outcomes. Across software, the unit of charge has been migrating from access—seats, licences, and subscriptions—toward outcomes such as resolved tickets, delivered records, and completed tasks as the marginal cost of each unit of work becomes measurable. Whenever a vendor can measure exactly what it delivered, it can bill for exactly that, and buyers who have reconciled an outcome-based invoice rarely go back to paying blindly for access.</p>
 
-<h2>The deeper pattern: software is moving to outcome pricing everywhere</h2>
-<p>Data is not the only category repricing this way. Across software, the unit of charge has been migrating from access (seats, licences, subscriptions) toward outcomes (resolved tickets, delivered records, completed tasks) as the marginal cost of the work itself becomes measurable per unit. The driver is the same in every category: when a vendor can measure exactly what it delivered, it can charge for exactly that — and buyers, once they have seen a bill they can audit line by line against outcomes, rarely accept an access bill again. Data products feel the shift first because their outcomes are unusually countable: a record either carries the contact or it does not; a job is either open or it is not; a company record is either complete or it is not. We built Apitory's pricing on the assumption that this migration is permanent, and that the vendors who thrive under it will be the ones whose pipelines genuinely produce the outcomes — because under per-result pricing, there is no longer anywhere for a decaying product to hide its decay. If you buy data regularly, that is the future to negotiate toward, with whichever vendor can survive being audited in it.</p>
+  <p>Data products feel this shift first because their deliverables are unusually countable: a record either carries a contact or it does not, a job is either open or it is not, and a company filing is either complete or it is not. We built Apitory's pricing on the premise that this migration is permanent—and that under pay-per-result billing, a decaying pipeline no longer has anywhere to hide.</p>
 
-<h2>Who pays when the source breaks?</h2>
-<p>Every data pipeline breaks eventually, because every source changes eventually: a site restructures, a platform revises its feed, a register updates its interface. The interesting question is whose problem that is under each pricing model — because the answer predicts how fast it gets fixed. Under a subscription, the vendor is paid in full while the product degrades, and the buyer's remedy is a complaint and a churn threat at renewal; the repair queue competes with every other priority in the vendor's roadmap, and the buyer cannot even see the degradation without auditing records by hand. Under per-row pricing, breakage is worse than invisible — it can be profitable, if broken extraction produces billable rows of garbage. Under per-result pricing with a sharp result definition, breakage stops the vendor's revenue for the affected product: records that fail the definition do not bill, empty runs do not bill, and the vendor's income resumes exactly when the pipeline is repaired. That alignment does not make breakage impossible; it makes the vendor's incentive point at the fix with an urgency no SLA clause manufactures. When you evaluate a vendor, ask about the last time a source broke and what happened to billing during the outage. The answer tells you which model you are really buying, whatever the pricing page calls it.</p>
+  <h2>What Counts as a Delivered Result (and What It Looks Like)</h2>
 
-<h2>Forecasting your spend: the small-run method</h2>
-<p>The standard objection to usage pricing is unpredictability — a subscription is a known number, a per-result bill is not. In practice the bill is forecastable with one cheap experiment, because yields are properties of the market, not of the run. Run the smallest version of your real job: one territory instead of ten, fifty companies instead of five hundred, one channel's backfill tranche instead of the whole set. Measure the delivered results and the charge. Your full job's cost is that measurement scaled by the size ratio, with a margin for the variance between territories — and the small run was not a cost of forecasting, it was the first tranche of the work itself, fully usable. This is how our own buyers typically start: a smoke-scale run whose output they audit (the audit checklist above), followed by volume once the yield and the quality are measured facts rather than sales claims. A vendor confident in its pipeline will encourage exactly this sequence. A vendor who insists on an annual commitment before you may measure anything is telling you how the measurement would go.</p>
+  <p>Pay-per-result starts from the buyer's end: define the exact outcome you are trying to obtain, and charge when—and only when—it is delivered. The model only holds together if "result" is defined mechanically enough for both sides to verify.</p>
 
-<h2>FAQ</h2>
-<h3>Is pay-per-result the same as pay-per-click or usage-based pricing?</h3>
-<p>It is a form of usage-based pricing with a stricter definition of usage: not attempts, API calls or rows processed, but results delivered that meet the stated definition — a record with a usable contact, a live job, a complete company record, a collected post.</p>
-<h3>What do I pay when a run finds nothing?</h3>
-<p>For most of our Actors, little or nothing beyond a minimal start event ($0.00005). If a Maps territory has no matching businesses or a company list has no open roles, there are no results to charge for. That is the model working as intended.</p>
-<h3>Are there minimum charges or subscriptions?</h3>
-<p>No subscriptions and no monthly minimums on our Actors. You pay the per-result charges for what a run delivers, plus Apify's platform usage for the run itself under Apify's pricing.</p>
-<h3>How do I verify I was charged correctly?</h3>
-<p>Count records in the delivered dataset, sample the premium-charged records to confirm each meets the premium's definition, and reconcile against the run's charge breakdown in the Apify console. The five-minute checklist above walks through it.</p>
-<h3>When should I choose a subscription instead?</h3>
-<p>When your volume is very high and steady, when you need open-ended browsing of a broad inventory, or when the data is a by-product of a platform you already pay for. The article above gives the honest cases; per-result wins on alignment, auditability and zero commitment.</p>
-<h3>Does per-result pricing mean the data is guaranteed accurate?</h3>
-<p>No pricing model can guarantee that. What it guarantees is the direction of the vendor's incentive and your ability to audit the delivery. Accuracy itself comes from the source — live pulls from the systems of record — which is why our Actors fetch at run time rather than reselling stored data.</p>
+  <ul>
+    <li><strong>Google Maps leads:</strong> A place record costs $0.004, because places are inexpensive to extract and buyers often want the full territory enumeration. The $0.10 lead charge applies only when the record carries a usable public contact; a place that yields no contact never attracts the premium. (See our <a href="/articles/google-maps-lead-generation-guide.html">complete Google Maps guide</a> for how the two steps work.)</li>
+    <li><strong>Job data:</strong> $3.00 per 1,000 job records delivered from live ATS feeds. A company on your list with no open roles returns zero records and costs nothing beyond the run's start event—and because the pull runs live, every delivered record reflects a role the employer currently lists as open.</li>
+    <li><strong>UK company data:</strong> $0.001 per full record—company profile plus officers and persons with significant control—assembled from the official register at run time. You pay only for the companies you requested, returned complete.</li>
+    <li><strong>Telegram channels:</strong> $0.0015 per post delivered to your dataset. A monitoring run that picks up twelve new posts costs twelve posts' worth, not a monthly subscription.</li>
+  </ul>
 
-<p><a class="btn" href="https://apify.com/apitory">Browse Apitory Actors on the Apify Store →</a></p>
+  <p>Two properties make those definitions work. First, the billable unit matches the buyer's unit of value rather than the vendor's unit of effort. Second, the event is verifiable: you can count rows in your dataset, inspect which records contain contacts, and reconcile the invoice line by line against delivery. A pricing model you can audit disciplines its vendor.</p>
+
+  <h3>What a Paid Output Record Contains</h3>
+
+  <p>To make that verification concrete, here is a real delivered, paid output record from the <code>google-maps-contacts</code> Actor:</p>
+
+  <table>
+    <caption>Sample delivered, paid result record (<code>google-maps-contacts</code>)</caption>
+    <thead>
+      <tr>
+        <th>Field</th>
+        <th>Delivered Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>name</code></td>
+        <td>Baldoria Madrid</td>
+      </tr>
+      <tr>
+        <td><code>category</code></td>
+        <td>Italian restaurant</td>
+      </tr>
+      <tr>
+        <td><code>rating</code></td>
+        <td>4.8</td>
+      </tr>
+      <tr>
+        <td><code>reviewsCount</code></td>
+        <td>28,976</td>
+      </tr>
+      <tr>
+        <td><code>contactFound</code></td>
+        <td>true</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Apitory Pricing Schedule Across Product Families</h3>
+
+  <p>Apitory's catalogue is deliberately small and uniform—Maps leads, live job data, UK company records, and Telegram channel data—so once a buyer learns how to audit one of our Actors, they know how to audit all of them. Every product bills per delivered result, with premiums attached solely to buyer-defined success events.</p>
+
+  <table>
+    <caption>Apitory pay-per-result pricing across Actor families</caption>
+    <thead>
+      <tr>
+        <th>Actor Family</th>
+        <th>Actor Start</th>
+        <th>Delivered Result Rate</th>
+        <th>Conditional / Additional Terms</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Maps family</td>
+        <td>$0.00005 per run</td>
+        <td>Place: $0.004 per place</td>
+        <td>Lead: $0.10 per lead, charged ONLY when a public contact is found</td>
+      </tr>
+      <tr>
+        <td>Jobs family</td>
+        <td>$0.00005 per run</td>
+        <td>Job Result: $0.003 per job record ($3.00 per 1,000 jobs)</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Telegram family</td>
+        <td>$0.00005 per run</td>
+        <td>Message Delivered: $0.0015 per post</td>
+        <td>Status items always free</td>
+      </tr>
+      <tr>
+        <td>UK Companies House</td>
+        <td>—</td>
+        <td>Full record: $0.001 per company ($1.00 per 1,000 full records)</td>
+        <td>—</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="4"><strong>Separate platform usage note:</strong> Measured delivery costs from our own build records show a 6-record live jobs smoke run cost $0.000163 in total measured platform usage, and a 500-post Telegram smoke run cost $0.0029. These are our platform costs on our own account, NOT buyer prices.</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <h3>Understanding the Two-Line Bill on Apify</h3>
+
+  <p>There is one buyer-side cost that should be stated plainly upfront: Apify runs consume platform usage—compute and proxies—in addition to the Actor's per-result charges, billed under Apify's own pricing. The per-result line pays for the data work, while the platform it runs on bills separately, much as a database subscription sits on top of your cloud infrastructure bill. We view this two-line structure as a feature because each line remains independently auditable, though it is something you should know before your first run rather than after. If you are new to buying data this way, our <a href="/articles/what-is-an-apify-actor-buyers-guide.html">buyer's guide to Apify Actors</a> explains runs, datasets, scheduling, and how both charge lines appear.</p>
+
+  <h2>Why Incentives, Silent Bugs, and Breakage Matter More Than Discounts</h2>
+
+  <p>Pricing models are incentive structures wearing invoices. Under per-row billing, a vendor makes more money by extracting more rows, so product decisions drift toward volume: wider search nets, looser filters, and tolerated duplicates. Under pay-per-result, a vendor earns more only when the buyer's yield improves, which pushes engineering attention toward the unglamorous work that actually increases usable output—filtering out parked domains, deduplicating reliably, keeping parsers current as sites evolve, and unwrapping redirect-hidden website URLs before fetching them.</p>
+
+  <h3>What One Failed Smoke Run Taught Us About Lead Pricing</h3>
+
+  <p>That redirect bug is not hypothetical—we ran into it directly in our own Maps engine. Our first smoke run of the real-estate variant returned 15 records and looked successful on the surface, but every record's website was a Google redirect URL, so the contact phase fetched nothing: 0 of 15 contacts, 0 emails, at a measured true cost of $0.2929. Under flat per-run pricing, that silent failure would have been the buyer's loss. That run is why our Maps pricing charges the $0.10 lead event only when a contact is actually found, and why we fixed the redirect handling in the shared engine afterwards—the repair re-test returned 5 contacts from 6 records.</p>
+
+  <h3>Freshness and Source Breakage Under Different Billing Models</h3>
+
+  <p>The same incentive alignment governs data freshness. A subscription database earns the exact same fee whether its records were updated yesterday or last year. A live-pull per-result vendor is paid only on delivery, and buyers only reorder runs if the returned records reflect current reality. Whenever you evaluate a data product, ask the vendor one blunt question: "What do you earn more of when my results get worse?" If the answer is "the same" or "more," the incentive points away from your interest.</p>
+
+  <p>Source breakage exposes that divide even faster. Every data pipeline breaks eventually because external websites restructure, platforms revise their feeds, and public registers update their interfaces. What matters is whose problem that outage becomes:</p>
+
+  <ul>
+    <li><strong>Under a subscription:</strong> The vendor collects full payment while output quietly degrades. Your only recourse is complaining or threatening to churn at renewal, while the repair competes with every other item on the vendor's roadmap and degradation goes unseen unless you audit records manually.</li>
+    <li><strong>Under per-row pricing:</strong> Breakage can actually be profitable if a malfunctioning scraper keeps emitting billable rows of broken output.</li>
+    <li><strong>Under pay-per-result:</strong> With a strict result definition, source breakage halts the vendor's revenue on the affected product immediately. Records failing the definition do not bill, empty runs do not bill, and revenue resumes only when the pipeline is repaired.</li>
+  </ul>
+
+  <p>That financial feedback loop does not prevent sources from changing, but it gives the vendor an urgency to fix breakage that no SLA clause can manufacture. Ask any prospective vendor about the last time an upstream source broke and what happened to customer billing during the outage—the answer tells you which model you are truly buying.</p>
+
+  <h2>Forecasting Spend and Auditing Your Invoice</h2>
+
+  <p>A common objection to usage-based billing is budget unpredictability: a subscription gives you a fixed monthly figure, whereas a per-result invoice moves with yield. In practice, you can forecast spend accurately with one inexpensive test, because yields are properties of the target market rather than the run itself.</p>
+
+  <h3>The Small-Run Forecasting Method</h3>
+
+  <p>Instead of guessing from a sales estimate, execute the smallest realistic slice of your actual workload: one territory instead of ten, fifty companies instead of five hundred, or one channel's backfill tranche instead of the entire set. Measure the delivered records and the total charge. Your full job's budget is that observed cost scaled by the size ratio, plus a margin for variance across territories. Even better, that pilot run is not wasted forecasting overhead—it is the first tranche of usable production data. Our own buyers typically start with a smoke-scale run, audit the output, and move to full volume only after yield and quality are measured facts. A vendor who demands an annual commitment before letting you measure anything is already telling you what that measurement would show.</p>
+
+  <h3>The Five-Minute Audit Checklist</h3>
+
+  <p>Once a run finishes, you can verify a pay-per-result bill in four checks:</p>
+
+  <ol>
+    <li><strong>Reconcile base counts:</strong> Count the delivered records in your dataset and multiply by the unit price. The math should match your charge breakdown exactly; if tiers or minimums exist, they should have been stated upfront on the Actor's page.</li>
+    <li><strong>Spot-check premium events:</strong> When you have been billed for lead premiums, sample twenty premium-charged records and verify that every single one contains the contact the premium is defined on. Per-row vendors cannot offer this check because their model has no outcome definition to test against.</li>
+    <li><strong>Inspect non-premium records:</strong> Sample records that did not trigger a premium charge. They should be genuinely contact-free—such as businesses with no published email—rather than extraction misses. If free rows are full of easily findable contacts, the pipeline is under-delivering regardless of the invoice total.</li>
+    <li><strong>Verify freshness against ground truth:</strong> Pick an entity whose current state you already know, such as a company whose director changed or a job that closed yesterday, and confirm the returned record matches reality. Our <a href="/articles/uk-companies-house-data-guide.html">Companies House data guide</a> walks through the same three-company check for official register data before you commit volume.</li>
+  </ol>
+
+  <p>If a vendor passes all four checks, the pricing model is doing real work. If you cannot inspect and verify charges this way, "pay-per-result" is just decoration.</p>
+
+  <h2>Contract Terms to Nail Down — and When Another Model Wins</h2>
+
+  <p>Per-result billing shifts buyer-vendor negotiations away from headline rates and onto precise definitions, where the conversation always belonged. Regardless of which vendor you work with—us included—get five definitions written down before running at scale:</p>
+
+  <ul>
+    <li><strong>The result definition:</strong> State exactly what a billable record must hold. "A lead" is vague; "a place record carrying at least one publicly published email address or a contact-page URL" is enforceable.</li>
+    <li><strong>The duplicate rule:</strong> Clarify whether duplicates are billed. We treat duplicates as a data-quality failure rather than a product, deduplicating on identity—name plus address, company number, or job ID—before delivery so a duplicate that slips through is not billed as a result.</li>
+    <li><strong>The freshness rule:</strong> Specify when records were gathered. For live-pull products, the answer is "during your run." For compiled datasets, require a compilation date per record rather than a marketing claim on the sales page.</li>
+    <li><strong>The failure bill:</strong> Confirm what an empty run costs. Under our model, it is a minimal start event and nothing else; a vendor whose empty runs are expensive is charging for extraction attempts under an outcome-shaped label.</li>
+    <li><strong>The audit right:</strong> Ensure you can sample delivered records against the upstream source and dispute charges that breach the written definition. Any vendor confident in its pipeline will grant that in writing, because auditing keeps both sides honest between runs.</li>
+  </ul>
+
+  <p>None of those five clauses mentions price, because most buyer disappointment in data purchasing stems from mismatched definitions rather than unit cost. A cheap record that fails to match what you thought you bought is expensive; a fairly priced record conforming to a strict written specification compounds in value every time you rerun the workflow.</p>
+
+  <h3>When Pay-Per-Result Is NOT the Cheapest Option</h3>
+
+  <p>Outcome billing is not universally optimal, and any vendor claiming otherwise is selling. Three genuine cases favour alternative models:</p>
+
+  <ul>
+    <li><strong>Very high, steady volume:</strong> If you consume millions of records every month on a stable specification, a negotiated flat arrangement will normally beat any per-unit rate—including ours. Pay-per-result wins on alignment and zero commitment, not infinite scale economics.</li>
+    <li><strong>Exploratory access:</strong> When your team needs to browse freely across a broad inventory to discover what exists, an access subscription can be the right tool. Pay-per-result is built for targeted questions: these companies, this territory, this channel.</li>
+    <li><strong>Data as a by-product:</strong> Where records appear as an inexpensive side output of software or a platform you already pay for, standalone per-unit pricing comparisons stop carrying much weight.</li>
+  </ul>
+
+  <h2>Frequently Asked Questions</h2>
+
+  <h3>How does pay-per-result differ from standard usage-based or pay-per-click pricing?</h3>
+  <p>It is a stricter form of usage-based pricing. Rather than billing for attempts, API calls, or raw rows processed, charges apply only when delivered records satisfy the stated result definition—such as a record carrying a usable contact, a live job posting, a complete company filing, or a collected post.</p>
+
+  <h3>What happens to my bill if a run returns zero results?</h3>
+  <p>For most of our Actors, you pay little or nothing beyond a minimal start event ($0.00005). If a Maps territory contains no matching businesses or a company list has no open roles, there are no delivered results to bill for—that is the pricing model working as designed.</p>
+
+  <h3>Are there monthly minimums or required subscriptions?</h3>
+  <p>No. Our Actors carry no subscriptions and no monthly minimums. You pay only the per-result charges for what a run delivers, alongside Apify's platform usage for executing the run under Apify's own pricing.</p>
+
+  <h3>How can I double-check that an invoice is accurate?</h3>
+  <p>Count the records inside your delivered dataset, sample the premium-charged rows to verify each satisfies the premium definition, and reconcile those counts against the run's charge breakdown in the Apify console using the four-check audit above.</p>
+
+  <h3>When does an annual or monthly subscription still make more sense?</h3>
+  <p>A subscription makes more sense when you pull very high, steady volumes every month, when you want open-ended exploratory browsing across a wide inventory, or when the records come as a by-product of a platform you already pay for. Outside those cases, pay-per-result offers stronger alignment, full auditability, and zero commitment.</p>
+
+  <h3>Does charging per result guarantee accurate data?</h3>
+  <p>No billing model can guarantee accuracy by itself. What pay-per-result guarantees is the direction of the vendor's incentive and your right to audit deliveries. Accuracy depends on pulling from systems of record, which is why our Actors fetch live at run time rather than reselling stale stored inventories.</p>
+
+  <p><a href="https://apify.com/apitory">Browse Apitory Actors on the Apify Store →</a></p>
+</article>
 <h2>Related Actors</h2><ul><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#8b5cf6,#6366f1)">GM</span><a href="/actors/google-maps-contacts.html">Google Maps Contacts & Leads</a> — $0.004 / place · $0.10 only when a public contact is found</li><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#f43f5e,#f59e0b)">CS</span><a href="/actors/career-site-jobs-live.html">Career Site Jobs — Live ATS API</a> — $3.00 / 1,000 jobs</li><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#0ea5e9,#22d3ee)">UC</span><a href="/actors/uk-companies-house.html">UK Companies House Data</a> — $1.00 / 1,000 full records</li></ul></main><footer><img class="fmark" src="/logo-mark.svg" alt=""><div>Support: <a href="mailto:apitoryhq@gmail.com">apitoryhq@gmail.com</a><br>Apitory — Data APIs &amp; Apify Actors. Clean data, pay per use.<br><a href="https://apify.com/apitory">apify.com/apitory</a></div></footer></body></html>

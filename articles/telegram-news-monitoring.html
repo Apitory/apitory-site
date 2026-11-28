@@ -1,54 +1,154 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Monitoring Telegram News Channels: From Scrolling to a Structured Feed — Apitory</title><meta name="description" content="A verified 10-channel news pack, scheduled pulls and the diff: how to monitor public Telegram news channels as a structured feed instead of scrolling."><link rel="icon" type="image/svg+xml" href="/logo-mark.svg"><link rel="stylesheet" href="/style.css?v=13"><link rel="canonical" href="https://apitory.com/articles/telegram-news-monitoring.html"></head><body><div class="bgfx"></div><header><nav><a class="brand" href="/"><img class="mark" src="/logo-mark.svg" alt=""><img class="typo" src="/logo-typo.svg" alt="Apitory"></a><span><a href="/#actors">Actors</a> &nbsp;|&nbsp; <a href="/articles.html">Articles</a> &nbsp;|&nbsp; <a href="https://apify.com/apitory">Apify Store</a> &nbsp;|&nbsp; <a href="mailto:apitoryhq@gmail.com">Support</a></span></nav></header><main><p><a href="/articles.html">&larr; All articles</a></p><h1>Monitoring Telegram News Channels: From Scrolling to a Structured Feed</h1>
-<p class="tag">Much of the world's news now breaks on Telegram first — or only on Telegram. Monitoring it properly means a verified channel set, scheduled pulls, and a dataset you can search and diff. Here is how the workflow is built, and what to watch out for.</p>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Monitoring Telegram News Channels: From Scrolling to a Structured Feed — Apitory</title><meta name="description" content="A verified 10-channel news pack, scheduled pulls and the diff: how to monitor public Telegram news channels as a structured feed instead of scrolling."><link rel="icon" type="image/svg+xml" href="/logo-mark.svg"><link rel="stylesheet" href="/style.css?v=13"><link rel="canonical" href="https://apitory.com/articles/telegram-news-monitoring.html"></head><body><div class="bgfx"></div><header><nav><a class="brand" href="/"><img class="mark" src="/logo-mark.svg" alt=""><img class="typo" src="/logo-typo.svg" alt="Apitory"></a><span><a href="/#actors">Actors</a> &nbsp;|&nbsp; <a href="/articles.html">Articles</a> &nbsp;|&nbsp; <a href="https://apify.com/apitory">Apify Store</a> &nbsp;|&nbsp; <a href="mailto:apitoryhq@gmail.com">Support</a></span></nav></header><main><p><a href="/articles.html">&larr; All articles</a></p><h1>Structured Telegram News Monitoring: Vetting Channels, Scheduling Pulls, and Diffing Feeds</h1>
 
-<h2>Why Telegram news monitoring is a distinct discipline</h2>
-<p>For a large share of the world's internet users, Telegram is not a chat app with channels attached; it is the primary news medium. National outlets, independent media, official government accounts and regional press publish to public channels whose posts are broadcast to subscribers and readable by anyone. Much of this publishing exists nowhere else — the same organisations post less, later, or not at all on the open web. A newsroom, researcher or analyst who ignores Telegram is not monitoring the news; they are monitoring the part of the news that happens to have a website.</p>
-<p>The problem is the shape of the data. The content is public but it lives inside an app, not on crawlable pages. Reading it by hand works for one channel and produces no dataset: nothing to search, nothing to diff, nothing to alert on. The workflow that works is the one this guide describes: a verified set of channels, pulled on a schedule, into structured records. Our <a href="/actors/telegram-news-monitor.html">Telegram News Monitor</a> is that workflow packaged — the Telegram Channel Scraper engine preconfigured with a verified 10-channel news pack, priced at $0.0015 per post delivered, with unservable channels reported as free status items instead of silent gaps.</p>
+<p><strong>TL;DR:</strong> Telegram news monitoring requires content-verified public channels, scheduled pulls, and structured records you can diff. When we probed 30+ candidate channels, famous handles hid squats and dormant feeds, leaving 10 verified sources. Runs cost $0.00005 plus $0.0015 per post delivered, with status items free.</p>
 
-<h2>The pack: verification is the product</h2>
-<p>A monitoring set is an editorial position, and its quality is decided before collection starts. During the build, more than 30 candidate channels were probed with two checks each: does the public preview serve, and is the channel actually posting (newest post within about two days)? The 10 that passed both: NEXTA Live, The Kyiv Independent, TRT World, The Guardian, South China Morning Post, El País, Meduza, Insider Paper, Disclose.tv, and the official channel of Volodymyr Zelenskyy — a deliberately mixed set across languages (Russian, English, Spanish, Ukrainian) and editorial stances.</p>
-<p>The candidates that failed are the instructive part. The famous names were the trap: <code>AssociatedPress</code> turned out to be a "username for sale" page with posts from 2023–24; <code>nbcnews</code> was an unrelated Russian quotes channel; <code>euronews</code> an unrelated Russian news feed; <code>bbcbreaking</code> looked squat-like. Each was caught only by reading the actual post content — a header title alone looks legitimate. Real but dormant channels were also excluded (New York Times, Washington Post, Sky News, France 24, Politico, Bloomberg — all quiet for months), as were channels with no public preview at all (Reuters, BBC News, CNN, DW, Al Jazeera and others). A monitoring set built on unvetted channels produces confident nonsense; a set built on content-verified channels is the only kind worth scheduling. The lesson generalises: for Telegram packs, verify post content, not just the header. We cover the collection mechanics in depth in the <a href="/articles/telegram-channel-data-guide.html">Telegram channel data guide</a>.</p>
+<h2>Why Public Channels Escape Standard Web Monitoring</h2>
 
-<h2>The workflow: scheduled pulls and the diff</h2>
-<p>One-off collection builds an archive. Monitoring builds a feed, and the difference is the schedule. The routine that works:</p>
+<p>For a large share of the world's internet users, Telegram is not a chat app with channels attached; it is the primary news medium. National outlets, independent media, official government accounts, and regional press publish to public channels whose posts broadcast to subscribers and remain readable by anyone. Much of this publishing exists nowhere else: the same organisations often post less, later, or not at all on the open web. A newsroom, researcher, or analyst who ignores Telegram is not monitoring the news—they are monitoring the part of the news that happens to have a website.</p>
+
+<p>The difficulty lies in the shape of the data. The content is public, yet it lives inside an app rather than on crawlable web pages. Reading it by hand works for one channel and produces no dataset: nothing to search, nothing to diff, and nothing to alert on. The workflow that holds up is a verified set of public channels pulled on a schedule into structured records. Our <a href="/actors/telegram-news-monitor.html">Telegram News Monitor</a> packages that workflow on the <a href="/actors/telegram-channel-scraper.html">Telegram Channel Scraper</a> engine, preconfigured with a verified 10-channel news pack, priced at $0.0015 per post delivered, and built to report unservable channels as free status items instead of silent gaps.</p>
+
+<h2>What We Found When Vetting Over 30 Candidate Channels</h2>
+
+<p>A monitoring set is an editorial position, and its quality is decided before collection begins. During our build, we probed more than 30 candidate channels with two checks each: does the public preview serve, and is the channel actually posting (with its newest post within about two days)? The 10 channels that passed both checks are NEXTA Live, The Kyiv Independent, TRT World, The Guardian, South China Morning Post, El País, Meduza, Insider Paper, Disclose.tv, and the official channel of Volodymyr Zelenskyy—a deliberately mixed set across four languages (Russian, English, Spanish, and Ukrainian) and distinct editorial stances.</p>
+
+<p>The candidates that failed were the instructive part, because famous names turned out to be the trap:</p>
+
+<ul>
+  <li><code>AssociatedPress</code> turned out to be a "username for sale" page carrying posts from 2023–24.</li>
+  <li><code>nbcnews</code> was an unrelated Russian quotes channel.</li>
+  <li><code>euronews</code> was an unrelated Russian news feed.</li>
+  <li><code>bbcbreaking</code> looked squat-like.</li>
+</ul>
+
+<p>We caught each of those only by reading the actual post content—a header title alone looks legitimate. We also excluded real but dormant channels (New York Times, Washington Post, Sky News, France 24, Politico, and Bloomberg, all quiet for months), as well as outlets whose channels had no public preview at all (Reuters, BBC News, CNN, DW, Al Jazeera, and others). A monitoring set built on unvetted channels produces confident nonsense; a set built on content-verified channels is the only kind worth scheduling. The lesson generalises across Telegram packs: verify post content, not just the header. We cover the collection mechanics in depth in our <a href="/articles/telegram-channel-data-guide.html">Telegram channel data guide</a>.</p>
+
+<p>Once we rebuilt the pack, our smoke tests demonstrated the completeness this workflow depends on. In smoke run 1, we pulled 9 real post records with 0 status items (after the earlier exposure of the <code>AssociatedPress</code> squat drove the pack rebuild); the 5 current NEXTA Live posts from 2026-11-25 had views between 90K and 108K, and the measured true platform usage of that run was $0.000270. A confirmation run on the final build returned 6 out of 6 real records with current dates. A monitoring feed with silent gaps yields confident, wrong answers; a feed that stays whole against the public stream yields answers you can defend.</p>
+
+<h2>Anatomy of a Captured Post Record</h2>
+
+<p>Rather than screenshots or an unstructured text dump, collection outputs one structured record per post with timestamps and forwarding context preserved. The table below shows a real sample record from our smoke run:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Sample Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>itemType</code></td>
+      <td><code>post</code></td>
+    </tr>
+    <tr>
+      <td><code>channelUsername</code></td>
+      <td><code>nexta_live</code></td>
+    </tr>
+    <tr>
+      <td><code>channelTitle</code></td>
+      <td><code>NEXTA Live</code></td>
+    </tr>
+    <tr>
+      <td><code>postId</code></td>
+      <td><code>127241</code></td>
+    </tr>
+    <tr>
+      <td><code>dateISO</code></td>
+      <td><code>2026-11-25T21:05:50+00:00</code></td>
+    </tr>
+    <tr>
+      <td><code>views</code></td>
+      <td><code>90700</code></td>
+    </tr>
+    <tr>
+      <td><code>mediaType</code></td>
+      <td><code>photo</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Engagement counters such as <code>views</code> are the channel's own displayed figures and are labelled as such.</p>
+
+<h2>Scheduling, Diffing, and Vetting Your Own Channels</h2>
+
+<p>One-off collection builds an archive. Monitoring builds a feed, and the schedule is what separates them. Four practices keep a recurring feed reliable:</p>
+
+<ul>
+  <li><strong>Pull on a cadence that matches the channels.</strong> Breaking-news channels require frequent small runs. Because costs track delivered posts ($0.0015 each), a quiet week costs almost nothing, while a channel that suddenly publishes ten times its normal volume becomes a signal to surface rather than smooth over.</li>
+  <li><strong>Diff each run against the last.</strong> New posts are the news, and a channel going silent is news too. Silence is invisible to anyone scrolling inside the app, whereas in an archive it appears as a row of missing dates—and that gap is data.</li>
+  <li><strong>Read the forwarding context.</strong> When the same claim appears across channels, timestamps paired with forwarding records usually reveal where it entered the ecosystem and how it spread. That trace is the foundational move of open-source investigation on Telegram, and it is only possible on a complete, timestamped archive.</li>
+  <li><strong>Keep the collection log.</strong> For research and monitoring alike, the defensible question is what you collected, when, and from which public channels. Apify runs capture that metadata by default; retain it alongside the dataset.</li>
+</ul>
+
+<p>Although the default news pack ships verified, most monitoring buyers eventually add channels of their own—a regional outlet, a specialist community, or a government account. Copy the two checks from our build and pair them with two ongoing habits:</p>
+
 <ol>
-<li><strong>Pull on a cadence that matches the channels.</strong> Breaking-news channels need frequent small runs; the cost follows delivered posts ($0.0015 each), so a quiet week costs almost nothing and a channel that suddenly publishes ten times its normal volume is itself a signal to surface, not smooth over.</li>
-<li><strong>Diff each run against the last.</strong> New posts are the news. A channel that goes silent is also news — silence is invisible to anyone reading the app, but in an archive it is a row of missing dates, and it is data.</li>
-<li><strong>Read the forwarding context.</strong> When the same claim appears across channels, timestamps plus forwarding records usually reveal where it entered the ecosystem and how it spread — the foundational move of open-source investigation on Telegram, and only possible on a complete, timestamped archive.</li>
-<li><strong>Keep the collection log.</strong> For research and monitoring alike, the defensible question is "what did you collect, when, from which public channels?" Apify runs carry that metadata by default; keep it with the dataset.</li>
+  <li><strong>Check one — preview serves:</strong> Open the channel's public preview (the web view with no login) and confirm posts actually render. A channel without a public preview cannot be collected read-only, whatever its subscriber count claims.</li>
+  <li><strong>Check two — actually posting:</strong> Read the newest posts to confirm the dates are current (within a couple of days) and the content matches the channel's name. This catches squats, dormant channels, and repurposed usernames—failure modes that look identical to a healthy channel from the outside.</li>
+  <li><strong>Read a week of posts, not one:</strong> A channel's identity is its publishing pattern; a single day's posts can reflect an anomaly or a hijack.</li>
+  <li><strong>Check the forwarding graph:</strong> Channels quote the sources they actually read, so reviewing a week of a candidate's forwards shows whether it sits inside the ecosystem you monitor or merely adjacent to it.</li>
 </ol>
-<p>In our smoke tests the engine proved the completeness this workflow depends on: a first run returned 9 real post records with zero status items (and exposed the AssociatedPress squat, which drove the pack rebuild), and a confirmation run on the final build returned 6 out of 6 real records with current dates. A monitoring feed with silent gaps produces confident, wrong answers; a feed that is whole against the public stream produces answers you can defend.</p>
 
-<h2>What the data is used for</h2>
-<p><strong>Media monitoring and research.</strong> Journalists and analysts track how stories and narratives move: which channel published first, how a claim mutated as it was forwarded, which outlets amplify each other. Post-level data with timestamps and forwarding context is the evidentiary base.</p>
-<p><strong>Market and community intelligence.</strong> In sectors where Telegram is the community's home, public channels are where announcements land first. Collecting them systematically turns "someone saw it in the app" into a searchable, alertable feed.</p>
-<p><strong>Newsletters and aggregation.</strong> Regional and specialist outlets that publish only on Telegram can be archived alongside web sources, so a monitoring product is not silently missing the channel-shaped part of the record.</p>
-<p><strong>Change and cadence analysis.</strong> Posting frequency and engagement patterns over time are signals about an outlet's activity — the raw material for monitoring products. The common thread: the value is in the complete, timestamped record, not in any single post.</p>
+<p>Run this method at intake and repeat it during a monthly review. Channels go dormant, get sold, or change hands, and a monitoring set is an editorial position that needs maintenance rather than a list written once.</p>
 
-<h2>The boundaries — what this data is not</h2>
-<p>Precision here protects everyone. Public channels are public; <strong>private groups and private channels are not data sources</strong>, and neither are individual users' messages. Collection applies to broadcast content that channel owners publish openly to an unlimited audience. It does not extend to anything behind an invitation or a membership approval. Buyers should apply the same test to any Telegram data product: if a vendor offers content from private spaces, the method behind it is not one you want attached to your work.</p>
-<p>Two further cautions. <strong>Content is claims, not facts.</strong> A Telegram dataset tells you what was published, when and by whom — it does not verify any of it, and channels in contested information environments publish propaganda alongside reporting. Treat the data as evidence about publishing behaviour, and cross-check any specific claim against at least one independent source before acting on it or republishing it. And <strong>respect the people in the data</strong>: public posts by public outlets are fair research material, but datasets should be handled with the same care you would apply to any corpus of human communication, stored securely, and used in line with the law of your jurisdiction. The ethical line is simple to state and worth keeping: collect the public record, analyse the record, and leave private people alone.</p>
+<h2>Where Timestamped Channel Data Fits—and Where Scope Ends</h2>
 
-<h2>Vetting your own channels: the two-check method</h2>
-<p>The news pack ships verified, but most monitoring buyers eventually add channels of their own — a regional outlet, a specialist community, a government account. The two checks from the build are the method to copy. <strong>Check one — preview serves:</strong> open the channel's public preview (the web view, no login) and confirm posts actually render. A channel with no preview cannot be collected read-only, whatever its subscriber count claims. <strong>Check two — actually posting:</strong> read the newest posts and confirm the dates are current (within a couple of days) and the content matches the channel's name. This is the check that catches squats, dormant channels and repurposed usernames — the failure modes that look identical to a healthy channel from the outside. Two more habits complete the method. <strong>Read a week of posts, not one:</strong> a channel's identity is its publishing pattern, and a single day's posts can be an anomaly or a hijack. <strong>Check the forwarding graph:</strong> channels quote the sources they actually read, so a week of a candidate's forwards reveals whether it sits inside the ecosystem you are monitoring or merely adjacent to it. Apply the method at intake and repeat it at a monthly review — channels go dormant, get sold, or change hands, and a monitoring set is an editorial position that needs maintenance, not a list you write once.</p>
+<p>Across monitoring teams, the value lies in the complete, timestamped record rather than in any single post:</p>
 
-<h2>Cost and completeness</h2>
-<p>Monitoring economics are easy to plan because the charge follows delivered posts: a 10,000-post backfill costs about $15, and ongoing collection costs only the new posts each run adds. Backfill in tranches — the highest-value channels first — and validate the analysis pipeline on the first tranche before committing to the full set. When evaluating any collector, ours included, the questions that matter are completeness (does a long history come back whole?), field honesty (are engagement counters the channel's own displayed figures, labelled as such?), scope discipline (public channels only, stated plainly?), and output shape (one structured record per post, with timestamps and forwarding context preserved — not screenshots, not a text dump). If you are new to buying data in this form, the <a href="/articles/what-is-an-apify-actor-buyers-guide.html">buyer's guide to Apify Actors</a> explains the platform mechanics, and <a href="/articles/pay-per-result-pricing-explained.html">pay-per-result pricing, explained</a> covers why the charge should attach to delivered records rather than to attempts. The parent engine — for any public channel, not just the news pack — is the <a href="/actors/telegram-channel-scraper.html">Telegram Channel Scraper</a>.</p>
+<ul>
+  <li><strong>Media monitoring and research:</strong> Journalists and analysts track how stories and narratives move—which channel published first, how a claim mutated as it was forwarded, and which outlets amplify each other—using post-level data with timestamps and forwarding context as their evidentiary base.</li>
+  <li><strong>Market and community intelligence:</strong> In sectors where Telegram is the community's home, public channels are where announcements land first. Collecting them systematically turns "someone saw it in the app" into a searchable, alertable feed.</li>
+  <li><strong>Newsletters and aggregation:</strong> Regional and specialist outlets that publish only on Telegram can be archived alongside web sources so a monitoring product is not silently missing the channel-shaped portion of the record.</li>
+  <li><strong>Change and cadence analysis:</strong> Posting frequency and engagement patterns over time provide signals about an outlet's activity and form the raw material for monitoring products.</li>
+</ul>
 
-<h2>FAQ</h2>
-<h3>Can you monitor any Telegram channel?</h3>
-<p>Any <em>public</em> channel — one whose posts are openly readable. Private groups, private channels and personal chats are out of scope by design.</p>
-<h3>Which channels are in the pack?</h3>
-<p>Ten, verified at build time for both preview availability and current activity: NEXTA Live, The Kyiv Independent, TRT World, The Guardian, South China Morning Post, El País, Meduza, Insider Paper, Disclose.tv, and the official Zelenskyy channel.</p>
-<h3>What does monitoring cost?</h3>
-<p>$0.0015 per post delivered. A 10,000-post backfill is about $15; a daily monitoring run costs only the new posts since the last run. Status items for unservable channels are always free.</p>
-<h3>How do I detect a channel going silent or suddenly active?</h3>
-<p>Run on a schedule and diff: the dataset is timestamped per post, so a gap in dates is visible immediately, as is a sudden acceleration in post volume. Both are signals worth surfacing, not smoothing over.</p>
-<h3>Can I add my own channels to the monitoring set?</h3>
-<p>Yes — the Actor accepts any list of public channel usernames. The news pack is the default; your own list replaces or extends it. The parent <a href="/actors/telegram-channel-scraper.html">Telegram Channel Scraper</a> covers arbitrary public channels with no pack at all.</p>
-<h3>Is the data reliable for research?</h3>
-<p>It is reliable evidence of what was published, when, and by which channel — the collection is complete against the public stream. It is not verification of the claims inside the posts; that judgement remains the researcher's.</p>
+<p>Precision about boundaries protects everyone involved. Public channels are public; private groups, private channels, and individual users' messages are not data sources. Collection applies strictly to broadcast content that channel owners publish openly to an unlimited audience, never to anything behind an invitation or membership approval. Apply that same test to any Telegram data product: if a vendor offers content from private spaces, the method behind it is not one you want attached to your work.</p>
 
-<p><a class="btn" href="https://apify.com/apitory/telegram-news-monitor">Run Telegram News Monitor on Apify →</a></p>
+<p>Two further cautions govern how datasets should be interpreted and handled. First, content is claims, not facts. A Telegram dataset tells you what was published, when, and by whom—it does not verify any of it, and channels in contested information environments publish propaganda alongside reporting. Treat the archive as evidence about publishing behaviour, and cross-check any specific claim against at least one independent source before acting on it or republishing it. Second, respect the people in the data: public posts by public outlets are fair research material, yet datasets should still be handled with the same care applied to any corpus of human communication, stored securely, and used in line with the law of your jurisdiction. The ethical line is straightforward: collect the public record, analyse the record, and leave private people alone.</p>
+
+<h2>Pay-Per-Result Economics and Collector Criteria</h2>
+
+<p>Monitoring economics remain predictable because charges attach to delivered posts rather than attempts. The pricing structure consists of three items:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Billing Item</th>
+      <th>Rate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Actor Start</td>
+      <td>$0.00005 per run</td>
+    </tr>
+    <tr>
+      <td>Message Delivered</td>
+      <td>$0.0015 per post delivered</td>
+    </tr>
+    <tr>
+      <td>Channel status items (preview disabled / not found / private)</td>
+      <td>Always free — never charged</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>At $0.0015 per delivered post, a 10,000-post backfill costs about $15, while ongoing scheduled collection pays only for the new posts each run adds. Backfill in tranches—starting with your highest-value channels—and validate your analysis pipeline on that first tranche before committing to the full set.</p>
+
+<p>When evaluating any collector, including ours, four criteria matter: completeness (does a long history come back whole?), field honesty (are engagement counters the channel's own displayed figures, labelled as such?), scope discipline (public channels only, stated plainly?), and output shape (one structured record per post with timestamps and forwarding context preserved, not screenshots or a text dump). If you are new to buying data in this form, the <a href="/articles/what-is-an-apify-actor-buyers-guide.html">buyer's guide to Apify Actors</a> explains the platform mechanics, and <a href="/articles/pay-per-result-pricing-explained.html">pay-per-result pricing, explained</a> details why charges should attach to delivered records rather than attempts. For arbitrary public channels without the news pack, use the parent engine directly: <a href="/actors/telegram-channel-scraper.html">Telegram Channel Scraper</a>.</p>
+
+<h2>Operational Reference Before You Deploy</h2>
+
+<ul>
+  <li><strong>Channel eligibility:</strong> Any public channel whose posts are openly readable can be monitored; private groups, private channels, and personal chats are excluded by design.</li>
+  <li><strong>Default news pack:</strong> Ten channels verified at build time for preview availability and current activity—NEXTA Live, The Kyiv Independent, TRT World, The Guardian, South China Morning Post, El País, Meduza, Insider Paper, Disclose.tv, and the official Zelenskyy channel.</li>
+  <li><strong>Custom channel lists:</strong> The Actor accepts any list of public channel usernames; the news pack is simply the default, and your own list replaces or extends it.</li>
+  <li><strong>Backfill versus daily cost:</strong> Runs start at $0.00005 plus $0.0015 per post delivered (about $15 for a 10,000-post backfill), daily monitoring runs pay only for new posts since the previous run, and status items for unservable channels are always free.</li>
+  <li><strong>Detecting silence or spikes:</strong> Scheduled runs diff a per-post timestamped dataset, surfacing both gaps in dates and sudden accelerations in post volume rather than smoothing them over.</li>
+  <li><strong>Research reliability:</strong> Collection provides complete evidence against the public stream of what was published, when, and by which channel; verifying the claims inside those posts remains the researcher's judgement.</li>
+</ul>
+
+<p><a href="https://apify.com/apitory/telegram-news-monitor">Run Telegram News Monitor on Apify &rarr;</a></p>
 <h2>Related Actors</h2><ul><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#7c3aed,#ec4899)">TN</span><a href="/actors/telegram-news-monitor.html">Telegram News Monitor — Track Public News Channels</a> — $0.0015 / post delivered</li><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#f43f5e,#f59e0b)">TC</span><a href="/actors/telegram-channel-scraper.html">Telegram Channel Scraper</a> — $0.0015 / post delivered</li></ul></main><footer><img class="fmark" src="/logo-mark.svg" alt=""><div>Support: <a href="mailto:apitoryhq@gmail.com">apitoryhq@gmail.com</a><br>Apitory — Data APIs &amp; Apify Actors. Clean data, pay per use.<br><a href="https://apify.com/apitory">apify.com/apitory</a></div></footer></body></html>

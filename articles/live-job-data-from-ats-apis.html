@@ -1,80 +1,238 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Live Job Data from ATS APIs: Why the Freshest Job Listings Never Touch a Scraper — Apitory</title><meta name="description" content="Most job data is scraped or indexed and quietly stale. Pulling openings directly from Greenhouse, Ashby, Lever, SmartRecruiters and Workable feeds is a different product."><link rel="icon" type="image/svg+xml" href="/logo-mark.svg"><link rel="stylesheet" href="/style.css?v=13"><link rel="canonical" href="https://apitory.com/articles/live-job-data-from-ats-apis.html"></head><body><div class="bgfx"></div><header><nav><a class="brand" href="/"><img class="mark" src="/logo-mark.svg" alt=""><img class="typo" src="/logo-typo.svg" alt="Apitory"></a><span><a href="/#actors">Actors</a> &nbsp;|&nbsp; <a href="/articles.html">Articles</a> &nbsp;|&nbsp; <a href="https://apify.com/apitory">Apify Store</a> &nbsp;|&nbsp; <a href="mailto:apitoryhq@gmail.com">Support</a></span></nav></header><main><p><a href="/articles.html">&larr; All articles</a></p><h1>Live Job Data from ATS APIs: Why the Freshest Job Listings Never Touch a Scraper</h1>
-<p class="tag">Most job-board data is scraped from rendered pages days after posting. Career-site jobs are different: the applicant tracking systems behind them publish structured feeds, and pulling from those feeds directly gives you complete, current listings. Here is how it works and when it matters.</p>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Live Job Data from ATS APIs: Why the Freshest Job Listings Never Touch a Scraper — Apitory</title><meta name="description" content="Most job data is scraped or indexed and quietly stale. Pulling openings directly from Greenhouse, Ashby, Lever, SmartRecruiters and Workable feeds is a different product."><link rel="icon" type="image/svg+xml" href="/logo-mark.svg"><link rel="stylesheet" href="/style.css?v=13"><link rel="canonical" href="https://apitory.com/articles/live-job-data-from-ats-apis.html"></head><body><div class="bgfx"></div><header><nav><a class="brand" href="/"><img class="mark" src="/logo-mark.svg" alt=""><img class="typo" src="/logo-typo.svg" alt="Apitory"></a><span><a href="/#actors">Actors</a> &nbsp;|&nbsp; <a href="/articles.html">Articles</a> &nbsp;|&nbsp; <a href="https://apify.com/apitory">Apify Store</a> &nbsp;|&nbsp; <a href="mailto:apitoryhq@gmail.com">Support</a></span></nav></header><main><p><a href="/articles.html">&larr; All articles</a></p><h1>Pulling Live Job Data Directly from ATS Feeds: Architecture, Economics, and Quality Checks</h1>
 
-<h2>The hidden infrastructure behind every careers page</h2>
-<p>When a company of any real size hires, it does not maintain its job listings by hand. It uses an applicant tracking system (ATS) — Greenhouse, Lever, Ashby, SmartRecruiters, Workable and their competitors — and the careers page on the company website is a window into that system. The listings are created once, inside the ATS, and displayed everywhere from there.</p>
-<p>This architecture has a consequence most data buyers never hear about: the ATS platforms expose the same structured job data through public, documented feeds, because their customers' own career sites, job-board integrations and widgets are built on top of them. The data a scraper struggles to reconstruct from HTML — title, department, location, workplace type, the full description, the application URL — is available as clean structured records at the source.</p>
+<p><strong>TL;DR:</strong> Live ATS pulls query five applicant tracking systems at run time, matching employers' careers pages without HTML scrapers or stale indexes. Supply a verified company list, diff scheduled runs for openings and closures, and pay $0.003 per delivered job record.</p>
 
-<h2>Live pull vs. scraping vs. indexed databases: three very different products</h2>
-<p>Job data reaches buyers through three routes, and they are not interchangeable:</p>
+<p>Most job-board data is scraped from rendered web pages days after a role goes live. Career-site jobs work differently: the applicant tracking systems behind those pages publish structured feeds, and pulling from those feeds directly delivers complete, current listings. Here is how that architecture works, how to operate and audit it, and when it is the right fit.</p>
+
+<h2>Why Career Pages Are Already Structured APIs</h2>
+
+<p>When a company of any real size hires, it does not maintain its job listings by hand. It runs an applicant tracking system (ATS) — Greenhouse, Lever, Ashby, SmartRecruiters, Workable, and their competitors — and the careers page on the company website is simply a window into that system. Listings are created once inside the ATS and displayed everywhere else from there.</p>
+
+<p>This setup carries a consequence most data buyers never hear about: the ATS platforms expose that same structured job data through public, documented feeds because their customers' own career sites, job-board integrations, and widgets are built on top of them. The fields an HTML scraper struggles to reconstruct — title, department, location, workplace type, the full description, and the application URL — are already sitting at the source as clean, structured records.</p>
+
+<h3>Data Provenance and Terms Posture</h3>
+
+<p>Buyers increasingly have to answer for how their job data was obtained, and sourcing routes differ sharply in defensibility. ATS feeds exist to distribute employers' openings: the platforms publish them so that career sites, widgets, and integrations can display active roles. Pulling a company's listings from the feed its own ATS publishes uses the channel built for distributing that data, at the employer's own level of openness — every listing in the feed is one the employer is actively advertising to the public.</p>
+
+<p>That posture stands in sharp contrast to scraping, where data exists because a crawler reconstructed what a website's terms may prohibit copying at scale, and to indexed databases, where provenance is a shrug. For a data product you intend to build a business on — a job board, a signal feed, or a recruiting tool — the provenance story is part of the asset. Being able to state plainly to customers, partners, and platforms that you pull live from applicant tracking systems' public feeds, the same source as the employers' own career pages, carries real commercial value in procurement conversations beyond its ethics.</p>
+
+<h2>Comparing Job-Data Sourcing Models: Feeds, Scrapers, and Indexes</h2>
+
+<p>Job data reaches buyers through three distinct routes, and those routes are not interchangeable:</p>
+
 <ul>
-<li><strong>Indexed databases</strong> crawl the web's career pages on a cycle, store what they find, and sell access to the store. The buyer gets breadth, but the data is only as fresh as the last crawl, records linger after the underlying job closes, and fields the crawler could not parse are silently wrong or missing. If you have ever bought job data and found listings for roles that closed weeks ago, you have met this model.</li>
-<li><strong>Page scrapers</strong> fetch career pages at run time and parse the HTML. Fresher than an index, but fragile: every company's page is a different template, JavaScript rendering hides content, and a redesign breaks the parser. Scrapers also inherit a structural blind spot — they can only see companies whose pages they have been pointed at and built for.</li>
-<li><strong>Live ATS pulls</strong> ask the ATS for a company's current openings at run time and return exactly what the company's own careers page is displaying at that moment — because it is the same feed. There is no index to go stale and no HTML to parse. When a role closes, it disappears from the feed, and from your results, immediately.</li>
+  <li><strong>Indexed databases</strong> crawl career pages across the web on a cycle, store what they find, and sell access to that store. Buyers get breadth, but the data is only as fresh as the last crawl, listings linger after the underlying job closes, and fields the crawler failed to parse are silently wrong or missing. Anyone who has bought job data and found roles that closed weeks earlier has run into this model.</li>
+  <li><strong>Page scrapers</strong> fetch career pages at run time and parse the HTML. They are fresher than an index, yet fragile: every employer's site uses a different template, JavaScript rendering hides content, and a page redesign breaks the parser. Scrapers also share a structural blind spot — they can only see the companies whose pages they have been pointed at and built for.</li>
+  <li><strong>Live ATS pulls</strong> ask the ATS for a company's current openings at run time and return exactly what the employer's own careers page displays at that moment, because both draw from the same feed. There is no index to go stale and no HTML to parse. When a role closes, it vanishes from the feed — and from your results — immediately.</li>
 </ul>
-<p>Our <a href="/actors/career-site-jobs-live.html">Career Site Jobs — Live ATS API</a> Actor is built entirely on the third route. It takes a list of companies, queries the public feeds of five ATS platforms — Greenhouse, Ashby, Lever, SmartRecruiters and Workable — and returns the openings those companies have live right now, at $3.00 per 1,000 job results. In our verification run it pulled 2,044 jobs across all five systems, and the counts matched the live sources exactly, because there is no intermediate copy for the numbers to disagree with.</p>
 
-<h2>What a live-pulled job record contains</h2>
-<p>Because the record comes from the system the employer itself maintains, the fields are the employer's own:</p>
+<p>Our <a href="/actors/career-site-jobs-live.html">Career Site Jobs — Live ATS API</a> Actor is built entirely on that third route. Given a list of companies, it queries the public feeds of five ATS platforms — Greenhouse, Ashby, Lever, SmartRecruiters, and Workable — and returns the openings those companies have live right now at $3.00 per 1,000 job results. In our verification run, it pulled 2,044 jobs across all five systems, and the totals matched the live sources exactly because there is no intermediate copy for the counts to disagree with.</p>
+
+<h3>Scope Boundaries and the Single-System Alternative</h3>
+
+<p>Live ATS pulls only work for employers that use a supported ATS and publish their openings through it. That covers a large and growing universe — the five supported platforms host the career sites of a substantial share of technology and growth companies — yet it does not cover every employer. Companies running unsupported systems, firms that keep listings behind their own portals, and very small businesses posting solely on external job boards sit outside the feed's reach.</p>
+
+<p>A live-pull Actor also has to be told which companies to query: it is a precision instrument for a defined company list, not a discovery engine for all jobs everywhere. Buyers who need open-web discovery still need an indexed database, and should purchase one with clear eyes about the freshness trade-off.</p>
+
+<p>Scope also varies inside the live-pull model itself. Many buyers only care about a single ATS — most often Greenhouse, the default across a large slice of the tech market. For those buyers we offer a single-system cut, <a href="/actors/greenhouse-jobs-live-api.html">Greenhouse Jobs — Live API</a>, which uses the same live-pull mechanics and the same $3.00 per 1,000 jobs pricing without the multi-system surface they will never touch.</p>
+
+<h2>Inside the Normalized Schema and Sample Output</h2>
+
+<p>Because each record comes straight from the system the employer itself maintains, the values reflect the employer's own entries rather than guesses extracted from rendered HTML:</p>
+
 <ul>
-<li><strong>Title, department and team</strong> — as structured in the ATS, not guessed from page text.</li>
-<li><strong>Location and workplace type</strong> — office location, remote/hybrid flags as the employer set them.</li>
-<li><strong>The full job description</strong> — the complete posting text, not a snippet.</li>
-<li><strong>The application URL</strong> — the canonical link into the employer's own application flow.</li>
-<li><strong>Posting and update timestamps</strong> — from the ATS, which is what makes genuine change detection possible: run the same company list tomorrow and diff the two datasets, and the differences are real events — new roles opened, roles closed — not crawl artefacts.</li>
+  <li><strong>Title, department, and team</strong> — captured as structured in the ATS, not inferred from page text.</li>
+  <li><strong>Location and workplace type</strong> — office locations plus remote or hybrid flags as configured by the employer.</li>
+  <li><strong>The full job description</strong> — the complete posting text rather than a truncated snippet.</li>
+  <li><strong>The application URL</strong> — the canonical link directly into the employer's application flow.</li>
+  <li><strong>Posting and update timestamps</strong> — taken from the ATS, making genuine change detection possible: run the same company list tomorrow and diff the two datasets, and every difference reflects a real event — new openings or closed roles — rather than a crawl artefact.</li>
 </ul>
-<p>That last property is the one buyers underrate. An index can tell you what it believes is open. A live pull, repeated, tells you what changed — and for use cases like competitor hiring signals, market mapping and niche job boards, the changes are the product.</p>
 
-<h2>Who buys live job data, and for what</h2>
-<p><strong>Niche job boards.</strong> A board for one profession, one technology or one region needs listings that are complete for its niche and dead-listing-free, because a board that sends applicants to closed roles burns its only asset — trust. Live pulls from a curated company list give a small board fresher inventory than it could ever crawl. We wrote a separate piece on <a href="/articles/build-niche-job-board-live-data.html">building a niche job board on live data</a>.</p>
-<p><strong>Recruiting and staffing firms.</strong> A firm's own target-account list is a company list. Pulling those companies' live openings turns "check 200 career pages" into one scheduled run, and the diff between runs is a call list: this account just opened three engineering roles.</p>
-<p><strong>Market and competitor intelligence.</strong> Hiring is a public signal of strategy. Structured, timestamped openings across a defined company set let analysts count, classify and track that signal without maintaining scrapers.</p>
-<p><strong>Lead generation.</strong> A company that is hiring for a role is a company with a budget and a problem. Live openings, filtered by department, are a buying-signal feed for anyone selling into that function.</p>
+<p>That timestamp property is the one buyers most often underrate. An index tells you what it believes is open. Repeated live pulls tell you what changed — and for competitor hiring signals, market mapping, and niche job boards, the changes are the product.</p>
 
-<h2>The limits of the live-pull model — stated plainly</h2>
-<p>Live ATS pulls only work for companies that use a supported ATS and publish their openings through it. That is a large and growing universe — the five platforms our Actor covers host the career sites of a substantial share of technology and growth companies — but it is not every employer. Companies on unsupported systems, companies that hide listings behind their own portals, and very small employers listing only on job boards are outside the feed's reach. A live-pull Actor also needs to be told which companies to pull: it is a precision instrument for a defined company list, not a discovery engine for "all jobs everywhere". Buyers who need discovery across the whole web still need an index — and should buy it knowing the freshness trade they are making.</p>
-<p>There is also a scope choice inside the model. Some buyers only care about one ATS — most often Greenhouse, the default for a large slice of the tech market. For them we ship a single-system cut, <a href="/actors/greenhouse-jobs-live-api.html">Greenhouse Jobs — Live API</a>, with the same live-pull mechanics and the same $3.00 per 1,000 jobs pricing, without the multi-system surface they will never use.</p>
+<p>Below is a real sample record from the <code>career-site-jobs-live</code> Actor alongside the normalized fields shared across Greenhouse, Ashby, Lever, SmartRecruiters, and Workable:</p>
 
-<h2>Cost shape: why per-result fits job data</h2>
-<p>Job data has a property that punishes subscription pricing: the value of a listing decays to zero the day the role closes, and you cannot know in advance which of your companies will be hiring this month. Paying per delivered result — $0.003 per job record — means a quiet month costs almost nothing and a hiring surge costs proportionally more, exactly when the data is worth most. It also means the vendor's incentive points the right way: we are paid for records the source systems themselves say are live, counted against the source at run time. The general principle is the same one behind all our pricing, and we explain it in <a href="/articles/pay-per-result-pricing-explained.html">pay-per-result pricing, explained</a>.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Sample Record (Stripe / Greenhouse)</th>
+      <th>Normalized Schema Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>ats</code></td>
+      <td><code>greenhouse</code></td>
+      <td>Source ATS across Greenhouse, Ashby, Lever, SmartRecruiters, and Workable.</td>
+    </tr>
+    <tr>
+      <td><code>company</code></td>
+      <td><code>Stripe</code></td>
+      <td>Company display name. Ashby and Lever feeds do not carry a company display name (use <code>companyId</code>).</td>
+    </tr>
+    <tr>
+      <td><code>jobTitle</code></td>
+      <td><code>Abuse Investigator</code></td>
+      <td>Role title in the unified schema.</td>
+    </tr>
+    <tr>
+      <td><code>location</code></td>
+      <td><code>Seattle, San Francisco, New York City</code></td>
+      <td>Location string in the unified schema.</td>
+    </tr>
+    <tr>
+      <td><code>companyId</code>, <code>jobId</code></td>
+      <td>—</td>
+      <td>Company identifier (used in place of company display name on Ashby and Lever) and job identifier.</td>
+    </tr>
+    <tr>
+      <td><code>url</code>, <code>applyUrl</code></td>
+      <td>—</td>
+      <td>Job listing URL and direct application URL in the normalized schema.</td>
+    </tr>
+    <tr>
+      <td><code>city</code>, <code>region</code>, <code>country</code>, <code>remote</code>, <code>workplace</code></td>
+      <td>—</td>
+      <td>Geographic breakdown and remote/workplace fields in the normalized schema.</td>
+    </tr>
+    <tr>
+      <td><code>department</code>, <code>team</code>, <code>employmentType</code>, <code>experienceLevel</code></td>
+      <td>—</td>
+      <td>Organizational and role classification fields in the normalized schema.</td>
+    </tr>
+    <tr>
+      <td><code>postedAt</code>, <code>fetchedAt</code></td>
+      <td>—</td>
+      <td>Posting timestamp from the ATS and fetch timestamp from the pull.</td>
+    </tr>
+    <tr>
+      <td><code>descriptionText</code></td>
+      <td>—</td>
+      <td>Posting description text. SmartRecruiters and Workable list feeds do not carry description text (<code>null</code>).</td>
+    </tr>
+  </tbody>
+</table>
 
-<h2>Getting started</h2>
-<p>The workflow is deliberately small: assemble your company list (the companies whose career sites you care about), run the Actor, receive one structured dataset of everything those companies have open right now. Schedule the run if you want the diff — daily or weekly pulls of the same list turn a snapshot into a change feed. If your list is Greenhouse-only, the single-system Actor is the cheaper-shaped tool. And if you are new to buying data through Actors at all, <a href="/articles/what-is-an-apify-actor-buyers-guide.html">our buyer's guide to Apify Actors</a> explains the mechanics — inputs, datasets, scheduling and pricing models — in one place.</p>
+<h3>How the Five Platforms Behave for Buyers</h3>
 
-<h2>The five platforms, from a buyer's point of view</h2>
-<p>Buyers rarely choose an ATS — the employers on their list already chose. But the mix of platforms on your list shapes what you get, so a short field guide helps. <strong>Greenhouse</strong> is the default for a large share of technology and growth companies; its boards are consistently structured, which is why our Greenhouse-only cut exists. <strong>Ashby</strong> is the newer platform winning fast-growing startups, and its listings tend to carry rich location and workplace detail because its customers configure them carefully. <strong>Lever</strong> has a long installed base across tech and professional services. <strong>SmartRecruiters</strong> skews toward larger and enterprise employers, where volumes per company are higher. <strong>Workable</strong> is strong among small and mid-size companies internationally. The operational point is not which is "best" — it is that a multi-system pull treats your company list as one market across all five, normalising the records into a single schema, so a company switching platforms does not fall out of your data. In the verification run for our multi-system Actor, a single pull returned 2,044 live jobs across the five platforms with counts matching the sources exactly — that normalisation, maintained as the platforms evolve, is most of what you are paying for.</p>
+<p>Buyers rarely pick an ATS — the employers on their target list have already made that choice. Still, the mix of systems on your list shapes the output you receive, so a short field guide helps:</p>
 
-<h2>From pulls to products: three patterns that work</h2>
-<p><strong>The watchlist.</strong> A fixed company list, pulled on a schedule, diffed each run. This is the recruiter's and the sales team's pattern: the deliverable is not the dataset but the change — this account opened its first sales role, that account's engineering team doubled its openings in a month. Watchlists work because hiring is a budgeted, time-bound intention; a company does not open a role it does not mean to fill.</p>
-<p><strong>The board.</strong> A niche job board is a watchlist published: the same pull, classified into a taxonomy and presented to an audience. We devoted a full article to <a href="/articles/build-niche-job-board-live-data.html">building a niche job board on live data</a>, including why dead listings — structurally impossible with feed pulls — are the trust issue that decides whether boards live or die.</p>
-<p><strong>The signal feed.</strong> For analysts and data teams, the pull is an input, not a product: openings classified by function and seniority become a time series — hiring velocity by company, by sector, by region — that feeds models of growth, expansion and strategy. The requirement that makes or breaks this pattern is timestamp integrity: because records come from the employer's own system with its own posting dates, the series reflects real events rather than the artefacts of a crawler's schedule.</p>
+<ul>
+  <li><strong>Greenhouse</strong> is the default for a large share of technology and growth companies, and its boards are consistently structured — which is why our Greenhouse-only Actor exists.</li>
+  <li><strong>Ashby</strong> is the newer platform gaining ground among fast-growing startups, and its listings tend to include rich location and workplace detail because customers configure those fields carefully.</li>
+  <li><strong>Lever</strong> has a long installed base across technology and professional services firms.</li>
+  <li><strong>SmartRecruiters</strong> skews toward larger and enterprise employers, where opening volumes per company tend to be higher.</li>
+  <li><strong>Workable</strong> is strong among small and mid-size companies internationally.</li>
+</ul>
 
-<h2>Judging a job-data sample before you buy</h2>
-<p>Job data is verifiable goods, and a ten-minute sample audit settles most vendor questions. Pick five records at random and open their application URLs: every one should resolve to a live posting on the employer's own system — a single "this position has been filled" page in five is a freshness confession. Check the posting dates against the employer's careers page for two companies you know: feed-pulled data will match exactly, because it is the same data; indexed data will drift by days. Look at the fields a parser would struggle with — workplace type, department, location — and confirm they are populated consistently across companies on different platforms; that consistency is the signature of a normalised feed pipeline rather than five scrapers in a trench coat. Finally, count: run the same company list against the employers' own pages and compare totals. Our own standard, from the verification run, is exact agreement — 2,044 records against 2,044 live postings — and it is the standard to hold any vendor to, because with feed data there is no honest reason for the numbers to differ.</p>
+<p>Operationally, the point is not which ATS is "best" — it is that a multi-system pull treats your company list as a single market across all five, normalizing records into one schema so an employer switching platforms never drops out of your pipeline. In the verification run for our multi-system Actor, a single pull returned 2,044 live jobs across the five platforms with counts matching the sources exactly; maintaining that normalization as platforms evolve is most of what you pay for.</p>
 
-<h2>Keeping the input alive: company-list operations</h2>
-<p>The Actor's input — your company list — is a living asset, and its maintenance is the one operational duty the live-pull model leaves with the buyer. It is light work, but it is real, and boards and signal products live or die by it. Three events drive the maintenance. <strong>Companies enter your universe:</strong> a startup raises its first round and starts hiring, a firm expands into your region, a new player appears in your niche. Discovery of entrants is editorial work — funding announcements, association lists, your own market watching — and a quarterly review that adds them keeps your coverage honest. <strong>Companies migrate platforms:</strong> growing companies switch ATS as they scale, and a board token that returned forty jobs last quarter can return zero after a migration — not because the company stopped hiring, but because it now hires through a different system. The operational signature is unmistakable (a healthy company flatlining to zero), and the fix is a two-minute check of its careers page and a token update. A monthly scan of your list for exactly this pattern — previously active, now zero — catches migrations before your users do. <strong>Companies exit:</strong> acquisitions and shutdowns end hiring; leaving dead companies on the list costs nothing in per-result pricing (they deliver no records), but removing them keeps your coverage statistics truthful. The total burden is an hour or two a month for a list of several hundred companies — a rounding error next to the parser-maintenance burden of the scraping model, and it is spent on market knowledge rather than on plumbing.</p>
+<h2>Probing Candidate Boards in Practice: What Breaks Without Verification</h2>
 
-<h2>Terms and posture: why feed pulls are the defensible route</h2>
-<p>Buyers increasingly have to answer for how their data was obtained, and job data is an area where the routes differ sharply in defensibility. The ATS feeds exist to distribute the employers' listings: the platforms publish them so that career sites, widgets and integrations can display the openings. Pulling a company's openings from the feed its own ATS publishes is using the data through the channel built for distributing it, at the employer's own level of openness — every listing in the feed is one the employer is actively advertising to the public. Contrast the scraping route, where the buyer's data exists because a crawler reconstructed what a website's terms may well prohibit copying at scale, and the index route, where provenance is a shrug. For a data product you intend to build a business on — a board, a signal feed, a recruiting tool — the provenance story is part of the asset. "We pull live from the applicant tracking systems' public feeds, the same source as the employers' own career pages" is a sentence you can say to customers, partners and platforms without flinching. In a market where data provenance is becoming a procurement question, that sentence has commercial value beyond its ethics.</p>
+<p>Live pulling only works when the boards behind your company list are real, and building curated lists has taught us to verify every candidate slug directly against the ATS APIs rather than trusting directories at face value.</p>
 
-<h2>One run, end to end</h2>
-<p>To make the mechanics concrete: a recruiting firm maintains a watchlist of 300 target companies spread across the five platforms. Each morning's scheduled run submits that list, the Actor queries each company's board on its ATS, and the firm receives one dataset — say 1,140 records on a typical day, costing about $3.42 in result charges. Their system diffs it against yesterday's dataset on company plus job identity. The morning report is not the 1,140 records; it is the eleven changes: six new openings (two of them at accounts with no previous hiring — the call list writes itself), three closures, two role re-posts. Nobody visited a careers page. Nobody maintained a parser. The same shape serves the board (publish the dataset, surface the changes), the analyst (append the dataset to the time series) and the sales team (filter the changes by department). One run, three products — because the run's output is a faithful, timestamped picture of what those companies' own systems currently say, and faithful pictures compose.</p>
+<p>When we built curated packs on this engine, we probed every candidate board against the ATS APIs: 577 Greenhouse slugs in one pack build, 639 Ashby slugs in another, and 307 cross-ATS candidates in a third. Those probes caught false matches that a directory would never flag: a "wise" board that belonged to an unrelated field-sales firm, a "crisp" board that belonged to a Dutch grocery-delivery company rather than the chat platform, and an "xai" board that turned out to be an annotation-staffing pool of 300 near-identical temporary roles rather than core hiring. We dropped all of them.</p>
 
-<h2>FAQ</h2>
-<h3>How fresh is "live", exactly?</h3>
-<p>The Actor queries the ATS feeds at run time. The results reflect what each company's careers page displays at that moment, because the careers page is served from the same system. There is no Apitory-side index or cache between you and the source.</p>
-<h3>Which ATS platforms are covered?</h3>
-<p>Greenhouse, Ashby, Lever, SmartRecruiters and Workable in the multi-system Actor. A Greenhouse-only version is available if your company list lives entirely on Greenhouse.</p>
-<h3>Can I discover companies I do not already know?</h3>
-<p>No — and that is by design. You supply the company list; the Actor returns those companies' live openings. Discovery across the whole web is a different product (an indexed database), with the freshness costs described above.</p>
-<h3>How do I detect new and closed jobs?</h3>
-<p>Run the same company list on a schedule and diff consecutive datasets on the job's identity (company plus job ID or application URL). New IDs are openings; vanished IDs are closures. Because both snapshots are live pulls, the diff reflects real changes rather than crawl timing.</p>
-<h3>What does it cost to monitor 500 companies?</h3>
-<p>You pay per job record delivered, not per company checked: $3.00 per 1,000 results. A run over 500 companies that returns 800 open jobs costs about $2.40 in Actor charges. Companies with no openings cost nothing beyond the run's start event.</p>
-<h3>Is the full job description included?</h3>
-<p>Yes. Records carry the complete posting text as published by the employer in the ATS, along with department, location, workplace type and the application URL.</p>
+<p>We also verified empty responses before trusting them: when 48 Lever candidates returned no live postings, we sanity-checked the Lever endpoint against the known-good <code>binance</code> board, which returned HTTP 200 and real postings, proving those zeroes were genuine.</p>
 
-<p><a class="btn" href="https://apify.com/apitory/career-site-jobs-live">Run Career Site Jobs — Live ATS API on Apify →</a></p>
+<h3>Keeping Your Company List Alive</h3>
+
+<p>Your company list is the Actor's input, and maintaining it is the one ongoing operational responsibility the live-pull model leaves with the buyer. It is light work, yet real, and job boards and signal products succeed or fail by how cleanly they handle it. Three recurring events drive list maintenance:</p>
+
+<ol>
+  <li><strong>Companies enter your universe.</strong> A startup raises its first round and begins hiring, a company expands into your region, or a new competitor enters your niche. Discovering entrants is editorial work — tracking funding announcements, association lists, and your own market — and a quarterly review keeps coverage honest.</li>
+  <li><strong>Companies migrate platforms.</strong> Growing firms switch ATS as they scale, so a board token that returned forty jobs last quarter can return zero after a migration — not because hiring stopped, but because the employer moved to another system. The signature is unmistakable (a healthy company flatlining to zero), and the fix is a two-minute check of its careers page followed by a token update. A monthly scan for previously active accounts that dropped to zero catches migrations before your users notice.</li>
+  <li><strong>Companies exit.</strong> Acquisitions and shutdowns halt hiring. Leaving defunct companies on the list costs nothing under per-result pricing because they deliver no records, but removing them keeps your coverage metrics truthful.</li>
+</ol>
+
+<p>For a list of several hundred companies, total maintenance takes an hour or two a month — a rounding error beside the parser-maintenance burden of scraping, and time spent on market knowledge rather than plumbing.</p>
+
+<h3>Auditing a Job-Data Sample in Ten Minutes</h3>
+
+<p>Job data is verifiable goods, and a ten-minute sample audit settles most questions before you commit to a vendor:</p>
+
+<ol>
+  <li><strong>Test live links.</strong> Pick five records at random and open their application URLs. Every one should resolve to a live posting on the employer's own system; even a single "this position has been filled" page out of five is a freshness confession.</li>
+  <li><strong>Compare posting dates.</strong> Check posting timestamps against the employer's careers page for two companies you know. Feed-pulled records match exactly because they come from the same feed, while indexed data drifts by days.</li>
+  <li><strong>Inspect parser-sensitive fields.</strong> Check workplace type, department, and location across companies on different platforms. Consistent population across all five systems is the signature of a normalized feed pipeline rather than five scrapers in a trench coat.</li>
+  <li><strong>Check exact counts.</strong> Run the same company list against the employers' own careers pages and compare totals. Our standard from the verification run is exact agreement — 2,044 records against 2,044 live postings — and that is the bar any vendor should meet, since with feed data there is no honest reason for totals to differ.</li>
+</ol>
+
+<h2>From Raw Snapshots to Change Feeds: Buyer Workflows and Products</h2>
+
+<p>To see how the mechanics work in practice, follow one morning run end to end. A recruiting firm maintains a watchlist of 300 target companies spread across the five ATS platforms. Each morning's scheduled run submits that list, the Actor queries each company's board, and the firm receives a single dataset — say 1,140 records on a typical day, costing about $3.42 in result charges.</p>
+
+<p>The firm's downstream system diffs today's dataset against yesterday's on company plus job identity. The morning deliverable is not the 1,140 rows; it is the eleven changes: six new openings (two of them at accounts with no prior hiring, meaning the call list writes itself), three closures, and two role re-posts. Nobody visited a careers page, and nobody fixed a broken parser.</p>
+
+<p>That exact output supports three distinct product patterns:</p>
+
+<ul>
+  <li><strong>The watchlist.</strong> A fixed company list pulled on a schedule and diffed after every run. Recruiters and sales teams rely on this pattern because the deliverable is the delta — this account just opened its first sales role, or that engineering team doubled its openings in a month. Watchlists work because hiring reflects a budgeted, time-bound intent.</li>
+  <li><strong>The niche job board.</strong> A job board is a watchlist published: the same pull, classified into a taxonomy and presented to candidates. We explored this in <a href="/articles/build-niche-job-board-live-data.html">building a niche job board on live data</a>, including why eliminating dead listings — structurally impossible to miss with live feed pulls — is the trust issue that decides whether boards survive.</li>
+  <li><strong>The signal feed.</strong> For analysts and data teams, the pull is an input rather than a finished product. Openings classified by function and seniority become a time series — tracking hiring velocity by company, sector, and region — that feeds models of growth and strategy. Timestamp integrity makes or breaks this pattern: because dates come directly from the employer's ATS, the series captures real hiring events rather than a crawler's schedule.</li>
+</ul>
+
+<h3>Who Uses Live Job Data — and Why</h3>
+
+<ul>
+  <li><strong>Niche job boards:</strong> A board serving one profession, technology, or region needs complete coverage within its niche and zero dead listings, because sending applicants to closed roles destroys its core asset — trust. Pulling live from a curated company list gives a focused board fresher inventory than crawling ever could, a workflow we unpack further in our guide to <a href="/articles/build-niche-job-board-live-data.html">building a niche job board on live data</a>.</li>
+  <li><strong>Recruiting and staffing firms:</strong> A firm's target-account roster is already a company list. Pulling live openings turns checking 200 career pages into one scheduled run, and the diff between runs becomes an immediate call list when an account opens three engineering roles.</li>
+  <li><strong>Market and competitor intelligence teams:</strong> Hiring is a public signal of strategy. Structured, timestamped openings across a defined set of companies let analysts count, classify, and track those shifts without maintaining scrapers.</li>
+  <li><strong>Lead-generation teams:</strong> A company hiring for a specific role is a company with an approved budget and an active problem. Live openings filtered by department act as a buying-signal feed for anyone selling into that function.</li>
+</ul>
+
+<h2>Per-Result Pricing and Run Economics</h2>
+
+<p>Job data has a property that punishes fixed subscriptions: a listing's value drops to zero the day the role closes, and you cannot predict in advance which companies on your list will be actively hiring in a given month. Paying per delivered result — $0.003 per job record — means a quiet hiring month costs almost nothing, while a hiring surge costs proportionally more precisely when the data is worth most.</p>
+
+<p>Per-result pricing also aligns incentives cleanly: we are paid for records the source ATS systems themselves report as live, counted against those sources at run time. This mirrors the principle across all our Actors, detailed in <a href="/articles/pay-per-result-pricing-explained.html">pay-per-result pricing, explained</a>.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Pricing Event</th>
+      <th>Rate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Actor Start</td>
+      <td>$0.00005 per run</td>
+    </tr>
+    <tr>
+      <td>Job Result</td>
+      <td>$0.003 per job record ($3.00 per 1,000 jobs)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>In practice, monitoring 500 companies that return 800 open jobs costs about $2.40 in Actor charges, and companies with no openings cost nothing beyond the run's start event. On the 300-company watchlist example above, 1,140 returned records come to about $3.42 in result charges.</p>
+
+<h3>Running Your First Pull</h3>
+
+<p>The workflow stays deliberately minimal: assemble your company list, run the Actor, and receive one structured dataset of every role those companies currently have open. Add a daily or weekly schedule on the same list to turn a one-off snapshot into a diffable change feed. If every company on your list uses Greenhouse, the single-system <a href="/actors/greenhouse-jobs-live-api.html">Greenhouse Jobs — Live API</a> Actor fits the narrower scope cleanly. If you are new to buying data through Actors altogether, our <a href="/articles/what-is-an-apify-actor-buyers-guide.html">buyer's guide to Apify Actors</a> covers inputs, datasets, scheduling, and pricing models in one place.</p>
+
+<h2>Common Questions About Live ATS Pulls</h2>
+
+<h3>What does "live" mean in practice for freshness?</h3>
+<p>The Actor queries the ATS feeds at run time, so results reflect what each company's careers page displays at that exact moment because both come from the same system. There is no Apitory-side index or cache sitting between your run and the source.</p>
+
+<h3>Which applicant tracking systems are supported?</h3>
+<p>The multi-system Actor covers Greenhouse, Ashby, Lever, SmartRecruiters, and Workable. A dedicated Greenhouse-only version is also available when your entire company list lives on Greenhouse.</p>
+
+<h3>Will the Actor discover companies I have not listed?</h3>
+<p>No — and that is intentional. You provide the company list and the Actor returns those companies' live openings. Discovering companies across the entire web belongs to a different product category (an indexed database), carrying the freshness trade-offs outlined earlier.</p>
+
+<h3>How do I track newly opened and closed positions over time?</h3>
+<p>Schedule the same company list to run regularly and diff consecutive datasets on each job's identity (company plus job ID or application URL). New IDs represent openings and vanished IDs represent closures; because both snapshots are live pulls, the diff captures genuine changes rather than crawl timing.</p>
+
+<h3>What does a run across 500 companies cost?</h3>
+<p>Charges are based on job records delivered rather than companies checked, at $3.00 per 1,000 results. A run across 500 companies that returns 800 open roles costs about $2.40 in Actor charges, while companies with zero openings incur no per-record fees beyond the run's start event.</p>
+
+<h3>Do records contain the full job description?</h3>
+<p>Yes — records carry the complete posting text published by the employer in the ATS, alongside department, location, workplace type, and the application URL.</p>
+
+<p><a href="https://apify.com/apitory/career-site-jobs-live">Run Career Site Jobs — Live ATS API on Apify →</a></p>
 <h2>Related Actors</h2><ul><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#f43f5e,#f59e0b)">CS</span><a href="/actors/career-site-jobs-live.html">Career Site Jobs — Live ATS API</a> — $3.00 / 1,000 jobs</li><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#7c3aed,#ec4899)">GJ</span><a href="/actors/greenhouse-jobs-live-api.html">Greenhouse Jobs — Live API</a> — $3.00 / 1,000 jobs</li></ul></main><footer><img class="fmark" src="/logo-mark.svg" alt=""><div>Support: <a href="mailto:apitoryhq@gmail.com">apitoryhq@gmail.com</a><br>Apitory — Data APIs &amp; Apify Actors. Clean data, pay per use.<br><a href="https://apify.com/apitory">apify.com/apitory</a></div></footer></body></html>

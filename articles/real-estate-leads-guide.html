@@ -1,52 +1,112 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Real Estate Business Leads from Google Maps: Agencies, Brokerages and Property Managers You Can Contact — Apitory</title><meta name="description" content="Selling to real estate means selling to offices, not listings and not individual agents. Google Maps holds the office layer — how to extract it at office level, with contacts, in any metro."><link rel="icon" type="image/svg+xml" href="/logo-mark.svg"><link rel="stylesheet" href="/style.css?v=13"><link rel="canonical" href="https://apitory.com/articles/real-estate-leads-guide.html"></head><body><div class="bgfx"></div><header><nav><a class="brand" href="/"><img class="mark" src="/logo-mark.svg" alt=""><img class="typo" src="/logo-typo.svg" alt="Apitory"></a><span><a href="/#actors">Actors</a> &nbsp;|&nbsp; <a href="/articles.html">Articles</a> &nbsp;|&nbsp; <a href="https://apify.com/apitory">Apify Store</a> &nbsp;|&nbsp; <a href="mailto:apitoryhq@gmail.com">Support</a></span></nav></header><main><p><a href="/articles.html">&larr; All articles</a></p><h1>Real Estate Business Leads from Google Maps: Agencies, Brokerages and Property Managers You Can Contact</h1>
-<p class="tag">Selling to real estate means selling to offices, not to listings and not to individual agents. Google Maps holds the office layer — but only if you extract it at office level, with contacts, and know what the data does and does not contain.</p>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Real Estate Business Leads from Google Maps: Agencies, Brokerages and Property Managers You Can Contact — Apitory</title><meta name="description" content="Selling to real estate means selling to offices, not listings and not individual agents. Google Maps holds the office layer — how to extract it at office level, with contacts, in any metro."><link rel="icon" type="image/svg+xml" href="/logo-mark.svg"><link rel="stylesheet" href="/style.css?v=13"><link rel="canonical" href="https://apitory.com/articles/real-estate-leads-guide.html"></head><body><div class="bgfx"></div><header><nav><a class="brand" href="/"><img class="mark" src="/logo-mark.svg" alt=""><img class="typo" src="/logo-typo.svg" alt="Apitory"></a><span><a href="/#actors">Actors</a> &nbsp;|&nbsp; <a href="/articles.html">Articles</a> &nbsp;|&nbsp; <a href="https://apify.com/apitory">Apify Store</a> &nbsp;|&nbsp; <a href="mailto:apitoryhq@gmail.com">Support</a></span></nav></header><main><p><a href="/articles.html">&larr; All articles</a></p><h1>Finding Real Estate Offices on Google Maps: A Practical Lead-Building Guide</h1>
 
-<h2>The buying unit is the office</h2>
+<p><strong>TL;DR:</strong> Real estate B2B outreach should target offices — agencies, brokerages, property managers — not listings or individual agents. Google Maps is the only public dataset that enumerates offices with contacts attached, and a six-term Dallas–Fort Worth pack shows how the method works.</p>
+
+<h2>Why the Office, Not the Listing or the Agent, Is the Target</h2>
+
 <p>Every B2B campaign aimed at real estate starts with a unit-of-analysis mistake, and the mistake is the same in almost every case: the list is built from the wrong object. Listing sites show properties. Agent directories show individual agents. Neither is the buying unit. A brokerage's marketing budget is decided by the office; a property management company's software is bought by the company; a franchise's vendor relationships are negotiated at group level. The office is the unit that signs, pays and renews — and Google Maps is the only public dataset that enumerates offices directly, with their addresses, phones, websites, ratings and review counts, in one place.</p>
-<p>Our <a href="/actors/google-maps-real-estate-leads.html">Google Maps Real Estate Lead Extractor</a> is the Maps engine preconfigured for exactly that unit: a six-term Dallas–Fort Worth pack (agencies, brokers and property management companies across Dallas, Fort Worth and Plano), office-level records, and contact extraction from each office's own website — $0.004 per place, $0.10 only when a record carries a usable public contact. The smoke test that proved the configuration returned <strong>15 offices with websites, 14 contacts found (93.3%), 8 with email (53.3%)</strong> on a Dallas agency run — real estate offices fit the contact event as well as dental, the family's best-yielding category. The sample record — The Realm Agency, Dallas, 5.0★ with 419 reviews, <code>info@therealmagency.com</code> from its own site — is the office layer working as designed. The general method, including why place extraction and contact enrichment are separate steps with separate prices, is covered in our <a href="/articles/google-maps-lead-generation-guide.html">complete guide to Google Maps lead generation</a>; this article is its real estate companion.</p>
 
-<h2>What the six-term pack covers, and why it is six terms</h2>
+<p>Our <a href="/actors/google-maps-real-estate-leads.html">Google Maps Real Estate Lead Extractor</a> is the Maps engine preconfigured for exactly that unit: a six-term Dallas–Fort Worth pack (agencies, brokers and property management companies across Dallas, Fort Worth and Plano), office-level records, and contact extraction from each office's own website — $0.004 per place, $0.10 only when a record carries a usable public contact. The general method, including why place extraction and contact enrichment are separate steps with separate prices, is covered in our <a href="/articles/google-maps-lead-generation-guide.html">complete guide to Google Maps lead generation</a>; this article is its real estate companion.</p>
+
+<h2>What a Real Record Looks Like</h2>
+
+<p>The smoke test that proved the configuration returned 15 offices with websites, 14 contacts found (93.3%), 8 with email (53.3%) on a Dallas agency run — real estate offices fit the contact event as well as dental, the family's best-yielding category. The sample record below — The Realm Agency, Dallas, 5.0★ with 419 reviews, info@therealmagency.com from its own site — is the office layer working as designed.</p>
+
+<table>
+<tr><th>Field</th><th>Value</th></tr>
+<tr><td>name</td><td>The Realm Agency</td></tr>
+<tr><td>category</td><td>Apartment rental agency</td></tr>
+<tr><td>address</td><td>8350 N Central Expy Ste 1900, Dallas, TX 75206</td></tr>
+<tr><td>rating</td><td>5.0</td></tr>
+<tr><td>reviewsCount</td><td>419</td></tr>
+<tr><td>contactFound</td><td>true</td></tr>
+<tr><td>email</td><td>info@therealmagency.com</td></tr>
+<tr><td>phone</td><td>2148144117</td></tr>
+</table>
+
+<h2>Six Search Terms, Three Metro Cores</h2>
+
 <p>A single search term under-enumerates any market, and real estate fragments by vocabulary more than most: agencies, brokers and property management companies are three different business types that happen to share a street. The pack's six terms cover the three types across the metro's three cores:</p>
-<ul>
-<li><strong>Dallas:</strong> <em>real estate agency</em>, <em>real estate broker</em>, <em>property management company</em>.</li>
-<li><strong>Fort Worth:</strong> <em>real estate agency</em>, <em>property management company</em>.</li>
-<li><strong>Plano:</strong> <em>real estate agency</em>.</li>
-</ul>
+
+<p>Dallas: real estate agency, real estate broker, property management company.</p>
+
+<p>Fort Worth: real estate agency, property management company.</p>
+
+<p>Plano: real estate agency.</p>
+
 <p>The terms are prefilled, not fixed: the Actor accepts any search terms, so a campaign for another metro — Houston, Austin, Atlanta, Phoenix — uses the same engine with different inputs. Run one search per term per locality, merge, and deduplicate on name plus address; the overlapping searches are how you beat the per-search result cap. And the metro is swappable by design: the pack is a starting point, not a territory.</p>
 
-<h2>Agencies, agents and listings: three shapes, one correct one</h2>
-<p>The distinction between the three data shapes is the whole purchase decision, so it is worth stating once more, precisely. <strong>Listings</strong> are properties: address, price, beds, photos. They are what buyers and renters search, and they are useless for B2B outreach — a listing's contact is the listing agent, whose authority extends to one property. <strong>Agent directories</strong> are people: name, photo, phone, sometimes an email. They are what a consumer uses to choose a representative, and they are the wrong unit for a vendor — an agent does not buy software for the brokerage. <strong>Offices</strong> are businesses: name, address, phone, website, rating, review count, and — once the website is visited — a published contact email. They are the unit that holds the budget, and they are what this Actor returns. The README states it plainly because the wrong buyer wastes the money and the right buyer saves it: if your campaign targets individual agents, this is the wrong tool; if it targets the businesses that employ them, this is the right one.</p>
-<p>Two operational consequences follow. First, <strong>franchises and multi-office groups</strong>: a listing for a franchised location often links to the national brand's site, and the record's email may belong to head office rather than the branch. Group by website domain and phone number after extraction — the record carries both fields — and route outreach to the group's decision-making location, not to each branch in turn. Second, <strong>review counts as a prioritisation signal</strong>: an office with hundreds of reviews is an office with volume and revenue. Sort the extracted list by review count before working it, and the first calls go to the businesses most likely to be able to pay. The rating itself is a weaker signal than the count: a 5.0★ office with three reviews is a new office, not a beloved one. Volume first, rating second.</p>
+<h2>Three Data Shapes, Only One Correct Buy</h2>
 
-<h2>Who buys real estate business leads, and with what angle</h2>
-<p><strong>Marketing agencies and lead services</strong> selling to real estate businesses: a metro's complete office list, contacts included, ready to work the same day — with the agency playbook (the audit-first packaging, the territory arithmetic) described in our <a href="/articles/home-services-leads-for-agencies.html">home services guide</a>, which applies to real estate with the same force.</p>
-<p><strong>CRM and proptech vendors</strong> building brokerage contact lists by metro, for whom the franchise and multi-office structure — visible in the data — is the difference between one account and eight duplicate emails.</p>
-<p><strong>Mortgage and insurance partners</strong> building brokerage contact lists by territory, for whom the office's published contact is the entry point to a referral relationship.</p>
-<p><strong>Market researchers</strong> mapping a metro's real estate sector: how many agencies, brokerages and management companies operate there, with ratings and review counts attached — the trading layer that a register count cannot give. The full anatomy of where addresses hide — and where they do not — is in <a href="/articles/extract-contacts-from-google-maps.html">how to extract contacts from Google Maps</a>.</p>
+<p>The distinction between the three data shapes is the whole purchase decision, so it is worth stating once more, precisely. Listings are properties: address, price, beds, photos. They are what buyers and renters search, and they are useless for B2B outreach — a listing's contact is the listing agent, whose authority extends to one property. Agent directories are people: name, photo, phone, sometimes an email. They are what a consumer uses to choose a representative, and they are the wrong unit for a vendor — an agent does not buy software for the brokerage. Offices are businesses: name, address, phone, website, rating, review count, and — once the website is visited — a published contact email. They are the unit that holds the budget, and they are what this Actor returns. The README states it plainly because the wrong buyer wastes the money and the right buyer saves it: if your campaign targets individual agents, this is the wrong tool; if it targets the businesses that employ them, this is the right one.</p>
 
-<h2>The property management angle</h2>
-<p>Property management companies deserve a paragraph of their own, because they are the segment where the data is most underused. A management company is a recurring-revenue business with dozens or hundreds of units under management — and it is a buyer of software, insurance, maintenance services, tenant screening, payment processing and marketing, all at once. It is also the segment most likely to be missed by a generic lead list, because its category on Maps is less uniform than "real estate agency": it appears under property management, apartment rental, real estate, and half a dozen neighbouring categories, and the search terms that catch it are the ones a buyer who only searches "real estate agency" never runs. The pack's three property-management terms exist for exactly that reason. When working the list, segment the management companies out and treat them as their own campaign: the pitch is different (recurring operations, not transactions), the decision-maker is different (the operations manager, not the broker-owner), and the lifetime value is different (a management company that adopts your product keeps paying while its units stay under management). The same segmentation logic applies inside the agency half of the list: residential agencies, commercial brokers and apartment-rental agencies buy different things, and the category field in the record is the first cut — use it before you write a single email.</p>
+<p>Two operational consequences follow. First, franchises and multi-office groups: a listing for a franchised location often links to the national brand's site, and the record's email may belong to head office rather than the branch. Group by website domain and phone number after extraction — the record carries both fields — and route outreach to the group's decision-making location, not to each branch in turn. Second, review counts as a prioritisation signal: an office with hundreds of reviews is an office with volume and revenue. Sort the extracted list by review count before working it, and the first calls go to the businesses most likely to be able to pay. The rating itself is a weaker signal than the count: a 5.0★ office with three reviews is a new office, not a beloved one. Volume first, rating second.</p>
 
-<h2>Working the list: the real estate outreach cadence</h2>
-<p>A list is only worth what the outreach does with it, and real estate offices reward a different cadence than most verticals. Three practical adjustments matter. <strong>Call first, and call the office number.</strong> Real estate is a phone-first industry: the listing carries the office's phone precisely because that is how the business runs, and the person who answers is often the office manager or the broker-owner — the decision-maker, not a gatekeeper. Email follows as the paper trail, with a one-line summary of the call and a link to whatever you promised. <strong>Mind the week.</strong> Real estate offices work weekends — Saturday is a showing day, not a quiet day — and the quietest hours for a first contact are weekday mid-mornings, after the morning's showings are set and before the afternoon's appointments. Calling on a Saturday afternoon reaches an office in the middle of its busiest work; calling on a Tuesday morning reaches it at its most receptive. <strong>Lead with the territory, not the product.</strong> An office that hears "we work with agencies in your metro" listens; an office that hears a feature list hangs up. The audit-first approach — "there are 214 agencies in your metro, 61 with no website, and here is where you stand" — works on real estate offices exactly as it works on home-services trades, because it opens with the office's own market rather than with your product. That is the same lesson as the data itself: a market is entered on its own terms, not translated.</p>
+<h2>Who This Data Is Built For</h2>
 
-<h2>Cost: what a metro costs to build</h2>
-<p>Per-result pricing makes the arithmetic easy to do before committing. A mid-size metro's full coverage of one business type — say 300 offices — costs about $1.20 in place charges; at the smoke test's yield, roughly 280 of those carry contacts, attracting about $28 in lead charges. A multi-metro campaign lands in the tens of dollars, not hundreds, and every premium dollar attaches to a record you can open and inspect. The general argument for this pricing shape — and how to audit a bill in five minutes — is in <a href="/articles/pay-per-result-pricing-explained.html">pay-per-result pricing, explained</a>. And if your market is not real estate, the general engine — <a href="/actors/google-maps-contacts.html">Google Maps Contacts &amp; Leads</a> — runs the same two-step process in any vertical and any territory, with the search terms as your only configuration work.</p>
+<p>Marketing agencies and lead services selling to real estate businesses: a metro's complete office list, contacts included, ready to work the same day — with the agency playbook (the audit-first packaging, the territory arithmetic) described in our <a href="/articles/home-services-leads-for-agencies.html">home services guide</a>, which applies to real estate with the same force.</p>
 
-<h2>FAQ</h2>
-<h3>Which businesses does the pack cover?</h3>
-<p>Six search terms across Dallas–Fort Worth: real estate agencies, brokers and property management companies in Dallas, Fort Worth and Plano. Any other metro can be run with the same engine by changing the terms.</p>
-<h3>What share of offices will have an email?</h3>
-<p>In our Dallas agency smoke test, 93.3% of offices carried contact details and 53.3% carried an email. The lead charge ($0.10) applies only when a usable public contact is found.</p>
-<h3>Does it return individual agents or listings?</h3>
-<p>Neither. It returns offices — agencies, brokerages and property management companies — the buying unit for B2B outreach. Listings and agent-directory profiles are different data shapes.</p>
-<h3>How do I handle franchises and multi-office groups?</h3>
-<p>Group the list by website domain and phone number after extraction. Multi-location businesses share both, which makes chain membership visible; route outreach to the group's decision-making location.</p>
-<h3>What does a metro campaign cost?</h3>
-<p>About $1.20 in place charges per 300 offices, plus roughly $28 in lead charges at the smoke test's yield. Every premium dollar attaches to a record with a usable public contact.</p>
-<h3>Can I run this for other metros?</h3>
-<p>Yes — replace the city in the search terms. The engine is territory-agnostic; the Dallas–Fort Worth pack is a starting point, not a limit.</p>
+<p>CRM and proptech vendors building brokerage contact lists by metro, for whom the franchise and multi-office structure — visible in the data — is the difference between one account and eight duplicate emails.</p>
 
-<p><a class="btn" href="https://apify.com/apitory/google-maps-real-estate-leads">Run Google Maps Real Estate Lead Extractor on Apify →</a></p>
+<p>Mortgage and insurance partners building brokerage contact lists by territory, for whom the office's published contact is the entry point to a referral relationship.</p>
+
+<p>Market researchers mapping a metro's real estate sector: how many agencies, brokerages and management companies operate there, with ratings and review counts attached — the trading layer that a register count cannot give. The full anatomy of where addresses hide — and where they do not — is in <a href="/articles/extract-contacts-from-google-maps.html">how to extract contacts from Google Maps</a>.</p>
+
+<h2>Why Property Managers Deserve Their Own Campaign</h2>
+
+<p>Property management companies deserve a paragraph of their own, because they are the segment where the data is most underused. A management company is a recurring-revenue business with dozens or hundreds of units under management — and it is a buyer of software, insurance, maintenance services, tenant screening, payment processing and marketing, all at once. It is also the segment most likely to be missed by a generic lead list, because its category on Maps is less uniform than "real estate agency": it appears under property management, apartment rental, real estate, and half a dozen neighbouring categories, and the search terms that catch it are the ones a buyer who only searches "real estate agency" never runs. The pack's three property-management terms exist for exactly that reason.</p>
+
+<p>When working the list, segment the management companies out and treat them as their own campaign: the pitch is different (recurring operations, not transactions), the decision-maker is different (the operations manager, not the broker-owner), and the lifetime value is different (a management company that adopts your product keeps paying while its units stay under management). The same segmentation logic applies inside the agency half of the list: residential agencies, commercial brokers and apartment-rental agencies buy different things, and the category field in the record is the first cut — use it before you write a single email.</p>
+
+<h2>When a Clean Run Returns Redirect Links Instead of Websites</h2>
+
+<p>We hit this ourselves while building the engine. Our first smoke run of this Actor succeeded on paper — 15 records — but every record's website was a Google redirect URL (/url?q=...) instead of the office's real site, so the contact phase fetched nothing: 0 of 15 contacts and 0 emails, at a measured true cost of $0.2929. A fresh second run extracted clean direct URLs and found contacts for 14 of 15 offices (93.3%), which told us the redirect shape was an intermittent Maps panel variant, not a constant break.</p>
+
+<p>We fixed it in the shared engine with a redirect-unwrap step, and the repair re-test (real estate agency in Dallas, cap 6) returned 6 records, 6 with websites, 0 redirect URLs, 5 contacts found and 2 with an email. That is the difference between a dataset that looks complete and one that is actually workable — the website field has to resolve before the contact field can mean anything.</p>
+
+<h2>Working the Office List: Calls, Timing and the Audit-First Pitch</h2>
+
+<p>A list is only worth what the outreach does with it, and real estate offices reward a different cadence than most verticals. Three practical adjustments matter.</p>
+
+<p>Call first, and call the office number. Real estate is a phone-first industry: the listing carries the office's phone precisely because that is how the business runs, and the person who answers is often the office manager or the broker-owner — the decision-maker, not a gatekeeper. Email follows as the paper trail, with a one-line summary of the call and a link to whatever you promised.</p>
+
+<p>Mind the week. Real estate offices work weekends — Saturday is a showing day, not a quiet day — and the quietest hours for a first contact are weekday mid-mornings, after the morning's showings are set and before the afternoon's appointments. Calling on a Saturday afternoon reaches an office in the middle of its busiest work; calling on a Tuesday morning reaches it at its most receptive.</p>
+
+<p>Lead with the territory, not the product. An office that hears "we work with agencies in your metro" listens; an office that hears a feature list hangs up. The audit-first approach — "there are 214 agencies in your metro, 61 with no website, and here is where you stand" — works on real estate offices exactly as it works on home-services trades, because it opens with the office's own market rather than with your product. That is the same lesson as the data itself: a market is entered on its own terms, not translated.</p>
+
+<h2>What It Costs to Build and Run</h2>
+
+<p>Per-result pricing makes the arithmetic easy to do before committing. A mid-size metro's full coverage of one business type — say 300 offices — costs about $1.20 in place charges; at the smoke test's yield, roughly 280 of those carry contacts, attracting about $28 in lead charges. A multi-metro campaign lands in the tens of dollars, not hundreds, and every premium dollar attaches to a record you can open and inspect.</p>
+
+<table>
+<tr><th>Charge type</th><th>Rate</th><th>When it applies</th></tr>
+<tr><td>Actor Start</td><td>$0.00005</td><td>Per run</td></tr>
+<tr><td>Place</td><td>$0.004</td><td>Per place returned</td></tr>
+<tr><td>Lead</td><td>$0.10</td><td>Only when the business's own website yields a public email/phone (contactFound: true)</td></tr>
+</table>
+
+<p>The measured platform usage for the 15-office Dallas smoke run was $0.2842. The general argument for this pricing shape — and how to audit a bill in five minutes — is in <a href="/articles/pay-per-result-pricing-explained.html">pay-per-result pricing, explained</a>. And if your market is not real estate, the general engine — <a href="/actors/google-maps-contacts.html">Google Maps Contacts & Leads</a> — runs the same two-step process in any vertical and any territory, with the search terms as your only configuration work.</p>
+
+<h2>Common Questions Before You Run It</h2>
+
+<p><strong>Which businesses does the pack cover?</strong><br>
+Six search terms across Dallas–Fort Worth: real estate agencies, brokers and property management companies in Dallas, Fort Worth and Plano. Any other metro can be run with the same engine by changing the terms.</p>
+
+<p><strong>What share of offices will have an email?</strong><br>
+In our Dallas agency smoke test, 93.3% of offices carried contact details and 53.3% carried an email. The lead charge ($0.10) applies only when a usable public contact is found.</p>
+
+<p><strong>Does it return individual agents or listings?</strong><br>
+Neither. It returns offices — agencies, brokerages and property management companies — the buying unit for B2B outreach. Listings and agent-directory profiles are different data shapes.</p>
+
+<p><strong>How do I handle franchises and multi-office groups?</strong><br>
+Group the list by website domain and phone number after extraction. Multi-location businesses share both, which makes chain membership visible; route outreach to the group's decision-making location.</p>
+
+<p><strong>What does a metro campaign cost?</strong><br>
+About $1.20 in place charges per 300 offices, plus roughly $28 in lead charges at the smoke test's yield. Every premium dollar attaches to a record with a usable public contact.</p>
+
+<p><strong>Can I run this for other metros?</strong><br>
+Yes — replace the city in the search terms. The engine is territory-agnostic; the Dallas–Fort Worth pack is a starting point, not a limit.</p>
+
+<p><a href="https://apify.com/apitory/google-maps-real-estate-leads">Run Google Maps Real Estate Lead Extractor on Apify →</a></p>
 <h2>Related Actors</h2><ul><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#ec4899,#f97316)">GM</span><a href="/actors/google-maps-real-estate-leads.html">Google Maps Real Estate Lead Extractor</a> — $0.004 / place · $0.10 / lead</li><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#8b5cf6,#6366f1)">GM</span><a href="/actors/google-maps-contacts.html">Google Maps Contacts & Leads</a> — $0.004 / place · $0.10 only when a public contact is found</li><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#6366f1,#a855f7)">GM</span><a href="/actors/google-maps-home-services-leads.html">Google Maps Home Services Leads</a> — $0.004 / place · $0.10 only when a public contact is found</li></ul></main><footer><img class="fmark" src="/logo-mark.svg" alt=""><div>Support: <a href="mailto:apitoryhq@gmail.com">apitoryhq@gmail.com</a><br>Apitory — Data APIs &amp; Apify Actors. Clean data, pay per use.<br><a href="https://apify.com/apitory">apify.com/apitory</a></div></footer></body></html>

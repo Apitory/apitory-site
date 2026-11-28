@@ -1,71 +1,192 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Home Services Leads for Agencies: Building Plumber, HVAC and Electrician Lists Your Clients Can Actually Call — Apitory</title><meta name="description" content="How agencies build fresh, territory-exact home-services lead lists from Google Maps — and package them as audits, worked lists and refresh retainers clients renew."><link rel="icon" type="image/svg+xml" href="/logo-mark.svg"><link rel="stylesheet" href="/style.css?v=13"><link rel="canonical" href="https://apitory.com/articles/home-services-leads-for-agencies.html"></head><body><div class="bgfx"></div><header><nav><a class="brand" href="/"><img class="mark" src="/logo-mark.svg" alt=""><img class="typo" src="/logo-typo.svg" alt="Apitory"></a><span><a href="/#actors">Actors</a> &nbsp;|&nbsp; <a href="/articles.html">Articles</a> &nbsp;|&nbsp; <a href="https://apify.com/apitory">Apify Store</a> &nbsp;|&nbsp; <a href="mailto:apitoryhq@gmail.com">Support</a></span></nav></header><main><p><a href="/articles.html">&larr; All articles</a></p><h1>Home Services Leads for Agencies: Building Plumber, HVAC and Electrician Lists Your Clients Can Actually Call</h1>
-<p class="tag">Agencies selling to home-services businesses have a list problem: the trades are local, numerous, and badly served by national databases. This guide shows how to build fresh, territory-exact lead lists from Google Maps — and how to package them so clients renew.</p>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Home Services Leads for Agencies: Building Plumber, HVAC and Electrician Lists Your Clients Can Actually Call — Apitory</title><meta name="description" content="How agencies build fresh, territory-exact home-services lead lists from Google Maps — and package them as audits, worked lists and refresh retainers clients renew."><link rel="icon" type="image/svg+xml" href="/logo-mark.svg"><link rel="stylesheet" href="/style.css?v=13"><link rel="canonical" href="https://apitory.com/articles/home-services-leads-for-agencies.html"></head><body><div class="bgfx"></div><header><nav><a class="brand" href="/"><img class="mark" src="/logo-mark.svg" alt=""><img class="typo" src="/logo-typo.svg" alt="Apitory"></a><span><a href="/#actors">Actors</a> &nbsp;|&nbsp; <a href="/articles.html">Articles</a> &nbsp;|&nbsp; <a href="https://apify.com/apitory">Apify Store</a> &nbsp;|&nbsp; <a href="mailto:apitoryhq@gmail.com">Support</a></span></nav></header><main><p><a href="/articles.html">&larr; All articles</a></p><article>
+<h1>How Agencies Build Client-Ready Home Services Lead Lists from Google Maps</h1>
 
-<h2>The agency problem with home-services data</h2>
-<p>Home services — plumbing, electrical, HVAC, roofing, cleaning, pest control, landscaping — is one of the best verticals an agency can serve. The businesses spend real money on customers because a single job is worth hundreds or thousands, they are numerous in every metro area, and most of them market badly or not at all. If you sell websites, ads, review management or a CRM to local trades, your constraint is rarely the offer. It is the list.</p>
-<p>National lead databases serve this vertical poorly for structural reasons. Their coverage is compiled slowly, so the newest businesses — often the keenest buyers — are missing. Their territory definitions are postal, not practical: a client's real service area is "these suburbs, this side of the river", not a radius around a postcode. And their records carry the fields a database finds easy — name, address, a phone — while missing the fields an agency actually prospects with: does this business have a website at all, what is its rating, how many reviews, and is there a public email?</p>
-<p>The alternative is to build the list at the moment you need it, from the source your clients' customers use: Google Maps. Our <a href="/actors/google-maps-home-services-leads.html">Google Maps Home Services Leads</a> Actor exists for exactly this workflow — a six-trade pack prefilled for the core home-services trades, priced at $0.004 per place and $0.10 only when a record carries a usable public contact. This guide explains how agencies use it, and the judgements that separate a list clients love from a list they churn on.</p>
+<aside class="tldr">
+<p><strong>TL;DR:</strong> National databases miss new trades, ignore real service territories, and omit key qualifying signals. Pull live local lists from Google Maps with a low-cost territory audit first, pay $0.10 per found contact only on surviving records, and turn one-off lists into monthly refresh retainers.</p>
+</aside>
 
-<h2>What an agency-grade record looks like</h2>
-<p>A prospecting record for a trades business should let a salesperson qualify the account in ten seconds:</p>
+<p>Agencies that sell websites, paid ads, review management, or CRM setups to local trades rarely struggle with their offer. Their real bottleneck is the list. Home services—plumbing, electrical, HVAC, roofing, cleaning, pest control, and landscaping—is one of the strongest verticals an agency can target: a single job is worth hundreds or thousands of dollars, every metro area holds plenty of businesses, and most of them market poorly or not at all.</p>
+
+<p>Yet the standard way agencies buy local business data works against them. National lead databases compile records slowly, define coverage by postcode rather than actual service boundaries, and hand back bare-bones spreadsheets that omit the signals salespeople need to open a conversation. Building fresh lists directly from Google Maps—the exact directory your clients' customers rely on—solves those structural gaps at the moment you need the data.</p>
+
+<h2>Why National Lead Databases Fail Local Trades Agencies</h2>
+
+<p>Static directories break down in home services for three practical reasons. First, slow compilation cycles mean the newest trades businesses—often the most eager buyers of marketing and software—are missing from the export. Second, postal territories do not match how trades operate in the field: a client's real footprint is "these suburbs on this side of the river," not an arbitrary radius drawn around a zip or postcode.</p>
+
+<p>Third, traditional databases store what is easiest to collect—a business name, a street address, and a phone number—while leaving out the fields that tell an agency how to pitch. You cannot see whether the business even has a website, what its star rating looks like, how many customer reviews it has earned, or whether a public email exists on its site.</p>
+
+<p>Our <a href="/actors/google-maps-home-services-leads.html">Google Maps Home Services Leads Actor</a> was built specifically for this agency workflow. It packages a six-trade pack prefilled for core home-services categories, runs live extractions against Google Maps, and separates place discovery ($0.004 per place) from contact enrichment ($0.10 per lead, charged only when a record yields a usable public contact). The difference between a list clients renew on and one they abandon comes down to how you structure that build.</p>
+
+<h2>Start with a Territory Audit Before Paying for Contacts</h2>
+
+<p>Most agencies jump straight to pulling enriched contacts. A better sequence starts with place-level enumeration and turns that cheap first pass into the client's first deliverable: a territory audit.</p>
+
+<p>Instead of quoting a city name, translate the client's description of "the north side" into specific suburbs and towns, then run one search per trade per locality. Overlapping search areas are fine. Deduplicating later on business name plus address is straightforward, whereas missed neighbourhoods leave permanent gaps in the territory.</p>
+
+<p>Consider how a typical audit comes together for a marketing agency onboarding a field-service software company across one mid-size metro territory:</p>
+
 <ul>
-<li><strong>Identity:</strong> business name, trade category, address, service-area signals.</li>
-<li><strong>Reachability:</strong> phone number, website, and — where the business publishes one — an email address. In our smoke test of the home-services pack, 87% of extracted places carried contact details and 40% carried an email. Plan your outreach mix around numbers like those: phone-first for the majority, email as a second channel, not the only one.</li>
-<li><strong>Marketing signals:</strong> rating and review count are the agency's opening wedge. A 4.9-star plumber with 300 reviews needs a different pitch (protect and extend) from a 4.1-star plumber with 9 reviews (your first sale is reputation itself). A business with no website at all is a different campaign again — and Maps data shows you all three at a glance.</li>
-<li><strong>Status:</strong> trading or permanently closed. Nothing burns a client's trust in your list like their SDR calling a business that shut last year. Live extraction carries the status flag; filter on it.</li>
+<li><strong>Run locality-by-locality searches across the six pack trades:</strong> For a mid-size metro, that might mean roughly forty searches in total, returning an illustrative 2,300 raw place records.</li>
+<li><strong>Clean the place inventory before enriching:</strong> Deduplicating on name plus address narrows the pool to about 1,900 distinct businesses, and filtering on trading status strips out permanently closed operations.</li>
+<li><strong>Keep the six trades as six separate lists:</strong> Plumbers and pest-control companies buy differently, churn differently, and answer the phone differently. Keeping the trade as a first-class field from extraction onward lets you price, pitch, and report per trade rather than delivering an undifferentiated blob called "home services."</li>
+<li><strong>Generate the market snapshot for under $10:</strong> At $0.004 per place, the entire place-level enumeration costs under $10, yet gives you every number needed to frame the market.</li>
 </ul>
 
-<h2>The build: territory, trades, then enrichment</h2>
-<p><strong>Start from the client's service area, not from a city name.</strong> Translate "we cover the north side" into the actual suburbs and towns, and run one search per trade per locality. Overlapping coverage is fine — deduplication on name plus address is a solved step, and gaps are not recoverable later, while duplicates are.</p>
-<p><strong>Run the six trades as six lists, not one.</strong> Plumbers and pest-control companies buy differently, churn differently and answer the phone differently. Keeping the trade as a first-class field from extraction onward lets you report, price and pitch per trade instead of handing the client an undifferentiated blob called "home services".</p>
-<p><strong>Filter before you enrich.</strong> Place extraction is cheap; contact enrichment is where the money goes. Drop closed businesses, duplicates and out-of-territory rows from the place list first, then enrich the survivors. With per-lead pricing — the $0.10 attaches only when a usable public contact is found — the waste line in this workflow is already small, but filtering first also keeps your client's list clean, which is the part they actually judge you on.</p>
-<p><strong>Refresh on the client's cadence, not on yours.</strong> Trades businesses open, close, move and rebrand constantly. A list delivered as a one-off spreadsheet is stale within a quarter. The agencies that retain clients sell the refresh: same territory, same trades, re-pulled monthly, with the diff highlighted — new businesses (your client's freshest prospects, highlighted at the top), closures removed, rating changes noted. A refresh costs a fraction of the original build because you only enrich the new and changed rows.</p>
+<p>From the place fields you already hold, the audit becomes simple arithmetic: total businesses per trade, how many have no website at all, how review counts distribute (under 10 reviews versus over 100), and the expected share carrying a public email (around our smoke-test benchmark of 40% of places, with contacts of some kind on 87%).</p>
 
-<h2>Packaging: how to sell a list without sounding like a list vendor</h2>
-<p>Clients do not want "data". They want a pipeline they can picture. The agencies we see succeed with this material package it in three forms:</p>
+<p>Walking into a pitch with exact market counts—"There are 214 plumbing businesses in your service area; 61 have no website, and 38 have under 10 reviews; here are the counts for every trade you serve"—immediately shifts the conversation. The client stops negotiating your fee and starts deciding which segment to attack first. You then enrich only the chosen trades' surviving records at $0.10 per found contact while holding the remaining trades as an unenriched place-level map until the campaign expands. Nobody pays enrichment fees for segments they have not decided to call.</p>
+
+<h2>What a Calling-Ready Trades Record Looks Like (and a Real Sample)</h2>
+
+<p>When a worked list lands on a rep's desk on Monday morning, it earns its renewal in the first week of calling. Every record should let a salesperson qualify the account in ten seconds across four dimensions:</p>
+
 <ul>
-<li><strong>The territory audit.</strong> Before any pitch: "There are 214 plumbing businesses in your service area. 61 have no website. 38 have under 10 reviews. Here are the counts for every trade you serve." The audit is a by-product of the place-extraction step — it costs a few dollars to produce — and it reframes the conversation from your price to their market.</li>
-<li><strong>The worked list.</strong> The enriched, filtered, segmented deliverable: one tab per trade, marketing signals attached, new businesses flagged. This is the list their team actually calls.</li>
-<li><strong>The monthly refresh.</strong> The retainer form: new entrants, closures, and movers, delivered on a schedule, priced as a service. This is the version that compounds — every refresh makes switching away from you more painful, because the client's pipeline history lives in your diffs.</li>
+<li><strong>Identity:</strong> Business name, trade category, address, and service-area signals.</li>
+<li><strong>Reachability:</strong> Phone number, website, and—where published on the business's own site—an email address. In our smoke test of the home-services pack, 87% of extracted places carried contact details and 40% carried an email. Because a ten-person trades shop rarely puts more than one step between the listed phone number and the owner, phone is the primary outreach channel, with email serving as a secondary nurture sequence for accounts the phone did not reach.</li>
+<li><strong>Marketing signals:</strong> Star rating and review count act as the opening wedge. A 4.9-star plumber with 300 reviews needs a protect-and-extend pitch, whereas a 4.1-star plumber with 9 reviews needs reputation building first. On a call, "You've got 212 reviews at 4.8—this call is about protecting that" is an entirely different conversation from "You've got 6 reviews—this call is about why the shop across town has 200." Website presence routes the rest of the offer: no website leads with a build, a dated website leads with a redesign, and a solid website paired with thin reviews points back to reputation management.</li>
+<li><strong>Status:</strong> Trading versus permanently closed. Nothing destroys a client's confidence faster than a rep dialling a shop that closed last year. Live extraction includes the current status flag so you can exclude closed businesses before delivery.</li>
 </ul>
-<p>Notice what is absent from the packaging: any claim about the data you cannot support. Do not promise emails for every record — in this vertical, four in ten records carrying an email is a realistic smoke-test figure, and a client told the truth renews, while a client promised 100% churns at the first empty column. The full mechanics of where the emails come from — the business's own website, never the listing itself — are covered in <a href="/articles/extract-contacts-from-google-maps.html">how to extract contacts from Google Maps</a>, and the list-building strategy end to end in the <a href="/articles/google-maps-lead-generation-guide.html">complete guide to Google Maps lead generation</a>.</p>
 
-<h2>Economics for the agency</h2>
-<p>Run the numbers on a mid-size territory: six trades across a metro area might return 1,500 places. At $0.004 per place that is $6; if 40% of the filtered list yields a public email and most yield a phone, the lead charges land in the tens of dollars. Your all-in data cost for a client-ready territory list is typically less than the cost of one hour of the salesperson who will work it. That is the pitch internally, too: the list is not a product you resell at a markup so much as the raw material that makes your retainer deliverable obviously worth its fee. Per-result pricing matters here because agency demand is spiky — a new client onboarding means three territories this week and none next week — and a subscription database charges you for the quiet weeks too. Our reasoning on that pricing shape is in <a href="/articles/pay-per-result-pricing-explained.html">pay-per-result pricing, explained</a>.</p>
+<p>Below is a real sample record from our on-Apify smoke run for the query <code>"plumber in Austin"</code> (<code>maxPlaces</code> set to 15), which scanned 15 places, found websites for all 15, found contacts on 13 (86.7%), and uncovered an email on 6 (40%) at a measured platform usage of $0.0177:</p>
 
-<h2>The territory audit, worked end to end</h2>
-<p>The audit is the agency's best first deliverable, so here is its production in concrete terms. A client — say a marketing agency onboarding a field-service software company — wants the picture for one metro territory across the six pack trades. You run the pack's searches locality by locality: perhaps forty searches in total for a mid-size metro. The raw extraction returns, illustratively, 2,300 place records; deduplication on name plus address brings it to about 1,900 distinct businesses; the status filter removes the permanently closed. At $0.004 per place, the entire enumeration costs under $10.</p>
-<p>The audit itself is then arithmetic on fields you already hold: businesses per trade; the share with no website at all; the distribution of review counts (how many under 10 reviews, how many over 100); the share with a public email (expect the neighbourhood of our smoke-test figure — 40% of places, with contacts of some kind on 87%). Presented well, this one page repositions the engagement: the client stops negotiating your fee and starts discussing which segment to attack first. The enriched worked list follows for the segments they choose — you enrich those trades' records first, at $0.10 only where a usable public contact is found, and the remaining trades stay as a place-level map until the campaign expands. Notice the cost discipline this sequencing creates: the client never pays enrichment prices for segments they have not yet decided to work, and you never deliver a column of data nobody uses.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Sample Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>Blue Dragon Plumbing, LLC</td>
+</tr>
+<tr>
+<td>category</td>
+<td>Plumber</td>
+</tr>
+<tr>
+<td>contactFound</td>
+<td>true</td>
+</tr>
+<tr>
+<td>public email found on the business's own website</td>
+<td>info@bluedragonplumbing.com</td>
+</tr>
+</tbody>
+</table>
 
-<h2>What the salesperson does with each field on Monday morning</h2>
-<p>A list earns its renewal in the first week of calling, so it is worth tracing the record into the rep's hands. <strong>Phone</strong> is the primary channel in this vertical — it is on nearly every record and it reaches the owner, because in a ten-person trades business the person answering the listed number is rarely more than one step from the decision. <strong>Rating and reviews</strong> are the opener: "You've got 212 reviews at 4.8 — this call is about protecting that" and "You've got 6 reviews — this call is about why the shop across town has 200" are two different, honest conversations, and the rep knows which one they are having before dialling. <strong>Website presence</strong> routes the account: no website means a build offer leads; a dated website means a redesign conversation; a good website with thin reviews means reputation is the wedge. <strong>Email</strong>, present on roughly four in ten records, runs the nurture sequence for accounts the phone did not reach. <strong>Status and freshness</strong> protect the rep's morale and the client's trust: nobody's first call of the day should be to a business that closed last spring. A list that supports all five of those uses is not a spreadsheet; it is the campaign, pre-built — and that is how it should be priced and presented.</p>
+<p>A list that supports all five sales actions—dialling the decision-maker, tailoring the rating opener, routing by website state, running email follow-ups, and avoiding dead shops—is not just a spreadsheet. It is a pre-built campaign.</p>
 
-<h2>The three list failures clients actually fire you for</h2>
-<p>Agencies rarely lose a client over a list's size. They lose them over three specific failures, all preventable at build time. <strong>Dead businesses.</strong> The client's rep calls a firm that shut down a year ago and concludes the whole list is archaeology. Live extraction plus the status filter eliminates this class entirely — it is the single strongest argument for building lists at order time rather than reselling stored inventory. <strong>Duplicates with different spellings.</strong> Two reps call the same roofer twice in a week because the list carried him as both "A1 Plumbing" and "A-1 Plumbing &amp; Heating". Deduplication on name plus address — and a human glance at near-matches within the same street — is cheap insurance. <strong>Scope drift.</strong> The list quietly includes businesses outside the agreed territory or trade — the neighbouring county, the adjacent category — and the client's first spot-check finds one, and the spot-check is what they remember. Filtering to the agreed searches and showing the client the exact search list you ran turns scope from a trust risk into a demonstration of rigour. All three failures share a root: they are what happens when a list is a commodity bought by weight. A list built as a process — defined searches, live pull, filter, enrich, date-stamp — fails in none of these ways, and the process is visible to the client, which is precisely why it retains.</p>
+<h2>Inside Our Smoke Tests and Redirect-URL Fix</h2>
 
-<h2>Seasonality: timing the build to the trades' calendar</h2>
-<p>Home services runs on seasons, and a list built with the calendar in mind outsells the same list built at random. HVAC demand spikes at the first heat wave and the first cold snap; roofing surges after storm seasons and into the dry months; plumbing peaks with winter freezes and the holiday hosting season; cleaning and landscaping crest in spring. The implication for agencies is twofold. First, <em>build and refresh ahead of the client's selling season, not inside it</em>: a territory list delivered six weeks before the season lets the client staff up, work the accounts and be the familiar name when demand hits; the same list delivered mid-surge arrives when the good businesses are too busy to take a sales call. Second, <em>use the off-season signals in the data</em>: in the quiet months, the businesses still accumulating reviews at pace are the ones investing through the trough — often the best accounts in the territory, and identifiable in a refresh diff precisely because their review counts moved while competitors' stood still. A monthly refresh cadence gives you twelve diffs a year; read against the trade calendar, those diffs tell you not just who is new and who closed, but who is pushing. That is the kind of observation that makes a client treat your report as intelligence rather than as a file delivery — and intelligence is the version of this product that renews itself.</p>
+<p>Our pricing structure and extraction checks come directly from what we saw while testing and repairing this Actor in production. In our Austin smoke run for this pack (<code>plumber in Austin</code>, 15 places), we found websites for all 15 places and contacts for 13 of them (86.7%), but an email address for only 6 (40%). Home-services businesses publish phone numbers far more readily than email addresses, which is why we price this pack per found contact rather than per email.</p>
 
-<h2>From dataset to CRM: a field-mapping that survives contact with sales</h2>
-<p>The last mile of list quality is embarrassingly practical: the mapping between the dataset's fields and the client's CRM. Agencies that hand over raw exports watch the client's team mangle them in spreadsheets; agencies that deliver CRM-ready files watch their lists actually get worked. Map business name, trade category and address to the account object; phone, website and email to the contact channels; rating and review count to custom fields the client's reporting can see (these two fields drive segmentation and the audit narrative, so burying them in a notes field wastes the asset); status to a hard exclusion — closed businesses should be un-importable, not merely flagged; and source query plus extraction date to provenance fields on every record, so that when the refresh arrives, the diff can be computed inside the CRM rather than in your inbox. Add one field of your own: the segment (no-website, thin-reviews, established, new-since-last-refresh), computed at delivery time. The client's manager should be able to assign Monday's calls by filtering one column. None of this is technically difficult; all of it is the difference between a data delivery and a working system, and it is the part of the engagement the client cannot get from a database subscription at any price.</p>
+<p>Later, a different variant's smoke test exposed a shared-engine defect: Google Maps intermittently returned website addresses as Google redirect URLs, which silently produced zero-contact runs at full cost. We fixed the unwrap in the shared engine and ran a repair re-test for this Actor (<code>plumber in Austin</code>, cap 6). That re-test returned 6 records, 6 with websites, 0 redirect URLs, 4 contacts found, and 1 with an email, at a measured platform cost of $0.2563.</p>
 
-<h2>How agencies package the pricing (without selling "data")</h2>
-<p>Because your input cost is per result and known to the dollar, the deliverable can be packaged with unusual honesty. Three structures work in practice. <strong>Territory packages:</strong> a fixed-scope build — these suburbs, these trades, enriched and CRM-ready — priced as a project. Your data cost is a small, predictable fraction, and the client's scope questions ("add the east side?") have a concrete answer because the build is a defined set of searches. <strong>Refresh retainers:</strong> the monthly diff delivered as a standing service, priced on the cadence and territory size rather than on record counts the client cannot verify; your per-refresh data cost stays low because enrichment applies mainly to new and changed rows. <strong>Audit-first engagements:</strong> the territory audit delivered free or cheap as the diagnostic, with the worked list and refresh as the paid programme — the audit's counts come from the place-level pull, which costs single-digit dollars, so the economics of giving it away are sound. What all three avoid is reselling raw records by weight, which invites the client to comparison-shop your spreadsheet against a database's — a contest on the commodity layer. You are selling the process: defined territory, live pull, judgement applied, changes tracked. Price the process, and the data cost underneath it stays what it should be — a minor, known input.</p>
+<h2>Pay-Per-Result Economics and Pricing Breakdown</h2>
 
-<h2>FAQ</h2>
-<h3>Which trades does the pack cover?</h3>
-<p>The home-services Actor ships with a six-trade pack prefilled for the core trades agencies ask for — plumbing, electrical, HVAC and their closest neighbours. The underlying engine is the general Maps extractor, so any other trade can be run with its own search terms.</p>
-<h3>What share of records will have an email?</h3>
-<p>In our smoke test, 87% of places carried contact details and 40% carried an email. Many sole traders publish a phone number and a contact form only. Build campaigns phone-first and treat email as a bonus channel in this vertical.</p>
-<h3>Can I define a custom service area?</h3>
-<p>Yes — run one search per locality in the service area and merge, deduplicating on name plus address. Practical territories ("these suburbs") map to a handful of searches each.</p>
-<h3>How fresh is the data?</h3>
-<p>Extracted live from current listings at run time, including the trading/closed status flag. For retainers, re-pull monthly and deliver the diff: new businesses, closures, rating changes.</p>
-<h3>Is this the same engine as the general Maps Actor?</h3>
-<p>Yes — identical extraction and enrichment, with the trade pack, defaults and output tuned for home services. The general version is <a href="/actors/google-maps-contacts.html">Google Maps Contacts &amp; Leads</a>.</p>
-<h3>Can I white-label the deliverable for my client?</h3>
-<p>The output is a structured dataset (JSON/CSV/Excel) — your formatting, branding and analysis are what the client sees. Agencies typically deliver it as their own territory audit and worked list.</p>
+<p>For an agency, the raw data cost stays minor compared to the value of the retainer. Take a mid-size territory across all six trades: pulling 1,500 places at $0.004 per place costs $6. If 40% of the filtered list yields a public email and most yield a phone number, total lead charges land in the tens of dollars. Even after full enrichment, your all-in data cost for a client-ready territory list is typically less than the cost of one hour of the salesperson who will work it.</p>
 
-<p><a class="btn" href="https://apify.com/apitory/google-maps-home-services-leads">Run Google Maps Home Services Leads on Apify →</a></p>
+<p>Just as important, agency demand is spiky—onboarding a new client might mean building three territories this week and none next week. Subscription databases charge you through every quiet week, whereas pay-per-result pricing scales strictly with active client builds. We break down why that billing model fits variable workloads in <a href="/articles/pay-per-result-pricing-explained.html">pay-per-result pricing, explained</a>. For the mechanics of how emails are pulled from a business's own website rather than the Maps listing itself, see <a href="/articles/extract-contacts-from-google-maps.html">how to extract contacts from Google Maps</a>, and for the broader workflow from end to end, read our <a href="/articles/google-maps-lead-generation-guide.html">complete guide to Google Maps lead generation</a>.</p>
+
+<p>Here is the exact pricing schedule for the Google Maps Home Services Leads Actor:</p>
+
+<table>
+<thead>
+<tr>
+<th>Billable Item</th>
+<th>Unit Price</th>
+<th>When Charged</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Actor Start</td>
+<td>$0.00005</td>
+<td>Per run</td>
+</tr>
+<tr>
+<td>Place</td>
+<td>$0.004</td>
+<td>Per place</td>
+</tr>
+<tr>
+<td>Lead</td>
+<td>$0.10</td>
+<td>Per lead, charged only when the business's own website yields a public email/phone (<code>contactFound: true</code>)</td>
+</tr>
+</tbody>
+</table>
+
+<h2>Preventing the Three Failures That Get Agencies Fired</h2>
+
+<p>Agencies rarely lose a client because a list was slightly smaller than expected. They lose clients over three preventable build mistakes:</p>
+
+<ol>
+<li><strong>Dead businesses:</strong> A rep dials a contractor that shut down a year ago and decides the entire list is outdated. Live extraction paired with the status filter removes closed firms before delivery—the strongest reason to pull fresh lists at order time rather than reselling stored inventory.</li>
+<li><strong>Near-duplicate spellings:</strong> Two reps call the same shop twice in a week because one row says "A1 Plumbing" and another says "A-1 Plumbing &amp; Heating." Deduplicating on name plus address—plus a quick human check of near-matches on the same street—prevents embarrassing double-touches.</li>
+<li><strong>Scope drift:</strong> Out-of-territory businesses from a neighbouring county or an adjacent category slip into the file, and the client catches one on their very first spot-check. Restricting the build to agreed locality queries and sharing the exact search list turns scope control into visible proof of rigour.</li>
+</ol>
+
+<p>All three failures stem from treating a lead list like a commodity bought by weight. Treating the build as a transparent process—defined searches, live extraction, pre-enrichment filtering, and date-stamping—eliminates every one of them.</p>
+
+<h2>CRM Field Mapping: Making the Data Usable on Delivery</h2>
+
+<p>The last mile of list quality happens when the file enters your client's CRM. Handing over raw exports invites the client's team to break formatting in spreadsheets; delivering CRM-ready mappings ensures the list actually gets worked:</p>
+
+<ul>
+<li><strong>Account fields:</strong> Map business name, trade category, and address directly to the account object.</li>
+<li><strong>Contact channels:</strong> Map phone, website, and email to dedicated contact fields.</li>
+<li><strong>Custom reporting fields:</strong> Map star rating and review count to visible custom fields rather than burying them in notes, because those two numbers drive both segmentation and the audit narrative.</li>
+<li><strong>Hard exclusion on status:</strong> Closed businesses should be excluded prior to import rather than merely flagged.</li>
+<li><strong>Provenance fields:</strong> Stamp every row with the source search query and extraction date so future refreshes can be diffed inside the CRM instead of manually in your inbox.</li>
+<li><strong>Computed segment column:</strong> Add one agency-computed field at delivery time—<code>no-website</code>, <code>thin-reviews</code>, <code>established</code>, or <code>new-since-last-refresh</code>—so a sales manager can assign Monday's calls by filtering a single column.</li>
+</ul>
+
+<p>None of this mapping is technically complicated, yet it is the gap between handing over raw data and installing a working sales system—something a generic database subscription never provides.</p>
+
+<h2>Packaging, Honest Expectations, and Monthly Refresh Retainers</h2>
+
+<p>Clients do not want to buy "data"; they want a pipeline they can picture. Because your underlying extraction and enrichment costs are known to the dollar, you can package the deliverable cleanly without ever competing against cheap commodity spreadsheets. Three commercial formats work consistently in practice:</p>
+
+<ul>
+<li><strong>Audit-first engagements:</strong> Deliver the place-level territory audit free or at low cost as a diagnostic, then convert the client into the paid worked list and ongoing refresh program. Since the audit comes from the place pull and costs single-digit dollars, the unit economics make it easy to offer upfront.</li>
+<li><strong>Territory packages:</strong> Sell a fixed-scope build—agreed suburbs, agreed trades, filtered, enriched, and CRM-ready—as a defined project. When a client asks to "add the east side," scope answers itself because the package maps to an explicit set of searches.</li>
+<li><strong>Refresh retainers:</strong> Deliver the monthly diff as a recurring service priced on territory size and cadence rather than raw row counts. Trades open, close, move, and rebrand constantly, turning a static one-off spreadsheet stale within a quarter. Re-pulling the same territories monthly costs a fraction of the initial build because you only enrich new entrants and changed rows, while flagging new businesses at the top, removing closures, and tracking rating changes. Every monthly diff locks in pipeline history and raises switching costs.</li>
+</ul>
+
+<p>Across every package, stay ruthlessly honest about coverage. Never promise emails on 100% of records—a client promised 100% churns at the first empty cell, while a client told upfront to expect roughly four in ten records with an email (and 87% with contact details overall) trusts your numbers and renews.</p>
+
+<h2>Timing Builds to the Trades' Seasonal Calendar</h2>
+
+<p>Home services runs on predictable seasonal surges, and syncing your build schedule to the trades calendar makes the same dataset dramatically more valuable. HVAC demand spikes with the first heat wave and first cold snap; roofing accelerates after storm seasons and into dry months; plumbing peaks during winter freezes and holiday hosting; cleaning and landscaping crest in spring.</p>
+
+<p>Two timing habits separate strategic agencies from file vendors. First, deliver and refresh lists six weeks ahead of a client's peak season rather than during the rush. Six weeks out, your client can staff up, start outreach, and become a familiar name before phones ring off the hook; mid-surge, the best tradespeople are too busy on job sites to take a sales call.</p>
+
+<p>Second, mine off-season diffs for momentum signals. A monthly refresh cadence generates twelve diffs a year. During quiet months, businesses whose review counts keep climbing while competitors stand still are actively investing through the trough—often making them the strongest prospects in the territory. Surfacing those movers turns a routine list delivery into market intelligence that renews itself.</p>
+
+<h2>Frequently Asked Questions</h2>
+
+<h3>Which trades are included in the prefilled pack?</h3>
+<p>The Actor ships with a six-trade pack prefilled for the core home-services trades agencies request—such as plumbing, electrical, HVAC, and neighbouring categories. Because it runs on the general Maps extractor, you can also target any other local trade using custom search terms.</p>
+
+<h3>What percentage of records typically include an email address?</h3>
+<p>In our smoke test, 87% of places carried contact details and 40% carried an email address. Many sole traders only list a phone number and a web contact form, so agencies should structure campaigns phone-first and treat email as a secondary channel.</p>
+
+<h3>Can I build lists around a client's exact service area instead of a whole city?</h3>
+<p>Yes. Run one search per suburb or locality inside the client's footprint, merge the results, and deduplicate on business name plus address. Practical service areas ("these suburbs") usually map cleanly to a handful of targeted searches.</p>
+
+<h3>How current is the extracted business data?</h3>
+<p>Every run extracts live from current Google Maps listings at run time, capturing the active trading or permanently closed status flag. For ongoing retainers, agencies re-pull monthly and deliver a diff highlighting new openings, closures, and rating shifts.</p>
+
+<h3>Does this use the same engine as the general Google Maps Actor?</h3>
+<p>Yes—it shares the exact same extraction and website contact enrichment engine, with the trade pack, defaults, and output tuned for home services. For broader local verticals outside the trades, use <a href="/actors/google-maps-contacts.html">Google Maps Contacts &amp; Leads</a>.</p>
+
+<h3>Can agencies white-label the exports for clients?</h3>
+<p>Yes. The Actor outputs structured datasets (JSON, CSV, and Excel), leaving the formatting, segmentation, CRM mapping, and analysis under your own agency brand as a territory audit and worked list.</p>
+
+<p><a href="https://apify.com/apitory/google-maps-home-services-leads">Run Google Maps Home Services Leads on Apify &rarr;</a></p>
+</article>
 <h2>Related Actors</h2><ul><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#6366f1,#a855f7)">GM</span><a href="/actors/google-maps-home-services-leads.html">Google Maps Home Services Leads</a> — $0.004 / place · $0.10 only when a public contact is found</li><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#8b5cf6,#6366f1)">GM</span><a href="/actors/google-maps-contacts.html">Google Maps Contacts & Leads</a> — $0.004 / place · $0.10 only when a public contact is found</li></ul></main><footer><img class="fmark" src="/logo-mark.svg" alt=""><div>Support: <a href="mailto:apitoryhq@gmail.com">apitoryhq@gmail.com</a><br>Apitory — Data APIs &amp; Apify Actors. Clean data, pay per use.<br><a href="https://apify.com/apitory">apify.com/apitory</a></div></footer></body></html>

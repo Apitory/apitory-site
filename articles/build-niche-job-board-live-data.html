@@ -1,86 +1,224 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Building a Niche Job Board on Live Data (Without Becoming a Scraping Company) — Apitory</title><meta name="description" content="The architecture, economics and operating routine for a niche job board fed by live ATS pulls — no dead listings, no parser maintenance, no scraping operation."><link rel="icon" type="image/svg+xml" href="/logo-mark.svg"><link rel="stylesheet" href="/style.css?v=13"><link rel="canonical" href="https://apitory.com/articles/build-niche-job-board-live-data.html"></head><body><div class="bgfx"></div><header><nav><a class="brand" href="/"><img class="mark" src="/logo-mark.svg" alt=""><img class="typo" src="/logo-typo.svg" alt="Apitory"></a><span><a href="/#actors">Actors</a> &nbsp;|&nbsp; <a href="/articles.html">Articles</a> &nbsp;|&nbsp; <a href="https://apify.com/apitory">Apify Store</a> &nbsp;|&nbsp; <a href="mailto:apitoryhq@gmail.com">Support</a></span></nav></header><main><p><a href="/articles.html">&larr; All articles</a></p><h1>Building a Niche Job Board on Live Data (Without Becoming a Scraping Company)</h1>
-<p class="tag">A niche job board lives or dies on two things: completeness inside its niche, and never sending an applicant to a closed role. Both are data problems, and both are solved better by pulling live from applicant tracking systems than by crawling the web. Here is the architecture, the economics and the operating routine.</p>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Building a Niche Job Board on Live Data (Without Becoming a Scraping Company) — Apitory</title><meta name="description" content="The architecture, economics and operating routine for a niche job board fed by live ATS pulls — no dead listings, no parser maintenance, no scraping operation."><link rel="icon" type="image/svg+xml" href="/logo-mark.svg"><link rel="stylesheet" href="/style.css?v=13"><link rel="canonical" href="https://apitory.com/articles/build-niche-job-board-live-data.html"></head><body><div class="bgfx"></div><header><nav><a class="brand" href="/"><img class="mark" src="/logo-mark.svg" alt=""><img class="typo" src="/logo-typo.svg" alt="Apitory"></a><span><a href="/#actors">Actors</a> &nbsp;|&nbsp; <a href="/articles.html">Articles</a> &nbsp;|&nbsp; <a href="https://apify.com/apitory">Apify Store</a> &nbsp;|&nbsp; <a href="mailto:apitoryhq@gmail.com">Support</a></span></nav></header><main><p><a href="/articles.html">&larr; All articles</a></p><h1>Live ATS Feeds for Niche Job Boards: Architecture, Economics, and Launch Playbook</h1>
 
-<h2>Why niche boards win, and why most of them die</h2>
-<p>The generalist job boards own breadth. What they cannot own is depth in a single profession, technology, region or work style — and depth is what applicants and employers in a niche actually want. A board that lists every remote data-engineering role, or every nursing vacancy in one state, or every job at companies using one technology stack, gives its audience a reason to bookmark it that a generalist never will.</p>
-<p>Most niche boards do not die from lack of audience. They die from data operations. The founder starts by collecting listings by hand, then writes scrapers, then maintains scrapers — and within a year the business is a scraping company with a job board attached. Career pages change their markup, JavaScript rendering hides the listings, IP blocks arrive, and every hour spent on parser maintenance is an hour not spent on the audience. The second killer is quieter: dead listings. An applicant who clicks through to a role that closed two weeks ago does not come back, and an employer whose filled role keeps attracting applicants stops posting. A niche board's entire asset is trust, and stale inventory spends it.</p>
-<p>Both failure modes come from the same decision: treating job listings as web pages to be harvested instead of as records in systems to be queried. This article is about the other architecture.</p>
+<p><strong>TL;DR:</strong> Niche boards win on depth and die on stale, scraped data.<br>Direct ATS feeds skip HTML parsing, prevent closed listings, and cost $3.00 per 1,000 job results.<br>Here is the niche test, feed architecture, sample record, and launch routine.</p>
 
-<h2>The insight: your niche is a company list</h2>
-<p>A niche is usually defined by a set of employers. "Remote data-engineering roles" means the openings at companies that hire data engineers remotely. "Jobs in climate tech" means the openings at a few hundred identifiable companies. Whatever the niche, there is a list of companies whose hiring defines it — and those companies run their hiring through applicant tracking systems (ATS) such as Greenhouse, Ashby, Lever, SmartRecruiters and Workable.</p>
-<p>Those systems publish the company's current openings as structured data, because the company's own careers page is built on the same feed. If your board pulls from the feeds, three of the classic problems simply disappear:</p>
+<p>A specialist job board survives or collapses on two promises: covering its corner of the market completely, and never sending a candidate to a role that has already closed. Both promises are data-engineering problems before they are marketing problems. Treating job postings as web pages to crawl turns your business into a maintenance shop; querying applicant tracking systems (ATS) directly solves both promises at the source.</p>
+
+<h2>Evaluating Whether a Niche Deserves a Live-Fed Board</h2>
+
+<p>Broad job aggregators own sheer volume, yet breadth leaves room for focused competitors. Generalist platforms cannot match deep coverage of a single profession, a single state, one work style, or one technology stack. A board dedicated to every remote data-engineering opening, every nursing vacancy in one state, or every role at companies running one technology stack earns bookmarks from applicants and loyalty from employers in ways a general index cannot replicate.</p>
+
+<p>Even so, not every promising category justifies building a board. Because live ATS queries charge only for delivered records, you can run a five-question scoring pass before committing engineering time to a site:</p>
+
 <ul>
-<li><strong>No parsing.</strong> Title, department, location, workplace type, description and application URL arrive as fields, not as HTML to be reverse-engineered per employer.</li>
-<li><strong>No staleness.</strong> A role appears in your inventory when the employer opens it and disappears when the employer closes it, because your pull and their careers page read the same source. Dead listings — the trust killer — are structurally impossible rather than merely cleaned up after.</li>
-<li><strong>No per-employer maintenance.</strong> A company redesigning its website changes nothing for you. The feed contract is with the ATS platform, and it changes rarely and uniformly across all its customers at once.</li>
+  <li><strong>Is the employer set enumerable?</strong> A feed-driven board requires a concrete list of employers. You should be able to assemble a hundred core companies in a day from industry knowledge and public directories; if the employers cannot be listed, they cannot be queried.</li>
+  <li><strong>Do those employers run supported ATS platforms?</strong> Run a sample of thirty target employers through the Actor. If most return active openings, the architecture covers your market. If most return empty datasets because hiring happens elsewhere, feeds will not carry the board.</li>
+  <li><strong>Is hiring velocity high enough?</strong> Forty open roles at any given moment will not sustain a job board, whereas a few hundred openings provide a working inventory. That same thirty-company sample measures actual velocity for a few dollars.</li>
+  <li><strong>Can you reach the audience?</strong> A profession with its own vocabulary, communities, and associations gives you clear distribution channels; a diffuse label without shared identity does not.</li>
+  <li><strong>Are generalists failing for fixable reasons?</strong> Generalist boards almost always underserve specialists, yet you need to confirm whether their weakness is missing inventory—which you can fix—or entrenched applicant habits, which are far harder to shift.</li>
 </ul>
-<p>What remains is the work that actually differentiates a board: choosing the company list well, classifying the openings into your niche's taxonomy, and building the audience.</p>
 
-<h2>The architecture, concretely</h2>
-<p>The data layer of a live-fed niche board has four moving parts:</p>
-<ol>
-<li><strong>The company list.</strong> Your niche's employers, each identified by the ATS board token or career-site identifier the pull needs. Building this list is editorial work, done once and then maintained: companies enter the niche, get acquired, or switch ATS platforms, and a quarterly review keeps the list honest. Expect the initial list to be the single highest-leverage afternoon you spend on the whole board.</li>
-<li><strong>The scheduled pull.</strong> A job-data Actor — ours is <a href="/actors/career-site-jobs-live.html">Career Site Jobs — Live ATS API</a> — takes the company list, queries the five ATS platforms' public feeds at run time, and returns one structured dataset of everything those companies have open right now. Daily is the right cadence for most boards; high-velocity niches can pull twice a day without any change in architecture.</li>
-<li><strong>The diff and classify step.</strong> Compare today's dataset with yesterday's on job identity. New records are new postings — publish them, and they are also your freshest marketing material ("14 new roles this week"). Vanished records are closures — unpublish immediately. Then classify each record into your board's taxonomy using the structured fields the feed gives you: department for function, location and workplace type for geography and remote status, and your own keyword rules over the title for specialisations.</li>
-<li><strong>The board itself.</strong> A static or database-backed listing site whose only data source is the classified dataset. Because the dataset is structured and complete, the board can offer the filters applicants actually use — location, remote, department, seniority keywords — without any of them depending on scraped free text.</li>
-</ol>
-<p>Nothing in this architecture requires you to operate a browser farm, rotate proxies, or maintain a parser per employer. The crawling problem has been moved to the one party who does not have it: the ATS platform itself.</p>
+<p>When a candidate niche clears all five checks, you have a build decision grounded in real inventory rather than guesswork—verified in days and dollars instead of quarters spent wiring scrapers.</p>
 
-<h2>The economics</h2>
-<p>Live pulls are priced per delivered result. Our Actor charges $3.00 per 1,000 job results, so the arithmetic is easy to do before you commit: a niche of 400 companies averaging five open roles each returns about 2,000 records per pull — roughly $6 per pull, or about $180 a month for a daily-refreshed board. Halve the cadence and you halve the bill; the inventory is still fresher than any weekly crawl. Compare that with the real cost of the scraping route — not the proxy bill, which is the small part, but the maintenance hours, which are the part that quietly eats a founder's week every time a major employer redesigns its careers page.</p>
-<p>The per-result shape also matches how a young board grows. When your niche list is 80 companies, you pay for 80 companies' worth of openings. The data bill scales with inventory, not with your ambition, and there is no subscription floor charging you for a database you are not using. We explain the general principle in <a href="/articles/pay-per-result-pricing-explained.html">pay-per-result pricing, explained</a>; job boards are its cleanest example, because a closed job is a result with literally zero value.</p>
+<h2>Why Scraped Job Boards Fail While ATS Feeds Hold</h2>
 
-<h2>What live data does not solve</h2>
-<p>Honesty about the boundaries matters more than enthusiasm:</p>
+<p>Most niche boards do not stall because nobody wants them. They stall because data operations consume the founder. What starts as manual curation turns into custom scripts, and within a year the company is running a fragile scraping operation that happens to display a job board on top. Career pages alter their HTML markup, client-side JavaScript hides listings behind renderers, IP blocks kick in, and every hour spent fixing broken parsers is an hour stolen from audience growth.</p>
+
+<p>Dead listings inflict quieter, heavier damage. An applicant who clicks an exciting opening only to discover it closed two weeks ago stops trusting the board and rarely returns. An employer whose filled role keeps drawing applications stops treating the channel seriously. Trust is the entire equity of a specialist board, and stale inventory burns through it.</p>
+
+<h3>The Nine-Month Failure Anatomy of a Scraped Board</h3>
+
+<p>Scraping often looks cheaper at each isolated milestone while losing decisively in aggregate:</p>
+
 <ul>
-<li><strong>Employers outside the ATS universe.</strong> Companies that hire through their own portals, through agencies, or only via generalist boards will not appear in ATS feeds. For most professional niches the ATS coverage is the market's centre of gravity, but a board that promises completeness should know exactly which named employers it cannot see and say so.</li>
-<li><strong>Discovery.</strong> A feed pull answers "what do these companies have open?" It does not answer "which companies exist in this niche?" The company list is your editorial product; growing it is research, not engineering.</li>
-<li><strong>Enrichment beyond the posting.</strong> Salary bands, tech-stack extraction and seniority inference are classification work on top of the record. The feed gives you the employer's own text and fields; anything beyond that is your layer to build — which is fine, because that layer is where a niche board's taxonomy advantage lives.</li>
+  <li><strong>Month one:</strong> You write custom parsers for the fifty most important employers over a weekend, launch quickly, and feel ahead of schedule.</li>
+  <li><strong>Month three:</strong> Coverage grows to two hundred employers, and roughly a third of those parsers have silently broken after page redesigns or JavaScript changes. Duplicates and expired roles accumulate faster than anyone can audit them.</li>
+  <li><strong>Month six:</strong> Your flagship employer blocks the crawler's IP range. Overnight, the niche's anchor inventory vanishes, forcing a week-long detour into proxy rotation and headless browser rendering while audience work halts.</li>
+  <li><strong>Month nine:</strong> A candidate leaves the blunt review that sticks—&ldquo;half the jobs here are closed&rdquo;—and because it is accurate, it spreads and ranks.</li>
 </ul>
-<p>If your company list lives entirely on one platform — Greenhouse hosts a large share of technology employers — the single-system version, <a href="/actors/greenhouse-jobs-live-api.html">Greenhouse Jobs — Live API</a>, gives you the same architecture with a smaller surface at the same per-result price. And for the deeper mechanics of why feed data beats both scrapers and indexes, read <a href="/articles/live-job-data-from-ats-apis.html">live job data from ATS APIs</a>.</p>
 
-<h2>An operating routine that keeps the board trustworthy</h2>
-<p><strong>Daily:</strong> pull, diff, publish new, unpublish closed. Automate it entirely; a human should only see failures.</p>
-<p><strong>Weekly:</strong> publish the change summary — new roles by company, notable closures. This is content your audience cannot get from a generalist board, and it is generated by the diff you already compute.</p>
-<p><strong>Monthly:</strong> audit the company list against your niche: new entrants, acquisitions, ATS migrations. Spot-check ten records against the employers' own careers pages; because both read the same feed, they should match exactly, and any mismatch is a configuration bug worth finding early.</p>
-<p><strong>Quarterly:</strong> review classification quality — are roles landing in the right categories, are your keyword rules ageing? The taxonomy is the product; the feed is plumbing.</p>
-<p>A board run this way spends its founder's hours on audience and taxonomy, which are the things a generalist cannot copy, instead of on parsers, which are the thing nobody should have to copy at all.</p>
+<p>None of those setbacks stem from poor execution; they are the inevitable tax of treating structured hiring records as arbitrary web pages. Eliminating that entire failure class for about $3 per thousand records changes the core question from &ldquo;can I scrape this cheaper?&rdquo; to &ldquo;am I building a niche community or a scraping company?&rdquo;</p>
 
-<h2>Monetisation: what a live-fed board can charge for</h2>
-<p>A board whose inventory is complete-in-niche and never stale has four realistic revenue shapes, and the data architecture supports all of them. <strong>Employer products</strong> are the classic: featured listings, employer pages, and distribution — but note the inversion the feed creates. On a scraped board, employers pay for presence; on a live-fed board their listings already arrive automatically, so what you sell them is prominence and audience, which is a healthier product because it does not depend on holding their own data hostage. <strong>Applicant products</strong> — alerts, early access, application tools — monetise the audience the freshness attracts; the weekly diff ("new roles at these companies") is a genuinely valuable alert precisely because it is generated from real changes. <strong>Data products</strong> are the quiet third leg: the same classified dataset, sold as a feed to recruiters and analysts who want the niche's hiring picture without running a board. <strong>Affiliate and referral arrangements</strong> with the ATS platforms and adjacent services fit naturally, because your board already sits on top of their ecosystem. The common thread: none of these require the board to win a breadth war with the generalists. Each monetises depth, freshness and trust — the three properties the live-data architecture produces as by-products.</p>
+<h3>The Core Shift: Your Niche Is a Company List</h3>
 
-<h2>How boards that scrape actually die: a failure anatomy</h2>
-<p>It is worth being concrete about the alternative, because the scraping route looks cheaper at every single step and loses only in total. Month one: the founder writes parsers for the fifty employers that matter most, over a weekend, and feels clever. Month three: the list is two hundred employers, a third of the parsers have silently degraded — a redesign here, a JavaScript wall there — and the board's inventory quietly fills with duplicates and dead roles that nobody has time to audit. Month six: the largest employer in the niche blocks the crawler's IP range; the board's flagship coverage vanishes overnight, and the founder spends a week on proxies and rendering infrastructure instead of the audience. Month nine: an applicant writes the review that matters — "half the jobs here are closed" — and it is true, and it ranks. None of these failures are caused by incompetence; they are the operating cost of treating records as web pages. The feed architecture's real product is not the data. It is the absence of that entire failure class, purchased for about $3 per thousand records — which is why we think the interesting question for a prospective board founder is not "can I scrape this cheaper?" but "which business am I actually trying to be in: the niche, or the scraping?"</p>
+<p>Almost every professional niche maps cleanly to an identifiable roster of employers. Remote data-engineering roles live at companies that hire data engineers remotely; climate-tech careers live at a few hundred recognisable firms. Those employers publish openings through ATS platforms—specifically Greenhouse, Ashby, Lever, SmartRecruiters, and Workable—whose public feeds power the companies' own careers pages.</p>
 
-<h2>Your first two weeks, in order</h2>
+<p>Querying those same feeds removes three classic headaches at once:</p>
+
+<ul>
+  <li><strong>No HTML parsing:</strong> Title, department, location, workplace type, full description, and application URL arrive as clean structured fields rather than employer-specific markup to reverse-engineer.</li>
+  <li><strong>No staleness:</strong> Because your scheduled pull reads the exact source behind the employer's own careers page, an opening enters your dataset when created and disappears when closed. Dead listings become structurally impossible instead of a cleanup chore.</li>
+  <li><strong>No per-employer maintenance:</strong> When a company redesigns its marketing site, your integration does not flinch. The data contract sits with the ATS platform, which changes infrequently and consistently across all customers.</li>
+</ul>
+
+<p>With collection automated, your differentiated work becomes purely editorial and product-focused: curating the right employers, classifying roles into a sharp taxonomy, and growing the audience.</p>
+
+<h2>Inside the Live-Feed Architecture, Sample Output, and Pack Verification</h2>
+
+<p>A live-fed niche job board relies on four straightforward components working in sequence:</p>
+
 <ol>
-<li><strong>Days 1–2: the company list.</strong> Draft your niche's employers from your own knowledge, association directories and competitor boards' customer logos. Identify each one's ATS and board token. Two hundred well-chosen companies beat two thousand scraped guesses.</li>
-<li><strong>Day 3: the first pull.</strong> Run the full list once through <a href="/actors/career-site-jobs-live.html">Career Site Jobs — Live ATS API</a>. Expect a few thousand records for a healthy niche; the run costs a few dollars and tells you your true inventory for the first time.</li>
-<li><strong>Days 4–5: the taxonomy.</strong> Build classification rules over department, location, workplace type and title keywords. Manually review a hundred records against your rules; fix the rules, not the records.</li>
-<li><strong>Week 2: the board and the diff.</strong> Publish the classified inventory, switch on the daily pull and the diff, and start the weekly change summary from the first diff you compute. Your launch announcement writes itself: "Every open role at these companies, updated daily, nothing listed that has closed."</li>
+  <li><strong>The company list:</strong> Your curated directory of employers mapped to each company's ATS board token or career-site identifier. Building the initial roster takes one focused afternoon—likely the highest-leverage afternoon of the project—followed by a quarterly check for acquisitions, new entrants, and ATS migrations.</li>
+  <li><strong>The scheduled pull:</strong> <a href="/actors/career-site-jobs-live.html">Career Site Jobs — Live ATS API</a> accepts your company list, queries the five ATS platforms' public feeds at run time, and outputs one unified dataset of current openings. Daily runs suit most niches, while fast-moving markets can pull twice a day with zero architectural changes.</li>
+  <li><strong>The diff and classify pipeline:</strong> Each run compares today's dataset against yesterday's by job identity. New records become fresh listings and ready-made marketing copy (&ldquo;14 new roles this week&rdquo;), while vanished records are unpublished immediately. Structured fields—department for function, location and workplace type for geography and remote status, and title keywords for specialisations—drive classification.</li>
+  <li><strong>The listing site itself:</strong> A static or database-backed front end powered solely by the classified dataset. Because every attribute is structured and current, filters for location, remote eligibility, department, and seniority work reliably without guessing from scraped prose.</li>
 </ol>
 
-<h2>SEO and the audience flywheel — without becoming a spam farm</h2>
-<p>A niche board's listings are naturally search-shaped: "remote data engineer jobs", "nursing jobs in Ohio", "climate tech careers" are queries with intent, and a board that genuinely holds the niche's complete, current inventory has the honest claim to rank for them. The temptation to resist is programmatic inflation — generating thousands of thin pages for every conceivable query permutation. That strategy borrows against the same trust the board exists to hold, and search engines have become competent at foreclosing on it. The durable version is narrower and stronger: one page per real listing (real because it exists, current because the feed keeps it so, removed when the role closes), category pages that aggregate genuine inventory with genuine counts, and company pages that show a real employer's real openings. A page that says "14 open roles" and lists 14 open roles is a better search asset than a page that says "thousands of jobs" and lists a database's memory of them — and it converts better, because the applicant who clicks through finds the promise kept. The flywheel then turns on its own: freshness earns rankings, rankings bring applicants, applicants justify employer products, and employer revenue funds the company-list research that widens coverage. Every part of that loop depends on the inventory being true, which is the entire argument of this article restated as a growth strategy.</p>
-<p>One more compounding asset deserves mention: the archive. Because your pulls are timestamped datasets, you accumulate the niche's hiring history as a by-product — which companies hired through which quarters, how the niche's demand moved, which skills' mentions rose. A year in, that archive is a content and data asset no new competitor can copy quickly, because it cannot be backfilled: the past states of the feeds are gone for anyone who was not collecting them. Boards rarely plan for the archive on day one; the ones that keep their raw datasets from the first pull are quietly building the moat.</p>
+<p>There are no browser farms to manage, no proxies to cycle, and no per-company scrapers to patch; the delivery burden stays with the ATS providers that host the canonical data.</p>
 
-<h2>Choosing the niche: a scoring pass before you build</h2>
-<p>Not every niche deserves a board, and the live-data model makes the test cheap enough to run before committing. Score a candidate niche on five questions. <strong>Is the employer set enumerable?</strong> You should be able to draft a hundred core companies from knowledge and directories in a day; a niche whose employers cannot be listed cannot be feed-fed. <strong>Do those employers hire through ATS platforms?</strong> Run a sample of thirty against the Actor: if most return live openings, the feed covers your market; if most return nothing because they hire elsewhere, the architecture does not fit this niche. <strong>Is hiring velocity sufficient?</strong> A niche with forty open roles at any moment cannot fill a board; a few hundred is a working inventory. The same sample run measures this for a few dollars. <strong>Is the audience identifiable and reachable?</strong> A profession with associations, communities and its own vocabulary is marketable; a diffuse category is not. <strong>Do the generalists serve it badly?</strong> They almost always do — but check whether their failure is inventory (fixable by you) or audience habit (harder). A niche that passes all five is a build decision, and the total cost of finding out was one sample run and a day of list work — which is, in miniature, the argument for the whole approach: decisions priced in dollars and days, not in quarters of scraping infrastructure.</p>
+<h3>Sample Output Record</h3>
 
-<h2>FAQ</h2>
-<h3>How fresh will my board's listings be?</h3>
-<p>As fresh as your pull cadence. The Actor queries the ATS feeds at run time, and the feeds are what the employers' own careers pages display. A daily pull means no listing on your board is more than a day behind the employer's own site, and closures disappear at the next pull.</p>
-<h3>Which ATS platforms can I pull from?</h3>
-<p>Greenhouse, Ashby, Lever, SmartRecruiters and Workable through the multi-system Actor; a Greenhouse-only Actor exists if your niche lives entirely there.</p>
-<h3>What does it cost to run a board on this?</h3>
-<p>$3.00 per 1,000 job records delivered. A 400-company niche with about 2,000 open roles costs roughly $6 per daily pull. You pay nothing for companies with no openings beyond the run's start event.</p>
-<h3>Can the feed tell me when a specific company starts hiring?</h3>
-<p>Yes — that is the diff. A company that had no open roles and now has three produces three new records in the next pull. The same mechanism powers hiring-signal products for recruiters and sales teams.</p>
-<h3>What if an employer in my niche does not use a supported ATS?</h3>
-<p>Then its openings are not in the feed, and no amount of configuration changes that. Cover the employers you can, name the gap honestly if completeness matters to your positioning, and add such employers through their own channels if they are individually important.</p>
-<h3>Do I need to handle scraping, proxies or rendering?</h3>
-<p>No. The pull is an API query against the ATS platforms' public feeds. There is no HTML parsing, no browser rendering and no per-employer maintenance in your stack.</p>
+<p>The table below shows a real record captured from the on-Apify smoke run for the Greenhouse member of this Actor family, alongside the pack and run measurements recorded at build time:</p>
 
-<p><a class="btn" href="https://apify.com/apitory/career-site-jobs-live">Run Career Site Jobs — Live ATS API on Apify →</a></p>
+<table>
+  <caption>Real sample output record from the on-Apify smoke run (boards <code>greenhouse</code> + <code>calendly</code>, cap 6: 6 real records, measured platform usage $0.000163; Greenhouse default pack: 150 verified live boards holding 14,001 open jobs).</caption>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value (Sample Record)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>ats</code></td>
+      <td><code>greenhouse</code></td>
+    </tr>
+    <tr>
+      <td><code>companyId</code></td>
+      <td><code>calendly</code></td>
+    </tr>
+    <tr>
+      <td><code>company</code></td>
+      <td>Calendly</td>
+    </tr>
+    <tr>
+      <td><code>jobTitle</code></td>
+      <td>Enterprise Account Executive</td>
+    </tr>
+    <tr>
+      <td><code>location</code></td>
+      <td>London</td>
+    </tr>
+    <tr>
+      <td>Description</td>
+      <td>Full description text included (5.0K-7.9K chars in the smoke run)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>How We Built and Verified the Greenhouse Board Pack</h3>
+
+<p>When we assembled the default Greenhouse board pack for this engine, we probed 577 candidate company slugs directly against the Greenhouse boards API, and 157 returned live jobs. Inspecting the live responses caught three false positives that had to be removed because they belonged to the wrong companies: <code>&quot;wise&quot;</code> pointed to an unrelated field-sales firm, <code>&quot;remote&quot;</code> belonged to a General Assembly board, and <code>&quot;ramp&quot;</code> was ambiguous. Dropping those three left exactly 150 boards holding 14,001 open jobs. We then ordered the pack by open-job count ascending so that a capped run samples broadly across many employers before hitting the mega-boards—Databricks with 874, Stripe with 772, and Anthropic with 635 open jobs at verification time.</p>
+
+<p>That verification pass illustrates why the company list itself is an editorial asset: probing slugs is fast, yet confirming that a slug actually maps to the intended employer protects inventory quality from day one.</p>
+
+<h2>Pricing, Unit Economics, and Honest Boundaries</h2>
+
+<p>All Actors in the live jobs family share transparent pay-per-result billing based solely on run start and delivered records:</p>
+
+<table>
+  <caption>Pay-per-result pricing for the live jobs Actor family.</caption>
+  <thead>
+    <tr>
+      <th>Billing Event</th>
+      <th>Unit Rate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Actor Start</td>
+      <td>$0.00005 per run</td>
+    </tr>
+    <tr>
+      <td>Job Result</td>
+      <td>$0.003 per job record ($3.00 per 1,000 jobs)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Because the Actor charges $3.00 per 1,000 job results, forecasting your monthly bill takes seconds. Suppose your niche tracks 400 employers averaging five open roles each: a pull returns about 2,000 job records, costing roughly $6 per run or about $180 a month on a daily refresh schedule. Running every other day halves the cost while keeping inventory far fresher than any weekly crawl. Compare that outlay against the hidden engineering hours spent rescuing broken parsers every time a major employer updates its career site.</p>
+
+<p>Pay-per-result economics also scale naturally with a young board. At 80 companies, you pay strictly for 80 companies' active openings, with no idle subscription floor charging for unused capacity. As we detail in <a href="/articles/pay-per-result-pricing-explained.html">pay-per-result pricing, explained</a>, job boards demonstrate the model clearly because an expired job listing carries literally zero value.</p>
+
+<h3>Honest Boundaries of Live Feed Architecture</h3>
+
+<p>Knowing what ATS feeds will not do for you is just as important as knowing what they automate:</p>
+
+<ul>
+  <li><strong>Employers outside supported ATS platforms:</strong> Organisations hiring through bespoke portals, staffing agencies, or generalist boards exclusively will not appear in ATS feeds. While ATS coverage captures the centre of gravity in most professional fields, any board promising completeness should state clearly which notable employers sit outside the feeds.</li>
+  <li><strong>Employer discovery:</strong> A live pull answers &ldquo;what are these employers hiring for right now?&rdquo; It does not tell you which companies belong in your niche. Building and expanding the roster remains editorial research rather than an engineering task.</li>
+  <li><strong>Post-pull enrichment:</strong> Salary-band normalisation, technology-stack extraction, and seniority tagging go beyond raw employer fields. The feed delivers the employer's structured attributes and posting text; additional classification is your layer to build—and precisely where your board's taxonomy moat lives.</li>
+</ul>
+
+<p>If your target employers operate entirely on Greenhouse—a common pattern across software and technology niches—the single-platform Actor, <a href="/actors/greenhouse-jobs-live-api.html">Greenhouse Jobs — Live API</a>, offers the same feed architecture with a narrower surface at identical per-result rates. To examine why direct feeds outperform both crawlers and stale aggregators at the protocol level, see <a href="/articles/live-job-data-from-ats-apis.html">live job data from ATS APIs</a>.</p>
+
+<h2>From Zero to Launch: The Two-Week Build and Operating Cadence</h2>
+
+<p>Taking a live-fed job board from an empty folder to production takes two structured weeks:</p>
+
+<ul>
+  <li><strong>Days 1–2 — Draft the company list:</strong> Compile your target employers from personal industry knowledge, association directories, and competitor logo walls, mapping each employer to its ATS and board token. Two hundred well-chosen companies beat two thousand scraped guesses.</li>
+  <li><strong>Day 3 — Run the first live pull:</strong> Pass the full roster through <a href="/actors/career-site-jobs-live.html">Career Site Jobs — Live ATS API</a>. A healthy niche typically yields a few thousand records, costing only a few dollars and revealing your true live inventory for the first time.</li>
+  <li><strong>Days 4–5 — Tune the taxonomy:</strong> Write classification rules over department, location, workplace type, and title keywords. Audit a hundred records manually against your rules, and refine the rules rather than hand-editing individual records.</li>
+  <li><strong>Week 2 — Ship the board and diff loop:</strong> Publish the classified listings, schedule the daily pull and diff job, and send your first weekly change summary directly from that diff. Your launch headline needs no exaggeration: &ldquo;Every open role at these companies, updated daily, nothing listed that has closed.&rdquo;</li>
+</ul>
+
+<h3>The Operating Routine After Launch</h3>
+
+<p>Once live, four lightweight cadences keep data quality intact without dragging you back into maintenance:</p>
+
+<ul>
+  <li><strong>Daily:</strong> Pull, diff, publish additions, and remove closed roles automatically; humans only inspect alerts if a run fails.</li>
+  <li><strong>Weekly:</strong> Publish a change digest highlighting new roles by company and notable closures—exclusive content generated automatically by your daily diff.</li>
+  <li><strong>Monthly:</strong> Review the company roster for new entrants, acquisitions, and ATS switches, and spot-check ten listings directly against employers' careers pages. Because both read the same feed, any discrepancy points immediately to a configuration bug.</li>
+  <li><strong>Quarterly:</strong> Audit classification accuracy and retire ageing keyword rules. The feed is plumbing; the taxonomy is your product.</li>
+</ul>
+
+<p>Running on this cadence keeps founder time concentrated on audience growth and taxonomy refinement—areas generalist sites cannot imitate—rather than parser repair.</p>
+
+<h2>Compounding Trust: Monetisation, Search Flywheel, and the Archive</h2>
+
+<p>Complete, continuously accurate niche inventory supports four durable revenue streams without forcing you into a volume war against generalists:</p>
+
+<ul>
+  <li><strong>Employer products:</strong> Featured slots, branded company profiles, and distribution packages. Unlike scraped boards that effectively hold an employer's own listings hostage for basic visibility, a live-fed board already lists current roles automatically—meaning employers pay cleanly for prominence and targeted reach.</li>
+  <li><strong>Applicant products:</strong> Real-time alerts, early access, and workflow tools built for repeat visitors. A weekly diff alert showing genuinely new openings at tracked employers works because it reflects verified changes.</li>
+  <li><strong>Data products:</strong> Licensing the classified dataset itself as a structured feed to recruiters, talent teams, and market analysts who want niche hiring intelligence without operating a consumer site.</li>
+  <li><strong>Affiliate and referral partnerships:</strong> Introductions to ATS providers and adjacent recruiting tools fit naturally atop an ecosystem your board already indexes.</li>
+</ul>
+
+<p>Every revenue stream monetises the same three outputs of the feed architecture: depth, freshness, and trust.</p>
+
+<h3>Search Rankings Without Programmatic Spam</h3>
+
+<p>Specialist job pages align naturally with high-intent queries such as &ldquo;remote data engineer jobs&rdquo;, &ldquo;nursing jobs in Ohio&rdquo;, and &ldquo;climate tech careers&rdquo;. The trap to avoid is programmatic inflation—spinning up thousands of thin permutation pages backed by empty or stale results, which erodes reader trust and invites search-engine penalties.</p>
+
+<p>A stronger, durable structure sticks to real pages backed by verified inventory: one canonical page per active role (removed promptly upon closure), category pages showing genuine live counts, and company pages displaying real current openings. A page promising &ldquo;14 open roles&rdquo; that actually lists 14 active roles outperforms a bloated page claiming &ldquo;thousands of jobs&rdquo; filled with ghosts—and converts far better when candidates click through. Freshness earns rankings, rankings attract applicants, applicants justify employer spend, and employer revenue funds the company-list research that widens coverage.</p>
+
+<h3>The Quiet Moat: Your Historical Archive</h3>
+
+<p>Because every scheduled pull produces a timestamped dataset, storing raw pulls from day one quietly builds a second compounding asset: your niche's hiring history. A year in, you hold longitudinal records showing which employers expanded through which quarters, how demand shifted across regions, and which skill mentions accelerated. No late entrant can backfill those past feed states once they have disappeared, turning your day-one datasets into a proprietary content and intelligence moat.</p>
+
+<h2>Frequently Asked Questions</h2>
+
+<h3>How current are listings pulled from ATS feeds?</h3>
+<p>Listings match your pull schedule. Because the Actor queries each ATS platform's public feed at run time—the identical source driving the employer's own careers page—a daily run is never more than a day behind the employer's site, and closed roles vanish on the very next pull.</p>
+
+<h3>Which applicant tracking systems are supported?</h3>
+<p>The multi-system Actor pulls from Greenhouse, Ashby, Lever, SmartRecruiters, and Workable. If every employer in your niche runs on Greenhouse, a dedicated Greenhouse-only Actor provides the same feed workflow with a streamlined setup.</p>
+
+<h3>What does daily operation cost?</h3>
+<p>Billing is $3.00 per 1,000 job records delivered. A 400-company niche with about 2,000 open roles costs roughly $6 per daily pull, and employers with no openings cost nothing beyond the run's start event.</p>
+
+<h3>Can the feed flag when a specific employer begins hiring?</h3>
+<p>Yes, via your daily diff. A tracked company that had no open roles and now has three produces three new records in the next pull—the exact mechanism behind hiring-signal products for sales and recruiting teams.</p>
+
+<h3>How should I handle an employer not using a supported ATS?</h3>
+<p>Openings outside the five supported systems will not appear in feed pulls regardless of configuration. Cover the supported majority first, note known gaps transparently where completeness matters, and track standout non-ATS employers separately if needed.</p>
+
+<h3>Do I need proxies, headless browsers, or HTML parsers?</h3>
+<p>No. Every run queries public ATS API endpoints directly, leaving your stack free of HTML scraping, browser rendering, and per-employer parser maintenance.</p>
+
+<p><a href="https://apify.com/apitory/career-site-jobs-live">Run Career Site Jobs — Live ATS API on Apify &rarr;</a></p>
 <h2>Related Actors</h2><ul><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#f43f5e,#f59e0b)">CS</span><a href="/actors/career-site-jobs-live.html">Career Site Jobs — Live ATS API</a> — $3.00 / 1,000 jobs</li><li><span class="aicon aicon-sm" style="background:linear-gradient(135deg,#7c3aed,#ec4899)">GJ</span><a href="/actors/greenhouse-jobs-live-api.html">Greenhouse Jobs — Live API</a> — $3.00 / 1,000 jobs</li></ul></main><footer><img class="fmark" src="/logo-mark.svg" alt=""><div>Support: <a href="mailto:apitoryhq@gmail.com">apitoryhq@gmail.com</a><br>Apitory — Data APIs &amp; Apify Actors. Clean data, pay per use.<br><a href="https://apify.com/apitory">apify.com/apitory</a></div></footer></body></html>
